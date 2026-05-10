@@ -69,8 +69,9 @@ class IcoDecoder extends Decoder {
 
     final imageInfo = _icoInfo!.images[frame];
     final imageBuffer = _input!.buffer.sublist(
-        _input!.start + imageInfo.bytesOffset,
-        _input!.start + imageInfo.bytesOffset + imageInfo.bytesSize);
+      _input!.start + imageInfo.bytesOffset,
+      _input!.start + imageInfo.bytesOffset + imageInfo.bytesSize,
+    );
 
     final png = PngDecoder();
     if (png.isValidFile(imageBuffer as Uint8List)) {
@@ -84,8 +85,10 @@ class IcoDecoder extends Decoder {
       ..writeUint32(0)
       ..writeUint32(0);
 
-    final bmpInfo = IcoBmpInfo(InputBuffer(imageBuffer),
-        fileHeader: BmpFileHeader(InputBuffer(dummyBmpHeader.getBytes())));
+    final bmpInfo = IcoBmpInfo(
+      InputBuffer(imageBuffer),
+      fileHeader: BmpFileHeader(InputBuffer(dummyBmpHeader.getBytes())),
+    );
 
     if (bmpInfo.headerSize != 40 && bmpInfo.planes != 1) {
       // invalid header.

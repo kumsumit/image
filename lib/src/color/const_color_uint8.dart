@@ -129,9 +129,12 @@ class ConstColorUint8 extends Iterable<num> implements Color {
   int get hashCode => Object.hashAll(toList());
 
   @override
-  Color convert({Format? format, int? numChannels, num? alpha}) =>
-      convertColor(this,
-          format: format, numChannels: numChannels, alpha: alpha);
+  Color convert({Format? format, int? numChannels, num? alpha}) => convertColor(
+    this,
+    format: format,
+    numChannels: numChannels,
+    alpha: alpha,
+  );
 }
 
 class ConstColorR8 extends ConstColorUint8 {
@@ -159,12 +162,12 @@ class ConstColorR8 extends ConstColorUint8 {
   num getChannel(Channel channel) => channel == Channel.luminance
       ? luminance
       : channel == Channel.green
-          ? 0
-          : channel == Channel.blue
-              ? 0
-              : channel == Channel.alpha
-                  ? 255
-                  : this[channel.index];
+      ? 0
+      : channel == Channel.blue
+      ? 0
+      : channel == Channel.alpha
+      ? 255
+      : this[channel.index];
 
   @override
   int get length => 1;
@@ -172,7 +175,7 @@ class ConstColorR8 extends ConstColorUint8 {
 
 class ConstColorRg8 extends ConstColorUint8 {
   const ConstColorRg8(int r, int g)
-      : super.data((255 << 24) | ((g & 0xff) << 8) | (r & 0xff));
+    : super.data((255 << 24) | ((g & 0xff) << 8) | (r & 0xff));
 
   @override
   num get b => 0;
@@ -190,10 +193,10 @@ class ConstColorRg8 extends ConstColorUint8 {
   num getChannel(Channel channel) => channel == Channel.luminance
       ? luminance
       : channel == Channel.blue
-          ? 0
-          : channel == Channel.alpha
-              ? 255
-              : this[channel.index];
+      ? 0
+      : channel == Channel.alpha
+      ? 255
+      : this[channel.index];
 
   @override
   int get length => 2;
@@ -201,8 +204,9 @@ class ConstColorRg8 extends ConstColorUint8 {
 
 class ConstColorRgb8 extends ConstColorUint8 {
   const ConstColorRgb8(int r, int g, int b)
-      : super.data(
-            (255 << 24) | ((b & 0xff) << 16) | ((g & 0xff) << 8) | (r & 0xff));
+    : super.data(
+        (255 << 24) | ((b & 0xff) << 16) | ((g & 0xff) << 8) | (r & 0xff),
+      );
 
   @override
   num get a => 255;
@@ -214,8 +218,8 @@ class ConstColorRgb8 extends ConstColorUint8 {
   num getChannel(Channel channel) => channel == Channel.luminance
       ? luminance
       : channel == Channel.alpha
-          ? 255
-          : this[channel.index];
+      ? 255
+      : this[channel.index];
 
   @override
   int get length => 3;
@@ -223,8 +227,10 @@ class ConstColorRgb8 extends ConstColorUint8 {
 
 class ConstColorRgba8 extends ConstColorUint8 {
   const ConstColorRgba8(int r, int g, int b, int a)
-      : super.data(((a & 0xff) << 24) |
+    : super.data(
+        ((a & 0xff) << 24) |
             ((b & 0xff) << 16) |
             ((g & 0xff) << 8) |
-            (r & 0xff));
+            (r & 0xff),
+      );
 }

@@ -3,10 +3,12 @@ import '../color/color.dart';
 import '../image/image.dart';
 import '../util/math_util.dart';
 
-Image scaleRgba(Image src,
-    {required Color scale,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image scaleRgba(
+  Image src, {
+  required Color scale,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   final dr = scale.rNormalized;
   final dg = scale.gNormalized;
   final db = scale.bNormalized;

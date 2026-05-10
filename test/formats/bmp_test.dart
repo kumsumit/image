@@ -16,16 +16,18 @@ void main() {
 
         final name = f.uri.pathSegments.last;
         test(name, () async {
-          final image = await (Command()
-                ..decodeBmp(f.readAsBytesSync())
-                ..writeToFile('$testOutputPath/bmp/$name.bmp'))
-              .getImage();
+          final image =
+              await (Command()
+                    ..decodeBmp(f.readAsBytesSync())
+                    ..writeToFile('$testOutputPath/bmp/$name.bmp'))
+                  .getImage();
           expect(image, isNotNull);
 
-          final image2 = await (Command()
-                ..decodeBmpFile('$testOutputPath/bmp/$name.bmp')
-                ..writeToFile('$testOutputPath/bmp/${name}2.bmp'))
-              .getImage();
+          final image2 =
+              await (Command()
+                    ..decodeBmpFile('$testOutputPath/bmp/$name.bmp')
+                    ..writeToFile('$testOutputPath/bmp/${name}2.bmp'))
+                  .getImage();
           expect(image2, isNotNull);
 
           testImageEquals(image2!, image!);

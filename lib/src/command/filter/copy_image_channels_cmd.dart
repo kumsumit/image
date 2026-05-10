@@ -12,16 +12,17 @@ class CopyImageChannelsCmd extends Command {
   final Command? mask;
   final Channel maskChannel;
 
-  CopyImageChannelsCmd(Command? input,
-      {this.from,
-      this.scaled = false,
-      this.red,
-      this.green,
-      this.blue,
-      this.alpha,
-      this.mask,
-      this.maskChannel = Channel.luminance})
-      : super(input);
+  CopyImageChannelsCmd(
+    Command? input, {
+    this.from,
+    this.scaled = false,
+    this.red,
+    this.green,
+    this.blue,
+    this.alpha,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {
@@ -29,7 +30,8 @@ class CopyImageChannelsCmd extends Command {
     final fromImg = await from?.getImage();
     final maskImg = await mask?.getImage();
     outputImage = img != null && fromImg != null
-        ? g.copyImageChannels(img,
+        ? g.copyImageChannels(
+            img,
             from: fromImg,
             scaled: scaled,
             red: red,
@@ -37,7 +39,8 @@ class CopyImageChannelsCmd extends Command {
             blue: blue,
             alpha: alpha,
             mask: maskImg,
-            maskChannel: maskChannel)
+            maskChannel: maskChannel,
+          )
         : null;
   }
 }

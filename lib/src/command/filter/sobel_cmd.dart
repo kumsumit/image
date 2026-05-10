@@ -7,9 +7,12 @@ class SobelCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  SobelCmd(Command? input,
-      {this.amount = 1, this.mask, this.maskChannel = Channel.luminance})
-      : super(input);
+  SobelCmd(
+    Command? input, {
+    this.amount = 1,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {

@@ -270,8 +270,11 @@ class PvrDecoder extends Decoder {
 
     switch (pType) {
       case pvrTypeRgba4444:
-        final image =
-            Image(width: info.width, height: info.height, numChannels: 4);
+        final image = Image(
+          width: info.width,
+          height: info.height,
+          numChannels: 4,
+        );
         for (final p in image) {
           final v1 = input.readByte();
           final v2 = input.readByte();
@@ -288,8 +291,11 @@ class PvrDecoder extends Decoder {
         }
         return image;
       case pvrTypeRgba5551:
-        final image =
-            Image(width: info.width, height: info.height, numChannels: 4);
+        final image = Image(
+          width: info.width,
+          height: info.height,
+          numChannels: 4,
+        );
         for (final p in image) {
           final v = input.readUint16();
           final r = (v & 0xf800) >> 8;
@@ -304,8 +310,11 @@ class PvrDecoder extends Decoder {
         }
         return image;
       case pvrTypeRgba8888:
-        final image =
-            Image(width: info.width, height: info.height, numChannels: 4);
+        final image = Image(
+          width: info.width,
+          height: info.height,
+          numChannels: 4,
+        );
         for (final p in image) {
           p
             ..r = input.readByte()
@@ -350,16 +359,22 @@ class PvrDecoder extends Decoder {
         }
         return image;
       case pvrTypeI8:
-        final image =
-            Image(width: info.width, height: info.height, numChannels: 1);
+        final image = Image(
+          width: info.width,
+          height: info.height,
+          numChannels: 1,
+        );
         for (final p in image) {
           final i = input.readByte();
           p.r = i;
         }
         return image;
       case pvrTypeAI8:
-        final image =
-            Image(width: info.width, height: info.height, numChannels: 4);
+        final image = Image(
+          width: info.width,
+          height: info.height,
+          numChannels: 4,
+        );
         for (final p in image) {
           final a = input.readByte();
           final i = input.readByte();
@@ -545,12 +560,14 @@ class PvrDecoder extends Decoder {
             p2.setBlock(x0, y1);
             p3.setBlock(x1, y1);
 
-            final ca = p0.getColorRgbA() * factors[factorIndex][0] +
+            final ca =
+                p0.getColorRgbA() * factors[factorIndex][0] +
                 p1.getColorRgbA() * factors[factorIndex][1] +
                 p2.getColorRgbA() * factors[factorIndex][2] +
                 p3.getColorRgbA() * factors[factorIndex][3];
 
-            final cb = p0.getColorRgbB() * factors[factorIndex][0] +
+            final cb =
+                p0.getColorRgbB() * factors[factorIndex][0] +
                 p1.getColorRgbB() * factors[factorIndex][1] +
                 p2.getColorRgbB() * factors[factorIndex][2] +
                 p3.getColorRgbB() * factors[factorIndex][3];
@@ -609,12 +626,14 @@ class PvrDecoder extends Decoder {
             p2.setBlock(x0, y1);
             p3.setBlock(x1, y1);
 
-            final ca = p0.getColorRgbaA() * factors[factorIndex][0] +
+            final ca =
+                p0.getColorRgbaA() * factors[factorIndex][0] +
                 p1.getColorRgbaA() * factors[factorIndex][1] +
                 p2.getColorRgbaA() * factors[factorIndex][2] +
                 p3.getColorRgbaA() * factors[factorIndex][3];
 
-            final cb = p0.getColorRgbaB() * factors[factorIndex][0] +
+            final cb =
+                p0.getColorRgbaB() * factors[factorIndex][0] +
                 p1.getColorRgbaB() * factors[factorIndex][1] +
                 p2.getColorRgbaB() * factors[factorIndex][2] +
                 p3.getColorRgbaB() * factors[factorIndex][3];

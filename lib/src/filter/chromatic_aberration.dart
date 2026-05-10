@@ -3,8 +3,12 @@ import '../image/image.dart';
 import '../util/math_util.dart';
 
 /// Apply chromatic aberration filter to the image.
-Image chromaticAberration(Image src,
-    {int shift = 5, Image? mask, Channel maskChannel = Channel.luminance}) {
+Image chromaticAberration(
+  Image src, {
+  int shift = 5,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: src.numChannels);
   }

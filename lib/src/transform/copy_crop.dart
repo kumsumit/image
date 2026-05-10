@@ -2,13 +2,15 @@ import '../image/image.dart';
 import '../util/_circle_test.dart';
 
 /// Returns a cropped copy of [src].
-Image copyCrop(Image src,
-    {required int x,
-    required int y,
-    required int width,
-    required int height,
-    num radius = 0,
-    bool antialias = true}) {
+Image copyCrop(
+  Image src, {
+  required int x,
+  required int y,
+  required int width,
+  required int height,
+  num radius = 0,
+  bool antialias = true,
+}) {
   // Make sure crop rectangle is within the range of the src image.
   x = x.clamp(0, src.width - 1).toInt();
   y = y.clamp(0, src.height - 1).toInt();
@@ -27,9 +29,14 @@ Image copyCrop(Image src,
   final numFrames = src.numFrames;
   for (var i = 0; i < numFrames; ++i) {
     final frame = src.frames[i];
-    final dst = firstFrame?.addFrame() ??
-        Image.fromResized(frame,
-            width: width, height: height, noAnimation: true);
+    final dst =
+        firstFrame?.addFrame() ??
+        Image.fromResized(
+          frame,
+          width: width,
+          height: height,
+          noAnimation: true,
+        );
     firstFrame ??= dst;
 
     if (radius > 0) {

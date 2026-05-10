@@ -312,8 +312,7 @@ Uint8List encodeJpg(
   Image image, {
   int quality = 100,
   JpegChroma chroma = JpegChroma.yuv444,
-}) =>
-    JpegEncoder(quality: quality).encode(image, chroma: chroma);
+}) => JpegEncoder(quality: quality).encode(image, chroma: chroma);
 
 /// Encode an [image] to a JPG file at the given [path].
 Future<bool> encodeJpgFile(
@@ -354,24 +353,33 @@ Future<Image?> decodePngFile(String path) async {
 }
 
 /// Encode an image to the PNG format.
-Uint8List encodePng(Image image,
-        {bool singleFrame = false,
-        int level = 6,
-        PngFilter filter = PngFilter.paeth,
-        PngCicpData? cicpData}) =>
-    PngEncoder(filter: filter, level: level, cicpData: cicpData)
-        .encode(image, singleFrame: singleFrame);
+Uint8List encodePng(
+  Image image, {
+  bool singleFrame = false,
+  int level = 6,
+  PngFilter filter = PngFilter.paeth,
+  PngCicpData? cicpData,
+}) => PngEncoder(
+  filter: filter,
+  level: level,
+  cicpData: cicpData,
+).encode(image, singleFrame: singleFrame);
 
 /// Encode an [image] to a PNG file at the given [path].
-Future<bool> encodePngFile(String path, Image image,
-    {bool singleFrame = false,
-    int level = 6,
-    PngFilter filter = PngFilter.paeth}) async {
+Future<bool> encodePngFile(
+  String path,
+  Image image, {
+  bool singleFrame = false,
+  int level = 6,
+  PngFilter filter = PngFilter.paeth,
+}) async {
   if (!supportsFileAccess()) {
     return false;
   }
-  final bytes = PngEncoder(level: level, filter: filter)
-      .encode(image, singleFrame: singleFrame);
+  final bytes = PngEncoder(
+    level: level,
+    filter: filter,
+  ).encode(image, singleFrame: singleFrame);
   return writeFile(path, bytes);
 }
 
@@ -463,33 +471,37 @@ Future<Image?> decodeGifFile(String path, {int? frame}) async {
 /// If you know that you have less than 256 colors in your frames
 /// anyway, you should supply a very large [samplingFactor] for maximum
 /// performance.
-Uint8List encodeGif(Image image,
-        {bool singleFrame = false,
-        int repeat = 0,
-        int samplingFactor = 10,
-        DitherKernel dither = DitherKernel.floydSteinberg,
-        bool ditherSerpentine = false}) =>
-    GifEncoder(
-            samplingFactor: samplingFactor,
-            dither: dither,
-            ditherSerpentine: ditherSerpentine)
-        .encode(image, singleFrame: singleFrame);
+Uint8List encodeGif(
+  Image image, {
+  bool singleFrame = false,
+  int repeat = 0,
+  int samplingFactor = 10,
+  DitherKernel dither = DitherKernel.floydSteinberg,
+  bool ditherSerpentine = false,
+}) => GifEncoder(
+  samplingFactor: samplingFactor,
+  dither: dither,
+  ditherSerpentine: ditherSerpentine,
+).encode(image, singleFrame: singleFrame);
 
 /// Encode an [image] to a GIF file at the given [path].
-Future<bool> encodeGifFile(String path, Image image,
-    {bool singleFrame = false,
-    int repeat = 0,
-    int samplingFactor = 10,
-    DitherKernel dither = DitherKernel.floydSteinberg,
-    bool ditherSerpentine = false}) async {
+Future<bool> encodeGifFile(
+  String path,
+  Image image, {
+  bool singleFrame = false,
+  int repeat = 0,
+  int samplingFactor = 10,
+  DitherKernel dither = DitherKernel.floydSteinberg,
+  bool ditherSerpentine = false,
+}) async {
   if (!supportsFileAccess()) {
     return false;
   }
   final bytes = GifEncoder(
-          samplingFactor: samplingFactor,
-          dither: dither,
-          ditherSerpentine: ditherSerpentine)
-      .encode(image, singleFrame: singleFrame);
+    samplingFactor: samplingFactor,
+    dither: dither,
+    ditherSerpentine: ditherSerpentine,
+  ).encode(image, singleFrame: singleFrame);
   return writeFile(path, bytes);
 }
 
@@ -511,8 +523,11 @@ Uint8List encodeTiff(Image image, {bool singleFrame = false}) =>
     TiffEncoder().encode(image, singleFrame: singleFrame);
 
 /// Encode an [image] to a TIFF file at the given [path].
-Future<bool> encodeTiffFile(String path, Image image,
-    {bool singleFrame = false}) async {
+Future<bool> encodeTiffFile(
+  String path,
+  Image image, {
+  bool singleFrame = false,
+}) async {
   if (!supportsFileAccess()) {
     return false;
   }
@@ -576,8 +591,11 @@ Uint8List encodeCur(Image image, {bool singleFrame = false}) =>
     CurEncoder().encode(image, singleFrame: singleFrame);
 
 /// Encode an [image] to a CUR file at the given [path].
-Future<bool> encodeCurFile(String path, Image image,
-    {bool singleFrame = false}) async {
+Future<bool> encodeCurFile(
+  String path,
+  Image image, {
+  bool singleFrame = false,
+}) async {
   if (!supportsFileAccess()) {
     return false;
   }
@@ -604,8 +622,11 @@ Uint8List encodeIco(Image image, {bool singleFrame = false}) =>
     IcoEncoder().encode(image, singleFrame: singleFrame);
 
 /// Encode an [image] to a ICO file at the given [path].
-Future<bool> encodeIcoFile(String path, Image image,
-    {bool singleFrame = false}) async {
+Future<bool> encodeIcoFile(
+  String path,
+  Image image, {
+  bool singleFrame = false,
+}) async {
   if (!supportsFileAccess()) {
     return false;
   }
@@ -632,8 +653,11 @@ Uint8List encodePvr(Image image, {bool singleFrame = false}) =>
     PvrEncoder().encode(image, singleFrame: singleFrame);
 
 /// Encode an [image] to a PVR file at the given [path].
-Future<bool> encodePvrFile(String path, Image image,
-    {bool singleFrame = false}) async {
+Future<bool> encodePvrFile(
+  String path,
+  Image image, {
+  bool singleFrame = false,
+}) async {
   if (!supportsFileAccess()) {
     return false;
   }

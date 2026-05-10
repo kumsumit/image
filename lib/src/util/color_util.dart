@@ -69,8 +69,13 @@ Color _convertColor(Color c, Color c2, num a) {
   return c2;
 }
 
-Color convertColor(Color c,
-    {Color? to, Format? format, int? numChannels, num? alpha}) {
+Color convertColor(
+  Color c, {
+  Color? to,
+  Format? format,
+  int? numChannels,
+  num? alpha,
+}) {
   final fromFormat = c.palette?.format ?? c.format;
   format = to?.format ?? format ?? c.format;
   numChannels = to?.length ?? numChannels ?? c.length;
@@ -355,7 +360,7 @@ List<int> xyzToRgb(num x, num y, num z) {
   return [
     (r * 255).clamp(0, 255).toInt(),
     (g * 255).clamp(0, 255).toInt(),
-    (b * 255).clamp(0, 255).toInt()
+    (b * 255).clamp(0, 255).toInt(),
   ];
 }
 
@@ -436,7 +441,7 @@ List<int> labToRgb(num l, num a, num b) {
   return [
     (R * 255.0).clamp(0, 255).toInt(),
     (G * 255.0).clamp(0, 255).toInt(),
-    (B * 255.0).clamp(0, 255).toInt()
+    (B * 255.0).clamp(0, 255).toInt(),
   ];
 }
 
@@ -469,7 +474,7 @@ List<num> rgbToXyz(num r, num g, num b) {
   return [
     r * 0.4124 + g * 0.3576 + b * 0.1805,
     r * 0.2126 + g * 0.7152 + b * 0.0722,
-    r * 0.0193 + g * 0.1192 + b * 0.9505
+    r * 0.0193 + g * 0.1192 + b * 0.9505,
   ];
 }
 

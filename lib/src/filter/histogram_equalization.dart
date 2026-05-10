@@ -26,19 +26,23 @@ enum HistogramEqualizeMode { grayscale, color }
 /// [Format.uint8] internally. If you need higher precision than 256 intensity
 /// levels, convert your input image to a higher-precision format (e.g.
 /// [Format.uint16] or [Format.uint32]) before calling this function.
-Image histogramEqualization(Image src,
-    {HistogramEqualizeMode mode = HistogramEqualizeMode.grayscale,
-    num? outputRangeMin,
-    num? outputRangeMax,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image histogramEqualization(
+  Image src, {
+  HistogramEqualizeMode mode = HistogramEqualizeMode.grayscale,
+  num? outputRangeMin,
+  num? outputRangeMax,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: max(src.numChannels, 3));
   }
   // The algorithm only works with discrete intensity levels at the moment.
   if (src.formatType == FormatType.float) {
-    src =
-        src.convert(format: Format.uint8, numChannels: max(src.numChannels, 3));
+    src = src.convert(
+      format: Format.uint8,
+      numChannels: max(src.numChannels, 3),
+    );
   }
   // The luminance accessor of a pixel object with channel < 3 is
   // ill-formed, this is a work around.
@@ -47,15 +51,19 @@ Image histogramEqualization(Image src,
   }
 
   outputRangeMin = min(max(0, outputRangeMin ?? 0), src.maxChannelValue);
-  outputRangeMax =
-      min(max(0, outputRangeMax ?? src.maxChannelValue), src.maxChannelValue);
+  outputRangeMax = min(
+    max(0, outputRangeMax ?? src.maxChannelValue),
+    src.maxChannelValue,
+  );
   final num numOutputBin = outputRangeMax - outputRangeMin + 1;
 
   for (final frame in src.frames) {
     // Take histogram
     final List<num> H = List<num>.generate(
-        src.maxChannelValue.ceil() + 1, (_) => 0,
-        growable: false);
+      src.maxChannelValue.ceil() + 1,
+      (_) => 0,
+      growable: false,
+    );
 
     num validPixelCounts = 0;
     for (final p in frame) {
@@ -72,8 +80,10 @@ Image histogramEqualization(Image src,
 
     final double numPixelPerBin = validPixelCounts / numOutputBin;
     final List<num> Hmap = List<num>.generate(
-        src.maxChannelValue.ceil() + 1, (x) => x,
-        growable: false);
+      src.maxChannelValue.ceil() + 1,
+      (x) => x,
+      growable: false,
+    );
     num pCounter = 0;
     // works out a new mapping from scanning the darkest up to mid luminance
     for (var l = 0; l < H.length / 2; ++l) {
@@ -89,8 +99,14 @@ Image histogramEqualization(Image src,
     }
 
     // produce output
-    _applyHistogramTransform(frame, Hmap, mode, src.maxChannelValue,
-        mask: mask, maskChannel: maskChannel);
+    _applyHistogramTransform(
+      frame,
+      Hmap,
+      mode,
+      src.maxChannelValue,
+      mask: mask,
+      maskChannel: maskChannel,
+    );
   }
 
   return src;
@@ -122,20 +138,24 @@ Image histogramEqualization(Image src,
 /// [Format.uint8] internally. If you need higher precision than 256 intensity
 /// levels, convert your input image to a higher-precision format (e.g.
 /// [Format.uint16] or [Format.uint32]) before calling this function.
-Image histogramStretch(Image src,
-    {HistogramEqualizeMode mode = HistogramEqualizeMode.grayscale,
-    num? outputRangeMin,
-    num? outputRangeMax,
-    double stretchClipRatio = 0.015,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image histogramStretch(
+  Image src, {
+  HistogramEqualizeMode mode = HistogramEqualizeMode.grayscale,
+  num? outputRangeMin,
+  num? outputRangeMax,
+  double stretchClipRatio = 0.015,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: max(src.numChannels, 3));
   }
   // The algorithm only works with discrete intensity levels at the moment.
   if (src.formatType == FormatType.float) {
-    src =
-        src.convert(format: Format.uint8, numChannels: max(src.numChannels, 3));
+    src = src.convert(
+      format: Format.uint8,
+      numChannels: max(src.numChannels, 3),
+    );
   }
   // The luminance accessor of a pixel object with channel < 3 is
   // ill-formed, this is a work around.
@@ -144,14 +164,18 @@ Image histogramStretch(Image src,
   }
 
   outputRangeMin = min(max(0, outputRangeMin ?? 0), src.maxChannelValue);
-  outputRangeMax =
-      min(max(0, outputRangeMax ?? src.maxChannelValue), src.maxChannelValue);
+  outputRangeMax = min(
+    max(0, outputRangeMax ?? src.maxChannelValue),
+    src.maxChannelValue,
+  );
 
   for (final frame in src.frames) {
     // Take histogram
     final List<num> H = List<num>.generate(
-        src.maxChannelValue.ceil() + 1, (_) => 0,
-        growable: false);
+      src.maxChannelValue.ceil() + 1,
+      (_) => 0,
+      growable: false,
+    );
     num validPixelCounts = 0;
     for (final p in frame) {
       if ((src.hasAlpha) && (p.a == 0)) {
@@ -179,35 +203,52 @@ Image histogramStretch(Image src,
       }
     }
     // Make sure highPercentileBin - lowPercentileBin >= 1
-    highPercentileBin = min(src.maxChannelValue.ceil(),
-        max(lowPercentileBin + 1, highPercentileBin));
+    highPercentileBin = min(
+      src.maxChannelValue.ceil(),
+      max(lowPercentileBin + 1, highPercentileBin),
+    );
     lowPercentileBin = max(0, min(lowPercentileBin, highPercentileBin - 1));
 
     final List<num> Hmap = List<num>.generate(
-        src.maxChannelValue.ceil() + 1, (x) => x,
-        growable: false);
+      src.maxChannelValue.ceil() + 1,
+      (x) => x,
+      growable: false,
+    );
     // works out a new mapping by re-scaling dynamic range
     final inputDynamicRange = highPercentileBin - lowPercentileBin;
     final outputDynamicRange = outputRangeMax - outputRangeMin;
     for (var l = 0; l < H.length; ++l) {
       final newIntensityLv =
           (l - lowPercentileBin) * outputDynamicRange / inputDynamicRange +
-              outputRangeMin;
-      Hmap[l] =
-          max(outputRangeMin, min(newIntensityLv.round(), outputRangeMax));
+          outputRangeMin;
+      Hmap[l] = max(
+        outputRangeMin,
+        min(newIntensityLv.round(), outputRangeMax),
+      );
     }
 
     // produce output
-    _applyHistogramTransform(frame, Hmap, mode, src.maxChannelValue,
-        mask: mask, maskChannel: maskChannel);
+    _applyHistogramTransform(
+      frame,
+      Hmap,
+      mode,
+      src.maxChannelValue,
+      mask: mask,
+      maskChannel: maskChannel,
+    );
   }
 
   return src;
 }
 
-void _applyHistogramTransform(Image frame, List<num> Hmap,
-    HistogramEqualizeMode mode, num maxChannelValue,
-    {Image? mask, Channel maskChannel = Channel.luminance}) {
+void _applyHistogramTransform(
+  Image frame,
+  List<num> Hmap,
+  HistogramEqualizeMode mode,
+  num maxChannelValue, {
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   for (final p in frame) {
     if ((frame.hasAlpha) && (p.a == 0)) {
       continue;
@@ -217,9 +258,10 @@ void _applyHistogramTransform(Image frame, List<num> Hmap,
       final baseIndex = min(oriLuminance.floor(), Hmap.length - 1);
       final frac = oriLuminance - baseIndex;
 
-      final newl = (Hmap[baseIndex] * (1 - frac) +
-              Hmap[min(baseIndex + 1, Hmap.length - 1)] * frac)
-          .round();
+      final newl =
+          (Hmap[baseIndex] * (1 - frac) +
+                  Hmap[min(baseIndex + 1, Hmap.length - 1)] * frac)
+              .round();
 
       final msk = mask?.getPixel(p.x, p.y).getChannelNormalized(maskChannel);
       if (msk == null) {
@@ -239,9 +281,10 @@ void _applyHistogramTransform(Image frame, List<num> Hmap,
       final oriLuminance = hsl[2].clamp(0, 1) * maxChannelValue;
       final baseIndex = min(oriLuminance.floor(), Hmap.length - 1);
       final frac = oriLuminance - baseIndex;
-      final newl = (Hmap[baseIndex] * (1 - frac) +
-              Hmap[min(baseIndex + 1, Hmap.length - 1)] * frac)
-          .round();
+      final newl =
+          (Hmap[baseIndex] * (1 - frac) +
+                  Hmap[min(baseIndex + 1, Hmap.length - 1)] * frac)
+              .round();
 
       final List<int> newRGB = [0, 0, 0];
       hslToRgb(hsl[0], hsl[1], newl / maxChannelValue, newRGB);

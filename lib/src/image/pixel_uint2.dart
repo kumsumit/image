@@ -20,29 +20,29 @@ class PixelUint2 extends Iterable<num> implements Pixel {
   final ImageDataUint2 image;
 
   PixelUint2.imageData(this.image)
-      : _x = -1,
-        _y = 0,
-        _index = 0,
-        _bitIndex = -2,
-        _rowOffset = 0;
+    : _x = -1,
+      _y = 0,
+      _index = 0,
+      _bitIndex = -2,
+      _rowOffset = 0;
 
   PixelUint2.image(Image image)
-      : _x = -1,
-        _y = 0,
-        _index = 0,
-        _bitIndex = -2,
-        _rowOffset = 0,
-        image = image.data is ImageDataUint2
-            ? image.data as ImageDataUint2
-            : ImageDataUint2(0, 0, 0);
+    : _x = -1,
+      _y = 0,
+      _index = 0,
+      _bitIndex = -2,
+      _rowOffset = 0,
+      image = image.data is ImageDataUint2
+          ? image.data as ImageDataUint2
+          : ImageDataUint2(0, 0, 0);
 
   PixelUint2.from(PixelUint2 other)
-      : _x = other._x,
-        _y = other._y,
-        _index = other._index,
-        _bitIndex = other._bitIndex,
-        _rowOffset = other._rowOffset,
-        image = other.image;
+    : _x = other._x,
+      _y = other._y,
+      _index = other._index,
+      _bitIndex = other._bitIndex,
+      _rowOffset = other._rowOffset,
+      image = other.image;
 
   @override
   PixelUint2 clone() => PixelUint2.from(this);
@@ -158,8 +158,8 @@ class PixelUint2 extends Iterable<num> implements Pixel {
 
   num _getChannel(int ci) => palette == null
       ? numChannels > ci
-          ? _get(ci)
-          : 0
+            ? _get(ci)
+            : 0
       : palette!.get(_get(0), ci);
 
   void _setChannel(int ci, num value) {
@@ -242,8 +242,8 @@ class PixelUint2 extends Iterable<num> implements Pixel {
   num getChannel(Channel channel) => channel == Channel.luminance
       ? luminance
       : channel.index < numChannels
-          ? _getChannel(channel.index)
-          : 0;
+      ? _getChannel(channel.index)
+      : 0;
 
   @override
   num getChannelNormalized(Channel channel) =>
@@ -328,7 +328,10 @@ class PixelUint2 extends Iterable<num> implements Pixel {
   int get hashCode => Object.hashAll(toList());
 
   @override
-  Color convert({Format? format, int? numChannels, num? alpha}) =>
-      convertColor(this,
-          format: format, numChannels: numChannels, alpha: alpha);
+  Color convert({Format? format, int? numChannels, num? alpha}) => convertColor(
+    this,
+    format: format,
+    numChannels: numChannels,
+    alpha: alpha,
+  );
 }

@@ -11,43 +11,78 @@ const topLeftQuadrant = 1;
 const topRightQuadrant = 2;
 const bottomLeftQuadrant = 4;
 const bottomRightQuadrant = 8;
-const allQuadrants = topLeftQuadrant |
+const allQuadrants =
+    topLeftQuadrant |
     topRightQuadrant |
     bottomLeftQuadrant |
     bottomRightQuadrant;
 
-Image drawAntialiasCircle(Image image,
-    {required int x,
-    required int y,
-    required int radius,
-    required Color color,
-    int quadrants = allQuadrants,
-    BlendMode blend = BlendMode.alpha,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image drawAntialiasCircle(
+  Image image, {
+  required int x,
+  required int y,
+  required int radius,
+  required Color color,
+  int quadrants = allQuadrants,
+  BlendMode blend = BlendMode.alpha,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   void drawPixel4(int x, int y, int dx, int dy, num alpha) {
     // bottom right
     if (quadrants & bottomRightQuadrant != 0) {
-      drawPixel(image, x + dx, y + dy, color,
-          alpha: alpha, blend: blend, mask: mask, maskChannel: maskChannel);
+      drawPixel(
+        image,
+        x + dx,
+        y + dy,
+        color,
+        alpha: alpha,
+        blend: blend,
+        mask: mask,
+        maskChannel: maskChannel,
+      );
     }
 
     // bottom left
     if (quadrants & bottomLeftQuadrant != 0) {
-      drawPixel(image, x - dx, y + dy, color,
-          alpha: alpha, blend: blend, mask: mask, maskChannel: maskChannel);
+      drawPixel(
+        image,
+        x - dx,
+        y + dy,
+        color,
+        alpha: alpha,
+        blend: blend,
+        mask: mask,
+        maskChannel: maskChannel,
+      );
     }
 
     // upper right
     if (quadrants & topRightQuadrant != 0) {
-      drawPixel(image, x + dx, y - dy, color,
-          alpha: alpha, blend: blend, mask: mask, maskChannel: maskChannel);
+      drawPixel(
+        image,
+        x + dx,
+        y - dy,
+        color,
+        alpha: alpha,
+        blend: blend,
+        mask: mask,
+        maskChannel: maskChannel,
+      );
     }
 
     // upper left
     if (quadrants & topLeftQuadrant != 0) {
-      drawPixel(image, x - dx, y - dy, color,
-          alpha: alpha, blend: blend, mask: mask, maskChannel: maskChannel);
+      drawPixel(
+        image,
+        x - dx,
+        y - dy,
+        color,
+        alpha: alpha,
+        blend: blend,
+        mask: mask,
+        maskChannel: maskChannel,
+      );
     }
   }
 

@@ -32,14 +32,15 @@ class JpegScan {
   late int successiveACNextValue;
 
   JpegScan(
-      this.input,
-      this.frame,
-      this.components,
-      this.resetInterval,
-      this.spectralStart,
-      this.spectralEnd,
-      this.successivePrev,
-      this.successive) {
+    this.input,
+    this.frame,
+    this.components,
+    this.resetInterval,
+    this.spectralStart,
+    this.spectralEnd,
+    this.successivePrev,
+    this.successive,
+  ) {
     precision = frame.precision;
     samplesPerLine = frame.samplesPerLine;
     scanLines = frame.scanLines;
@@ -323,11 +324,12 @@ class JpegScan {
   }
 
   void _decodeMcu(
-      JpegComponent component,
-      void Function(JpegComponent, List<int>) decodeFn,
-      int mcu,
-      int row,
-      int col) {
+    JpegComponent component,
+    void Function(JpegComponent, List<int>) decodeFn,
+    int mcu,
+    int row,
+    int col,
+  ) {
     final mcuRow = mcu ~/ mcusPerLine;
     final mcuCol = mcu % mcusPerLine;
     final blockRow = mcuRow * component.vSamples + row;
@@ -342,8 +344,11 @@ class JpegScan {
     decodeFn(component, component.blocks[blockRow][blockCol]);
   }
 
-  void _decodeBlock(JpegComponent component,
-      void Function(JpegComponent, List<int>) decodeFn, int mcu) {
+  void _decodeBlock(
+    JpegComponent component,
+    void Function(JpegComponent, List<int>) decodeFn,
+    int mcu,
+  ) {
     final blockRow = mcu ~/ component.blocksPerLine;
     final blockCol = mcu % component.blocksPerLine;
     decodeFn(component, component.blocks[blockRow][blockCol]);

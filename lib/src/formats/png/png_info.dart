@@ -71,8 +71,12 @@ class PngCicpData {
   });
 
   @override
-  int get hashCode => Object.hash(colourPrimaries, transferCharacteristics,
-      matrixCoefficients, videoFullRangeFlag);
+  int get hashCode => Object.hash(
+    colourPrimaries,
+    transferCharacteristics,
+    matrixCoefficients,
+    videoFullRangeFlag,
+  );
 
   @override
   bool operator ==(Object other) =>
@@ -83,7 +87,8 @@ class PngCicpData {
       other.videoFullRangeFlag == videoFullRangeFlag;
 
   @override
-  String toString() => 'PngCicpData('
+  String toString() =>
+      'PngCicpData('
       'primaries=$colourPrimaries, '
       'transfer=$transferCharacteristics, '
       'matrix=$matrixCoefficients, '
@@ -111,18 +116,19 @@ class PngPhysicalPixelDimensions {
   final int unitSpecifier;
 
   /// Constructs a dimension descriptor with the given values.
-  const PngPhysicalPixelDimensions(
-      {required this.xPxPerUnit,
-      required this.yPxPerUnit,
-      required this.unitSpecifier});
+  const PngPhysicalPixelDimensions({
+    required this.xPxPerUnit,
+    required this.yPxPerUnit,
+    required this.unitSpecifier,
+  });
 
   /// Constructs a dimension descriptor specifying x and y resolution in dots
   /// per inch (DPI). If [yDpi] is unspecified, [xDpi] is used for both x and y
   /// axes.
   PngPhysicalPixelDimensions.dpi(int xDpi, [int? yDpi])
-      : xPxPerUnit = (xDpi * _inchesPerM).round(),
-        yPxPerUnit = ((yDpi ?? xDpi) * _inchesPerM).round(),
-        unitSpecifier = unitMeter;
+    : xPxPerUnit = (xDpi * _inchesPerM).round(),
+      yPxPerUnit = ((yDpi ?? xDpi) * _inchesPerM).round(),
+      unitSpecifier = unitMeter;
 
   @override
   int get hashCode => Object.hash(xPxPerUnit, yPxPerUnit, unitSpecifier);

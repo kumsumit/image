@@ -8,20 +8,26 @@ class NormalizeCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  NormalizeCmd(Command? input,
-      {required this.min,
-      required this.max,
-      this.mask,
-      this.maskChannel = Channel.luminance})
-      : super(input);
+  NormalizeCmd(
+    Command? input, {
+    required this.min,
+    required this.max,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {
     final img = await input?.getImage();
     final maskImg = await mask?.getImage();
     outputImage = img != null
-        ? g.normalize(img,
-            min: min, max: max, mask: maskImg, maskChannel: maskChannel)
+        ? g.normalize(
+            img,
+            min: min,
+            max: max,
+            mask: maskImg,
+            maskChannel: maskChannel,
+          )
         : null;
   }
 }

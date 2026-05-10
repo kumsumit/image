@@ -7,12 +7,12 @@ class PaletteFloat32 extends Palette {
   final Float32List data;
 
   PaletteFloat32(int numColors, int numChannels)
-      : data = Float32List(numColors * numChannels),
-        super(numColors, numChannels);
+    : data = Float32List(numColors * numChannels),
+      super(numColors, numChannels);
 
   PaletteFloat32.from(PaletteFloat32 other)
-      : data = Float32List.fromList(other.data),
-        super(other.numColors, other.numChannels);
+    : data = Float32List.fromList(other.data),
+      super(other.numColors, other.numChannels);
 
   @override
   PaletteFloat32 clone() => PaletteFloat32.from(this);

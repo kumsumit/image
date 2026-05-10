@@ -269,37 +269,38 @@ class TiffImage {
     final format = bitsPerSample == 1
         ? Format.uint1
         : bitsPerSample == 2
-            ? Format.uint2
-            : bitsPerSample == 4
-                ? Format.uint4
-                : isFloat && bitsPerSample == 16
-                    ? Format.float16
-                    : isFloat && bitsPerSample == 32
-                        ? Format.float32
-                        : isFloat && bitsPerSample == 64
-                            ? Format.float64
-                            : isInt && bitsPerSample == 8
-                                ? Format.int8
-                                : isInt && bitsPerSample == 16
-                                    ? Format.int16
-                                    : isInt && bitsPerSample == 32
-                                        ? Format.int32
-                                        : bitsPerSample == 16
-                                            ? Format.uint16
-                                            : bitsPerSample == 32
-                                                ? Format.uint32
-                                                : Format.uint8;
+        ? Format.uint2
+        : bitsPerSample == 4
+        ? Format.uint4
+        : isFloat && bitsPerSample == 16
+        ? Format.float16
+        : isFloat && bitsPerSample == 32
+        ? Format.float32
+        : isFloat && bitsPerSample == 64
+        ? Format.float64
+        : isInt && bitsPerSample == 8
+        ? Format.int8
+        : isInt && bitsPerSample == 16
+        ? Format.int16
+        : isInt && bitsPerSample == 32
+        ? Format.int32
+        : bitsPerSample == 16
+        ? Format.uint16
+        : bitsPerSample == 32
+        ? Format.uint32
+        : Format.uint8;
     final hasPalette =
         colorMap != null && photometricType == TiffPhotometricType.palette;
     final numChannels = hasPalette ? 3 : channelsPerPixel;
 
     final image = Image(
-        width: width,
-        height: height,
-        format: format,
-        numChannels: numChannels,
-        withPalette: hasPalette,
-        paletteFormat: format);
+      width: width,
+      height: height,
+      format: format,
+      numChannels: numChannels,
+      withPalette: hasPalette,
+      paletteFormat: format,
+    );
 
     if (hasPalette) {
       final p = image.palette!;
@@ -363,7 +364,9 @@ class TiffImage {
         final decoder = LzwDecoder();
         try {
           decoder.decode(
-              InputBuffer.from(p, length: byteCount), byteData.buffer);
+            InputBuffer.from(p, length: byteCount),
+            byteData.buffer,
+          );
         } catch (e) {
           //print(e);
         }
@@ -644,8 +647,14 @@ class TiffImage {
     }
   }
 
-  void _jpegToImage(Image tile, Image image, int outX, int outY, int tileWidth,
-      int tileHeight) {
+  void _jpegToImage(
+    Image tile,
+    Image image,
+    int outX,
+    int outY,
+    int tileWidth,
+    int tileHeight,
+  ) {
     final width = tileWidth;
     final height = tileHeight;
     for (var y = 0; y < height; y++) {
@@ -724,8 +733,10 @@ class TiffImage {
     } else if (compression == TiffCompression.lzw) {
       byteData = InputBuffer(Uint8List(tileWidth * tileHeight));
 
-      LzwDecoder()
-          .decode(InputBuffer.from(p, length: byteCount), byteData.buffer);
+      LzwDecoder().decode(
+        InputBuffer.from(p, length: byteCount),
+        byteData.buffer,
+      );
 
       // Horizontal Differencing Predictor
       if (predictor == 2) {
@@ -741,20 +752,29 @@ class TiffImage {
     } else if (compression == TiffCompression.ccittRle) {
       byteData = InputBuffer(Uint8List(tileWidth * tileHeight));
       try {
-        TiffFaxDecoder(fillOrder, tileWidth, tileHeight)
-            .decode1D(byteData, p, 0, tileHeight);
+        TiffFaxDecoder(
+          fillOrder,
+          tileWidth,
+          tileHeight,
+        ).decode1D(byteData, p, 0, tileHeight);
       } catch (_) {}
     } else if (compression == TiffCompression.ccittFax3) {
       byteData = InputBuffer(Uint8List(tileWidth * tileHeight));
       try {
-        TiffFaxDecoder(fillOrder, tileWidth, tileHeight)
-            .decode2D(byteData, p, 0, tileHeight, t4Options!);
+        TiffFaxDecoder(
+          fillOrder,
+          tileWidth,
+          tileHeight,
+        ).decode2D(byteData, p, 0, tileHeight, t4Options!);
       } catch (_) {}
     } else if (compression == TiffCompression.ccittFax4) {
       byteData = InputBuffer(Uint8List(tileWidth * tileHeight));
       try {
-        TiffFaxDecoder(fillOrder, tileWidth, tileHeight)
-            .decodeT6(byteData, p, 0, tileHeight, t6Options!);
+        TiffFaxDecoder(
+          fillOrder,
+          tileWidth,
+          tileHeight,
+        ).decodeT6(byteData, p, 0, tileHeight, t6Options!);
       } catch (_) {}
     } else if (compression == TiffCompression.zip) {
       final data = p.toList(0, byteCount);
@@ -851,7 +871,7 @@ enum TiffPhotometricType {
   colorFilterArray, // = 32803
   linearRaw, // = 34892
   depth, // = 51177
-  unknown
+  unknown,
 }
 
 enum TiffImageType {
@@ -864,7 +884,7 @@ enum TiffImageType {
   rgba,
   yCbCrSub,
   generic,
-  invalid
+  invalid,
 }
 
 class TiffCompression {

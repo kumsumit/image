@@ -10,11 +10,13 @@ import '../util/color_util.dart';
 /// will swap the red and green channels of the image.
 /// remapColors(src, alpha: Channel.luminance)
 /// will set the alpha channel to the luminance (grayscale) of the image.
-Image remapColors(Image src,
-    {Channel red = Channel.red,
-    Channel green = Channel.green,
-    Channel blue = Channel.blue,
-    Channel alpha = Channel.alpha}) {
+Image remapColors(
+  Image src, {
+  Channel red = Channel.red,
+  Channel green = Channel.green,
+  Channel blue = Channel.blue,
+  Channel alpha = Channel.alpha,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: src.numChannels);
   }

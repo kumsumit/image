@@ -7,9 +7,12 @@ class SmoothCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  SmoothCmd(Command? input,
-      {required this.weight, this.mask, this.maskChannel = Channel.luminance})
-      : super(input);
+  SmoothCmd(
+    Command? input, {
+    required this.weight,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {

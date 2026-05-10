@@ -5,11 +5,13 @@ import '../util/min_max.dart';
 
 /// Linearly normalize the colors of the image. All color values will be mapped
 /// to the range [min], [max] inclusive.
-Image normalize(Image src,
-    {required num min,
-    required num max,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image normalize(
+  Image src, {
+  required num min,
+  required num max,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   final num a = min < max ? min : max;
   final num b = min < max ? max : min;
 

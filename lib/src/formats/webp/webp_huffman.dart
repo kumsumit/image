@@ -7,13 +7,9 @@ class HuffmanCode {
   int bits;
   int value;
 
-  HuffmanCode()
-      : bits = 0,
-        value = 0;
+  HuffmanCode() : bits = 0, value = 0;
 
-  HuffmanCode.from(HuffmanCode other)
-      : bits = other.bits,
-        value = other.value;
+  HuffmanCode.from(HuffmanCode other) : bits = other.bits, value = other.value;
 }
 
 @internal
@@ -27,12 +23,12 @@ class HuffmanCodeList {
   final List<HuffmanCode> htree;
   int offset;
   HuffmanCodeList(int size)
-      : htree = List<HuffmanCode>.generate(size, (_) => HuffmanCode()),
-        offset = 0;
+    : htree = List<HuffmanCode>.generate(size, (_) => HuffmanCode()),
+      offset = 0;
 
   HuffmanCodeList.from(HuffmanCodeList other, int offset)
-      : htree = other.htree,
-        offset = other.offset + offset;
+    : htree = other.htree,
+      offset = other.offset + offset;
 
   int get length => htree.length - offset;
 
@@ -55,12 +51,16 @@ class HTreeGroup {
   final List<HuffmanCode32> packedTable;
 
   HTreeGroup()
-      : htrees = List<HuffmanCodeList>.generate(
-            VP8L.huffmanCodesPerMetaCode, (_) => HuffmanCodeList(0),
-            growable: false),
-        packedTable = List<HuffmanCode32>.generate(
-            VP8L.huffmanPackedTableSize, (_) => HuffmanCode32(),
-            growable: false);
+    : htrees = List<HuffmanCodeList>.generate(
+        VP8L.huffmanCodesPerMetaCode,
+        (_) => HuffmanCodeList(0),
+        growable: false,
+      ),
+      packedTable = List<HuffmanCode32>.generate(
+        VP8L.huffmanPackedTableSize,
+        (_) => HuffmanCode32(),
+        growable: false,
+      );
 
   HuffmanCodeList operator [](int index) => htrees[index];
 

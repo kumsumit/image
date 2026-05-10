@@ -8,8 +8,13 @@ import '../util/_circle_test.dart';
 /// a radius filling the image will be used. If [centerX] is not provided,
 /// the horizontal mid-point of the image will be used. If [centerY] is not
 /// provided, the vertical mid-point of the image will be used.
-Image copyCropCircle(Image src,
-    {int? radius, int? centerX, int? centerY, bool antialias = true}) {
+Image copyCropCircle(
+  Image src, {
+  int? radius,
+  int? centerX,
+  int? centerY,
+  bool antialias = true,
+}) {
   centerX ??= src.width ~/ 2;
   centerY ??= src.height ~/ 2;
   radius ??= min(src.width, src.height) ~/ 2;
@@ -35,7 +40,8 @@ Image copyCropCircle(Image src,
   final numFrames = src.numFrames;
   for (var i = 0; i < numFrames; ++i) {
     final frame = src.frames[i];
-    final dst = firstFrame?.addFrame() ??
+    final dst =
+        firstFrame?.addFrame() ??
         Image.fromResized(frame, width: wh, height: wh, noAnimation: true);
     firstFrame ??= dst;
 
@@ -49,8 +55,13 @@ Image copyCropCircle(Image src,
     for (var yi = 0, sy = tly; yi < dh; ++yi, ++sy) {
       for (var xi = 0, sx = tlx; xi < dw; ++xi, ++sx) {
         final p = frame.getPixel(sx, sy);
-        final a =
-            circleTest(p, centerX, centerY, radiusSqr, antialias: antialias);
+        final a = circleTest(
+          p,
+          centerX,
+          centerY,
+          radiusSqr,
+          antialias: antialias,
+        );
 
         if (a != 1) {
           dst.getPixel(xi, yi).setRgba(p.r, p.g, p.b, p.a * a);

@@ -13,5 +13,5 @@ enum BlendMode {
   hardLight,
   difference,
   subtract,
-  divide
+  divide,
 }

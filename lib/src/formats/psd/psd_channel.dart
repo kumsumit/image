@@ -25,20 +25,35 @@ class PsdChannel {
   PsdChannel(this.id, this.dataLength);
 
   PsdChannel.read(
-      InputBuffer input,
-      this.id,
-      int width,
-      int height,
-      int? bitDepth,
-      int compression,
-      Uint16List? lineLengths,
-      int planeNumber) {
+    InputBuffer input,
+    this.id,
+    int width,
+    int height,
+    int? bitDepth,
+    int compression,
+    Uint16List? lineLengths,
+    int planeNumber,
+  ) {
     readPlane(
-        input, width, height, bitDepth, compression, lineLengths, planeNumber);
+      input,
+      width,
+      height,
+      bitDepth,
+      compression,
+      lineLengths,
+      planeNumber,
+    );
   }
 
-  void readPlane(InputBuffer input, int width, int height, int? bitDepth,
-      [int? compression, Uint16List? lineLengths, int planeNum = 0]) {
+  void readPlane(
+    InputBuffer input,
+    int width,
+    int height,
+    int? bitDepth, [
+    int? compression,
+    Uint16List? lineLengths,
+    int planeNum = 0,
+  ]) {
     if (input.length < 2) {
       return;
     }
@@ -51,7 +66,13 @@ class PsdChannel {
       case compressRle:
         lineLengths ??= _readLineLengths(input, height);
         _readPlaneRleCompressed(
-            input, width, height, bitDepth!, lineLengths, planeNum);
+          input,
+          width,
+          height,
+          bitDepth!,
+          lineLengths,
+          planeNum,
+        );
         break;
       default:
         throw ImageException('Unsupported compression: $compression');
@@ -67,7 +88,11 @@ class PsdChannel {
   }
 
   void _readPlaneUncompressed(
-      InputBuffer input, int width, int height, int bitDepth) {
+    InputBuffer input,
+    int width,
+    int height,
+    int bitDepth,
+  ) {
     var len = width * height;
     if (bitDepth == 16) {
       len *= 2;
@@ -82,8 +107,14 @@ class PsdChannel {
     data = imgData.toUint8List();
   }
 
-  void _readPlaneRleCompressed(InputBuffer input, int width, int height,
-      int bitDepth, Uint16List lineLengths, int planeNum) {
+  void _readPlaneRleCompressed(
+    InputBuffer input,
+    int width,
+    int height,
+    int bitDepth,
+    Uint16List lineLengths,
+    int planeNum,
+  ) {
     var len = width * height;
     if (bitDepth == 16) {
       len *= 2;

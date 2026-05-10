@@ -35,22 +35,25 @@ enum TrimMode {
 
   /// Trim an image to the top-left and bottom-right most pixels that are not
   /// the same as the bottom-right most pixel of the image.
-  bottomRightColor
+  bottomRightColor,
 }
 
 /// Find the crop area to be used by the trim function. Returns the
 /// coordinates as \[x, y, width, height\]. You could pass these coordinates
 /// to the copyCrop function to crop the image.
-List<int> findTrim(Image src,
-    {TrimMode mode = TrimMode.transparent, Trim sides = Trim.all}) {
+List<int> findTrim(
+  Image src, {
+  TrimMode mode = TrimMode.transparent,
+  Trim sides = Trim.all,
+}) {
   var h = src.height;
   var w = src.width;
 
   final bg = (mode == TrimMode.topLeftColor)
       ? src.getPixel(0, 0)
       : (mode == TrimMode.bottomRightColor)
-          ? src.getPixel(w - 1, h - 1)
-          : 0;
+      ? src.getPixel(w - 1, h - 1)
+      : 0;
 
   var xMin = w;
   var xMax = 0;
@@ -114,8 +117,11 @@ List<int> findTrim(Image src,
 /// [sides] can be used to control which sides of the image get trimmed,
 /// and can be any combination of [Trim.top], [Trim.bottom], [Trim.left],
 /// and [Trim.right].
-Image trim(Image src,
-    {TrimMode mode = TrimMode.topLeftColor, Trim sides = Trim.all}) {
+Image trim(
+  Image src, {
+  TrimMode mode = TrimMode.topLeftColor,
+  Trim sides = Trim.all,
+}) {
   if (mode == TrimMode.transparent && src.numChannels == 3) {
     return Image.from(src);
   }
@@ -124,17 +130,25 @@ Image trim(Image src,
 
   Image? firstFrame;
   for (var frame in src.frames) {
-    final dst = firstFrame?.addFrame() ??
-        Image.fromResized(frame,
-            width: crop[2], height: crop[3], noAnimation: true);
+    final dst =
+        firstFrame?.addFrame() ??
+        Image.fromResized(
+          frame,
+          width: crop[2],
+          height: crop[3],
+          noAnimation: true,
+        );
     firstFrame ??= dst;
 
-    compositeImage(dst, src,
-        srcX: crop[0],
-        srcY: crop[1],
-        srcW: crop[2],
-        srcH: crop[3],
-        blend: BlendMode.direct);
+    compositeImage(
+      dst,
+      src,
+      srcX: crop[0],
+      srcY: crop[1],
+      srcW: crop[2],
+      srcH: crop[3],
+      blend: BlendMode.direct,
+    );
   }
 
   return firstFrame!;

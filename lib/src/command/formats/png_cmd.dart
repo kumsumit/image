@@ -35,11 +35,13 @@ class EncodePngCmd extends Command {
   final int _level;
   final PngFilter _filter;
 
-  EncodePngCmd(Command? input,
-      {int level = 6, PngFilter filter = PngFilter.paeth})
-      : _level = level,
-        _filter = filter,
-        super(input);
+  EncodePngCmd(
+    Command? input, {
+    int level = 6,
+    PngFilter filter = PngFilter.paeth,
+  }) : _level = level,
+       _filter = filter,
+       super(input);
 
   @override
   Future<void> executeCommand() async {
@@ -56,9 +58,12 @@ class EncodePngCmd extends Command {
 class EncodePngFileCmd extends EncodePngCmd {
   final String path;
 
-  EncodePngFileCmd(Command? input, this.path,
-      {int level = 6, PngFilter filter = PngFilter.paeth})
-      : super(input, level: level, filter: filter);
+  EncodePngFileCmd(
+    Command? input,
+    this.path, {
+    int level = 6,
+    PngFilter filter = PngFilter.paeth,
+  }) : super(input, level: level, filter: filter);
 
   @override
   Future<void> executeCommand() async {

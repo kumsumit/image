@@ -8,7 +8,7 @@ enum FlipDirection {
   vertical,
 
   /// Flip the image both horizontally and vertically.
-  both
+  both,
 }
 
 /// Flips the [src] image using the given [direction], which can be one of:

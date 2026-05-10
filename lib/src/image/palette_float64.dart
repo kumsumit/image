@@ -7,12 +7,12 @@ class PaletteFloat64 extends Palette {
   final Float64List data;
 
   PaletteFloat64(int numColors, int numChannels)
-      : data = Float64List(numColors * numChannels),
-        super(numColors, numChannels);
+    : data = Float64List(numColors * numChannels),
+      super(numColors, numChannels);
 
   PaletteFloat64.from(PaletteFloat64 other)
-      : data = Float64List.fromList(other.data),
-        super(other.numColors, other.numChannels);
+    : data = Float64List.fromList(other.data),
+      super(other.numColors, other.numChannels);
 
   @override
   PaletteFloat64 clone() => PaletteFloat64.from(this);

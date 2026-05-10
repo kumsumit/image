@@ -94,5 +94,5 @@ enum TgaImageType {
   reserved8,
   paletteRle,
   rgbRle,
-  grayRle
+  grayRle,
 }

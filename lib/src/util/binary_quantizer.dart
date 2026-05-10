@@ -18,10 +18,16 @@ class BinaryQuantizer extends Quantizer {
 
   @override
   Color getQuantizedColor(Color c) => c.luminanceNormalized < threshold
-      ? ColorRgb8(_palette.getRed(0) as int, _palette.getGreen(0) as int,
-          _palette.getBlue(0) as int)
-      : ColorRgb8(_palette.getRed(1) as int, _palette.getGreen(1) as int,
-          _palette.getBlue(1) as int);
+      ? ColorRgb8(
+          _palette.getRed(0) as int,
+          _palette.getGreen(0) as int,
+          _palette.getBlue(0) as int,
+        )
+      : ColorRgb8(
+          _palette.getRed(1) as int,
+          _palette.getGreen(1) as int,
+          _palette.getBlue(1) as int,
+        );
 
   @override
   int getColorIndex(Color c) => c.luminanceNormalized < threshold ? 0 : 1;

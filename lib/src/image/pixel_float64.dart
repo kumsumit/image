@@ -18,23 +18,23 @@ class PixelFloat64 extends Iterable<num> implements Pixel {
   final ImageDataFloat64 image;
 
   PixelFloat64.imageData(this.image)
-      : _x = -1,
-        _y = 0,
-        _index = -image.numChannels;
+    : _x = -1,
+      _y = 0,
+      _index = -image.numChannels;
 
   PixelFloat64.image(Image image)
-      : _x = -1,
-        _y = 0,
-        _index = -image.numChannels,
-        image = image.data is ImageDataFloat64
-            ? image.data as ImageDataFloat64
-            : ImageDataFloat64(0, 0, 0);
+    : _x = -1,
+      _y = 0,
+      _index = -image.numChannels,
+      image = image.data is ImageDataFloat64
+          ? image.data as ImageDataFloat64
+          : ImageDataFloat64(0, 0, 0);
 
   PixelFloat64.from(PixelFloat64 other)
-      : _x = other._x,
-        _y = other._y,
-        _index = other._index,
-        image = other.image;
+    : _x = other._x,
+      _y = other._y,
+      _index = other._index,
+      image = other.image;
 
   @override
   PixelFloat64 clone() => PixelFloat64.from(this);
@@ -186,8 +186,8 @@ class PixelFloat64 extends Iterable<num> implements Pixel {
   num getChannel(Channel channel) => channel == Channel.luminance
       ? luminance
       : channel.index < numChannels
-          ? data[_index + channel.index]
-          : 0;
+      ? data[_index + channel.index]
+      : 0;
 
   @override
   num getChannelNormalized(Channel channel) =>
@@ -265,7 +265,10 @@ class PixelFloat64 extends Iterable<num> implements Pixel {
   int get hashCode => Object.hashAll(toList());
 
   @override
-  Color convert({Format? format, int? numChannels, num? alpha}) =>
-      convertColor(this,
-          format: format, numChannels: numChannels, alpha: alpha);
+  Color convert({Format? format, int? numChannels, num? alpha}) => convertColor(
+    this,
+    format: format,
+    numChannels: numChannels,
+    alpha: alpha,
+  );
 }

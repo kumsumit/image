@@ -8,9 +8,13 @@ class DropShadowCmd extends Command {
   int blur;
   Color? shadowColor;
 
-  DropShadowCmd(Command? input, this.hShadow, this.vShadow, this.blur,
-      {this.shadowColor})
-      : super(input);
+  DropShadowCmd(
+    Command? input,
+    this.hShadow,
+    this.vShadow,
+    this.blur, {
+    this.shadowColor,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {

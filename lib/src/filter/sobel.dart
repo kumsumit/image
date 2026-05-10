@@ -4,8 +4,12 @@ import '../color/channel.dart';
 import '../image/image.dart';
 
 /// Apply Sobel edge detection filtering to the [src] Image.
-Image sobel(Image src,
-    {num amount = 1, Image? mask, Channel maskChannel = Channel.luminance}) {
+Image sobel(
+  Image src, {
+  num amount = 1,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (amount == 0.0) {
     return src;
   }

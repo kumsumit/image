@@ -7,12 +7,12 @@ class PaletteInt32 extends Palette {
   final Int32List data;
 
   PaletteInt32(int numColors, int numChannels)
-      : data = Int32List(numColors * numChannels),
-        super(numColors, numChannels);
+    : data = Int32List(numColors * numChannels),
+      super(numColors, numChannels);
 
   PaletteInt32.from(PaletteInt32 other)
-      : data = Int32List.fromList(other.data),
-        super(other.numColors, other.numChannels);
+    : data = Int32List.fromList(other.data),
+      super(other.numColors, other.numChannels);
 
   @override
   PaletteInt32 clone() => PaletteInt32.from(this);

@@ -8,8 +8,8 @@ class VP8LColorCache {
   final int hashShift; // Hash shift: 32 - hash_bits.
 
   VP8LColorCache(int hashBits)
-      : colors = Uint32List(1 << hashBits),
-        hashShift = 32 - hashBits;
+    : colors = Uint32List(1 << hashBits),
+      hashShift = 32 - hashBits;
 
   void insert(int argb) {
     final a = (argb * _hashMultiplier) & 0xffffffff;

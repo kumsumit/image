@@ -12,14 +12,14 @@ class ImageDataUint32 extends ImageData {
   final Uint32List data;
 
   ImageDataUint32(int width, int height, int numChannels)
-      : data = Uint32List(width * height * numChannels),
-        super(width, height, numChannels);
+    : data = Uint32List(width * height * numChannels),
+      super(width, height, numChannels);
 
   ImageDataUint32.from(ImageDataUint32 other, {bool skipPixels = false})
-      : data = skipPixels
-            ? Uint32List(other.data.length)
-            : Uint32List.fromList(other.data),
-        super(other.width, other.height, other.numChannels);
+    : data = skipPixels
+          ? Uint32List(other.data.length)
+          : Uint32List.fromList(other.data),
+      super(other.width, other.height, other.numChannels);
 
   @override
   ImageDataUint32 clone({bool noPixels = false}) =>

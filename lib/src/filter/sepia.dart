@@ -5,8 +5,12 @@ import '../util/color_util.dart';
 /// Apply sepia tone to the image.
 ///
 /// [amount] controls the strength of the effect, in the range \[0, 1\].
-Image sepia(Image src,
-    {num amount = 1, Image? mask, Channel maskChannel = Channel.luminance}) {
+Image sepia(
+  Image src, {
+  num amount = 1,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (amount == 0) {
     return src;
   }

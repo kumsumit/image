@@ -15,19 +15,19 @@ class ImageDataUint16 extends ImageData {
   Palette? palette;
 
   ImageDataUint16(int width, int height, int numChannels)
-      : data = Uint16List(width * height * numChannels),
-        super(width, height, numChannels);
+    : data = Uint16List(width * height * numChannels),
+      super(width, height, numChannels);
 
   ImageDataUint16.palette(int width, int height, this.palette)
-      : data = Uint16List(width * height),
-        super(width, height, 1);
+    : data = Uint16List(width * height),
+      super(width, height, 1);
 
   ImageDataUint16.from(ImageDataUint16 other, {bool skipPixels = false})
-      : data = skipPixels
-            ? Uint16List(other.data.length)
-            : Uint16List.fromList(other.data),
-        palette = other.palette?.clone(),
-        super(other.width, other.height, other.numChannels);
+    : data = skipPixels
+          ? Uint16List(other.data.length)
+          : Uint16List.fromList(other.data),
+      palette = other.palette?.clone(),
+      super(other.width, other.height, other.numChannels);
 
   @override
   ImageDataUint16 clone({bool noPixels = false}) =>

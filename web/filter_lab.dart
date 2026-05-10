@@ -7,8 +7,12 @@ late HTMLCanvasElement canvas;
 late HTMLDivElement logDiv;
 late img.Image origImage;
 
-void _addControl(String label, String value, HTMLDivElement parent,
-    void Function(double) callback) {
+void _addControl(
+  String label,
+  String value,
+  HTMLDivElement parent,
+  void Function(double) callback,
+) {
   final amountLabel = HTMLLabelElement()..textContent = '$label:';
   final amountEdit = HTMLInputElement()
     ..value = value
@@ -50,8 +54,11 @@ void testSepia() {
     image = img.sepia(image, amount: amount);
     logDiv.textContent = 'TIME: ${t.elapsedMilliseconds / 1000.0}';
     final imageBytes = Uint8ClampedList.view(image.toUint8List().buffer);
-    final imageData =
-        ImageData(imageBytes.toJS, image.width, image.height.toJS);
+    final imageData = ImageData(
+      imageBytes.toJS,
+      image.width,
+      image.height.toJS,
+    );
     // Draw the buffer onto the canvas.
     canvas.context2D.clearRect(0, 0, canvas.width, canvas.height);
     canvas.context2D.putImageData(imageData, 0, 0);
@@ -79,8 +86,11 @@ void testSobel() {
     image = img.sobel(image, amount: amount);
     logDiv.textContent = 'TIME: ${t.elapsedMilliseconds / 1000.0}';
     final imageBytes = Uint8ClampedList.view(image.toUint8List().buffer);
-    final imageData =
-        ImageData(imageBytes.toJS, image.width, image.height.toJS);
+    final imageData = ImageData(
+      imageBytes.toJS,
+      image.width,
+      image.height.toJS,
+    );
     // Draw the buffer onto the canvas.
     canvas.context2D.clearRect(0, 0, canvas.width, canvas.height);
     canvas.context2D.putImageData(imageData, 0, 0);
@@ -107,8 +117,11 @@ void testGaussian() {
     image = img.gaussianBlur(image, radius: radius);
     logDiv.textContent = 'TIME: ${t.elapsedMilliseconds / 1000.0}';
     final imageBytes = Uint8ClampedList.view(image.toUint8List().buffer);
-    final imageData =
-        ImageData(imageBytes.toJS, image.width, image.height.toJS);
+    final imageData = ImageData(
+      imageBytes.toJS,
+      image.width,
+      image.height.toJS,
+    );
     // Draw the buffer onto the canvas.
     canvas.context2D.clearRect(0, 0, canvas.width, canvas.height);
     canvas.context2D.putImageData(imageData, 0, 0);
@@ -137,8 +150,11 @@ void testVignette() {
     image = img.vignette(image, start: start, end: end, amount: amount);
     logDiv.textContent = 'TIME: ${t.elapsedMilliseconds / 1000.0}';
     final imageBytes = Uint8ClampedList.view(image.toUint8List().buffer);
-    final imageData =
-        ImageData(imageBytes.toJS, image.width, image.height.toJS);
+    final imageData = ImageData(
+      imageBytes.toJS,
+      image.width,
+      image.height.toJS,
+    );
     // Draw the buffer onto the canvas.
     canvas.context2D.clearRect(0, 0, canvas.width, canvas.height);
     canvas.context2D.putImageData(imageData, 0, 0);
@@ -175,8 +191,11 @@ void testPixelate() {
     image = img.pixelate(image, size: blockSize);
     logDiv.textContent = 'TIME: ${t.elapsedMilliseconds / 1000.0}';
     final imageBytes = Uint8ClampedList.view(image.toUint8List().buffer);
-    final imageData =
-        ImageData(imageBytes.toJS, image.width, image.height.toJS);
+    final imageData = ImageData(
+      imageBytes.toJS,
+      image.width,
+      image.height.toJS,
+    );
     // Draw the buffer onto the canvas.
     canvas.context2D.clearRect(0, 0, canvas.width, canvas.height);
     canvas.context2D.putImageData(imageData, 0, 0);
@@ -203,12 +222,20 @@ void testColorOffset() {
   void apply() {
     final t = Stopwatch()..start();
     var image = img.Image.from(origImage);
-    image = img.colorOffset(image,
-        red: red, green: green, blue: blue, alpha: alpha);
+    image = img.colorOffset(
+      image,
+      red: red,
+      green: green,
+      blue: blue,
+      alpha: alpha,
+    );
     logDiv.textContent = 'TIME: ${t.elapsedMilliseconds / 1000.0}';
     final imageBytes = Uint8ClampedList.view(image.toUint8List().buffer);
-    final imageData =
-        ImageData(imageBytes.toJS, image.width, image.height.toJS);
+    final imageData = ImageData(
+      imageBytes.toJS,
+      image.width,
+      image.height.toJS,
+    );
     // Draw the buffer onto the canvas.
     canvas.context2D.clearRect(0, 0, canvas.width, canvas.height);
     canvas.context2D.putImageData(imageData, 0, 0);
@@ -253,18 +280,23 @@ void testAdjustColor() {
   void apply() {
     final t = Stopwatch()..start();
     var image = img.Image.from(origImage);
-    image = img.adjustColor(image,
-        contrast: contrast,
-        saturation: saturation,
-        brightness: brightness,
-        gamma: gamma,
-        exposure: exposure,
-        hue: hue,
-        amount: amount);
+    image = img.adjustColor(
+      image,
+      contrast: contrast,
+      saturation: saturation,
+      brightness: brightness,
+      gamma: gamma,
+      exposure: exposure,
+      hue: hue,
+      amount: amount,
+    );
     logDiv.textContent = 'TIME: ${t.elapsedMilliseconds / 1000.0}';
     final imageBytes = Uint8ClampedList.view(image.toUint8List().buffer);
-    final imageData =
-        ImageData(imageBytes.toJS, image.width, image.height.toJS);
+    final imageData = ImageData(
+      imageBytes.toJS,
+      image.width,
+      image.height.toJS,
+    );
     // Draw the buffer onto the canvas.
     canvas.context2D.clearRect(0, 0, canvas.width, canvas.height);
     canvas.context2D.putImageData(imageData, 0, 0);
@@ -341,10 +373,11 @@ void main() {
     final imageData = c.context2D.getImageData(0, 0, image.width, image.height);
 
     origImage = img.Image.fromBytes(
-        width: image.width,
-        height: image.height,
-        bytes: imageData.data.toDart.buffer,
-        numChannels: 4);
+      width: image.width,
+      height: image.height,
+      bytes: imageData.data.toDart.buffer,
+      numChannels: 4,
+    );
 
     canvas.width = image.width;
     canvas.height = image.height;

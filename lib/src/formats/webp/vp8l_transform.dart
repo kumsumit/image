@@ -10,7 +10,7 @@ enum VP8LImageTransformType {
   predictor,
   crossColor,
   subtractGreen,
-  colorIndexing
+  colorIndexing,
 }
 
 @internal
@@ -21,8 +21,14 @@ class VP8LTransform {
   Uint32List? data;
   int bits = 0;
 
-  void inverseTransform(int rowStart, int rowEnd, Uint32List inData, int inPtr,
-      Uint32List outData, int outPtr) {
+  void inverseTransform(
+    int rowStart,
+    int rowEnd,
+    Uint32List inData,
+    int inPtr,
+    Uint32List outData,
+    int outPtr,
+  ) {
     final width = xsize;
 
     switch (type) {
@@ -31,7 +37,13 @@ class VP8LTransform {
         break;
       case VP8LImageTransformType.predictor:
         predictorInverseTransform(
-            rowStart, rowEnd, inData, inPtr, outData, outPtr);
+          rowStart,
+          rowEnd,
+          inData,
+          inPtr,
+          outData,
+          outPtr,
+        );
         if (rowEnd != ysize) {
           // The last predicted row in this iteration will be the top-pred row
           // for the first row in next iteration.
@@ -43,7 +55,13 @@ class VP8LTransform {
         break;
       case VP8LImageTransformType.crossColor:
         colorSpaceInverseTransform(
-            rowStart, rowEnd, inData, inPtr, outData, outPtr);
+          rowStart,
+          rowEnd,
+          inData,
+          inPtr,
+          outData,
+          outPtr,
+        );
         break;
       case VP8LImageTransformType.colorIndexing:
         if (inPtr == outPtr && bits > 0) {
@@ -60,17 +78,33 @@ class VP8LTransform {
           outData.setRange(src, src + inStride, inData, outPtr);
 
           colorIndexInverseTransform(
-              rowStart, rowEnd, inData, src, outData, outPtr);
+            rowStart,
+            rowEnd,
+            inData,
+            src,
+            outData,
+            outPtr,
+          );
         } else {
           colorIndexInverseTransform(
-              rowStart, rowEnd, inData, inPtr, outData, outPtr);
+            rowStart,
+            rowEnd,
+            inData,
+            inPtr,
+            outData,
+            outPtr,
+          );
         }
         break;
     }
   }
 
   void colorIndexInverseTransformAlpha(
-      int yStart, int yEnd, InputBuffer src, InputBuffer dst) {
+    int yStart,
+    int yEnd,
+    InputBuffer src,
+    InputBuffer dst,
+  ) {
     final bitsPerPixel = 8 >> bits;
     final width = xsize;
     final colorMap = data;
@@ -107,8 +141,14 @@ class VP8LTransform {
     }
   }
 
-  void colorIndexInverseTransform(int yStart, int yEnd, Uint32List inData,
-      int src, Uint32List outData, int dst) {
+  void colorIndexInverseTransform(
+    int yStart,
+    int yEnd,
+    Uint32List inData,
+    int src,
+    Uint32List outData,
+    int dst,
+  ) {
     final bitsPerPixel = 8 >> bits;
     final width = xsize;
     final colorMap = data;
@@ -133,16 +173,23 @@ class VP8LTransform {
     } else {
       for (var y = yStart; y < yEnd; ++y) {
         for (var x = 0; x < width; ++x) {
-          outData[dst++] =
-              _getARGBValue(colorMap![_getARGBIndex(inData[src++])]);
+          outData[dst++] = _getARGBValue(
+            colorMap![_getARGBIndex(inData[src++])],
+          );
         }
       }
     }
   }
 
   // Color space inverse transform.
-  void colorSpaceInverseTransform(int yStart, int yEnd, Uint32List inData,
-      int inPtr, Uint32List outData, int outPtr) {
+  void colorSpaceInverseTransform(
+    int yStart,
+    int yEnd,
+    Uint32List inData,
+    int inPtr,
+    Uint32List outData,
+    int outPtr,
+  ) {
     final width = xsize;
     final mask = (1 << bits) - 1;
     final tilesPerRow = InternalVP8L.subSampleSize(width, bits);
@@ -178,8 +225,14 @@ class VP8LTransform {
   }
 
   // Inverse prediction.
-  void predictorInverseTransform(int yStart, int yEnd, Uint32List inData,
-      int inPtr, Uint32List outData, int outPtr) {
+  void predictorInverseTransform(
+    int yStart,
+    int yEnd,
+    Uint32List inData,
+    int inPtr,
+    Uint32List outData,
+    int outPtr,
+  ) {
     final width = xsize;
 
     if (yStart == 0) {
@@ -237,8 +290,10 @@ class VP8LTransform {
 
         if (predIndex == 0) {
           for (var i = 0; i < numPixels; ++i) {
-            outData[outPtr2 + i] =
-                _addPixels(inData[inPtr2 + i], VP8L.argbBlack);
+            outData[outPtr2 + i] = _addPixels(
+              inData[inPtr2 + i],
+              VP8L.argbBlack,
+            );
           }
         } else if (predIndex == 1) {
           var left = outData[outPtr2 - 1];
@@ -248,8 +303,11 @@ class VP8LTransform {
           }
         } else {
           for (var i = 0; i < numPixels; ++i) {
-            final pred =
-                predFunc(outData[outPtr2 + i - 1], outData, upperPtr2 + i);
+            final pred = predFunc(
+              outData[outPtr2 + i - 1],
+              outData,
+              upperPtr2 + i,
+            );
             outData[outPtr2 + i] = _addPixels(inData[inPtr2 + i], pred);
           }
         }
@@ -315,9 +373,15 @@ class VP8LTransform {
   static int _clampedAddSubtractFull(int c0, int c1, int c2) {
     final a = _addSubtractComponentFull(c0 >> 24, c1 >> 24, c2 >> 24);
     final r = _addSubtractComponentFull(
-        (c0 >> 16) & 0xff, (c1 >> 16) & 0xff, (c2 >> 16) & 0xff);
+      (c0 >> 16) & 0xff,
+      (c1 >> 16) & 0xff,
+      (c2 >> 16) & 0xff,
+    );
     final g = _addSubtractComponentFull(
-        (c0 >> 8) & 0xff, (c1 >> 8) & 0xff, (c2 >> 8) & 0xff);
+      (c0 >> 8) & 0xff,
+      (c1 >> 8) & 0xff,
+      (c2 >> 8) & 0xff,
+    );
     final b = _addSubtractComponentFull(c0 & 0xff, c1 & 0xff, c2 & 0xff);
     return (a << 24) | (r << 16) | (g << 8) | b;
   }
@@ -341,7 +405,8 @@ class VP8LTransform {
   }
 
   static int _select(int a, int b, int c) {
-    final paMinusPb = _sub3(a >> 24, b >> 24, c >> 24) +
+    final paMinusPb =
+        _sub3(a >> 24, b >> 24, c >> 24) +
         _sub3((a >> 16) & 0xff, (b >> 16) & 0xff, (c >> 16) & 0xff) +
         _sub3((a >> 8) & 0xff, (b >> 8) & 0xff, (c >> 8) & 0xff) +
         _sub3(a & 0xff, b & 0xff, c & 0xff);
@@ -407,7 +472,7 @@ class VP8LTransform {
     _predictor12,
     _predictor13,
     _predictor0,
-    _predictor0
+    _predictor0,
   ];
 }
 

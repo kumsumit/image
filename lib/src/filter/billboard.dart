@@ -5,11 +5,13 @@ import '../image/image.dart';
 import '../util/math_util.dart';
 
 /// Apply the billboard filter to the image.
-Image billboard(Image src,
-    {num grid = 10,
-    num amount = 1,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image billboard(
+  Image src, {
+  num grid = 10,
+  num amount = 1,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   const rs = 0.2025; // pow(0.45, 2.0);
 
   if (src.hasPalette) {

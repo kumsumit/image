@@ -13,29 +13,43 @@ import 'exr_part.dart';
 @internal
 abstract class ExrPxr24Compressor extends ExrCompressor {
   factory ExrPxr24Compressor(
-          ExrPart header, int? maxScanLineSize, int numScanLines) =
-      InternalExrPxr24Compressor;
+    ExrPart header,
+    int? maxScanLineSize,
+    int numScanLines,
+  ) = InternalExrPxr24Compressor;
 }
 
 @internal
 class InternalExrPxr24Compressor extends InternalExrCompressor
     implements ExrPxr24Compressor {
   InternalExrPxr24Compressor(
-      ExrPart header, this._maxScanLineSize, this._numScanLines)
-      : super(header as InternalExrPart);
+    ExrPart header,
+    this._maxScanLineSize,
+    this._numScanLines,
+  ) : super(header as InternalExrPart);
 
   @override
   int numScanLines() => _numScanLines;
 
   @override
-  Uint8List compress(InputBuffer input, int x, int y,
-      [int? width, int? height]) {
+  Uint8List compress(
+    InputBuffer input,
+    int x,
+    int y, [
+    int? width,
+    int? height,
+  ]) {
     throw ImageException('Pxr24 compression not yet supported.');
   }
 
   @override
-  Uint8List uncompress(InputBuffer input, int x, int y,
-      [int? width, int? height]) {
+  Uint8List uncompress(
+    InputBuffer input,
+    int x,
+    int y, [
+    int? width,
+    int? height,
+  ]) {
     final data = _zlib.decodeBytes(input.toUint8List());
 
     _output ??= OutputBuffer(size: _numScanLines * _maxScanLineSize!);
@@ -82,7 +96,8 @@ class InternalExrPxr24Compressor extends InternalExrCompressor
             ptr[2] = ptr[1] + n;
             tmpEnd = ptr[2] + n;
             for (var j = 0; j < n; ++j) {
-              final diff = (data[ptr[0]++] << 24) |
+              final diff =
+                  (data[ptr[0]++] << 24) |
                   (data[ptr[1]++] << 16) |
                   (data[ptr[2]++] << 8);
               pixel[0] += diff;
@@ -110,7 +125,8 @@ class InternalExrPxr24Compressor extends InternalExrCompressor
             ptr[2] = ptr[1] + n;
             tmpEnd = ptr[2] + n;
             for (var j = 0; j < n; ++j) {
-              final diff = (data[ptr[0]++] << 24) |
+              final diff =
+                  (data[ptr[0]++] << 24) |
                   (data[ptr[1]++] << 16) |
                   (data[ptr[2]++] << 8);
               pixel[0] += diff;

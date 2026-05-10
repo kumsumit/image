@@ -15,20 +15,20 @@ class ImageDataUint8 extends ImageData {
   Palette? palette;
 
   ImageDataUint8(int width, int height, int numChannels)
-      : data = Uint8List(width * height * numChannels),
-        palette = null,
-        super(width, height, numChannels);
+    : data = Uint8List(width * height * numChannels),
+      palette = null,
+      super(width, height, numChannels);
 
   ImageDataUint8.palette(int width, int height, this.palette)
-      : data = Uint8List(width * height),
-        super(width, height, 1);
+    : data = Uint8List(width * height),
+      super(width, height, 1);
 
   ImageDataUint8.from(ImageDataUint8 other, {bool skipPixels = false})
-      : data = skipPixels
-            ? Uint8List(other.data.length)
-            : Uint8List.fromList(other.data),
-        palette = other.palette?.clone(),
-        super(other.width, other.height, other.numChannels);
+    : data = skipPixels
+          ? Uint8List(other.data.length)
+          : Uint8List.fromList(other.data),
+      palette = other.palette?.clone(),
+      super(other.width, other.height, other.numChannels);
 
   @override
   ImageDataUint8 clone({bool noPixels = false}) =>
@@ -73,10 +73,17 @@ class ImageDataUint8 extends ImageData {
 
   @override
   Color getColor(num r, num g, num b, [num? a]) => a == null
-      ? ColorRgb8(r.clamp(0, 255).toInt(), g.clamp(0, 255).toInt(),
-          b.clamp(0, 255).toInt())
-      : ColorRgba8(r.clamp(0, 255).toInt(), g.clamp(0, 255).toInt(),
-          b.clamp(0, 255).toInt(), a.clamp(0, 255).toInt());
+      ? ColorRgb8(
+          r.clamp(0, 255).toInt(),
+          g.clamp(0, 255).toInt(),
+          b.clamp(0, 255).toInt(),
+        )
+      : ColorRgba8(
+          r.clamp(0, 255).toInt(),
+          g.clamp(0, 255).toInt(),
+          b.clamp(0, 255).toInt(),
+          a.clamp(0, 255).toInt(),
+        );
 
   @override
   Pixel getPixel(int x, int y, [Pixel? pixel]) {

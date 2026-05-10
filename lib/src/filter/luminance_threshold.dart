@@ -5,12 +5,14 @@ import '../image/image.dart';
 import '../util/math_util.dart';
 
 ///
-Image luminanceThreshold(Image src,
-    {num threshold = 0.5,
-    bool outputColor = false,
-    num amount = 1,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image luminanceThreshold(
+  Image src, {
+  num threshold = 0.5,
+  bool outputColor = false,
+  num amount = 1,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: src.numChannels);
   }

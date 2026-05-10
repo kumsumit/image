@@ -13,14 +13,16 @@ typedef _MarkPixel = void Function(int y, int x);
 
 /// Fill the 4-connected shape containing [x],[y] in the image [src] with the
 /// given [color].
-Image fillFlood(Image src,
-    {required int x,
-    required int y,
-    required Color color,
-    num threshold = 0.0,
-    bool compareAlpha = false,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image fillFlood(
+  Image src, {
+  required int x,
+  required int y,
+  required Color color,
+  num threshold = 0.0,
+  bool compareAlpha = false,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (color.a == 0) {
     return src;
   }
@@ -76,8 +78,14 @@ Image fillFlood(Image src,
 
 /// Create a mask describing the 4-connected shape containing [x],[y] in the
 /// image [src].
-Uint8List maskFlood(Image src, int x, int y,
-    {num threshold = 0.0, bool compareAlpha = false, int fillValue = 255}) {
+Uint8List maskFlood(
+  Image src,
+  int x,
+  int y, {
+  num threshold = 0.0,
+  bool compareAlpha = false,
+  int fillValue = 255,
+}) {
   final visited = Uint8List(src.width * src.height);
 
   Color srcColor = src.getPixel(x, y);
@@ -131,16 +139,23 @@ num _colorDistance(List<num> c1, List<num> c2, bool compareAlpha) {
   final d3 = c1[2] - c2[2];
   if (compareAlpha) {
     final dA = c1[3] - c2[3];
-    return sqrt(max(d1 * d1, (d1 - dA) * (d1 - dA)) +
-        max(d2 * d2, (d2 - dA) * (d2 - dA)) +
-        max(d3 * d3, (d3 - dA) * (d3 - dA)));
+    return sqrt(
+      max(d1 * d1, (d1 - dA) * (d1 - dA)) +
+          max(d2 * d2, (d2 - dA) * (d2 - dA)) +
+          max(d3 * d3, (d3 - dA) * (d3 - dA)),
+    );
   } else {
     return sqrt(d1 * d1 + d2 * d2 + d3 * d3);
   }
 }
 
 bool _testPixelLabColorDistance(
-    Image src, int x, int y, List<num> refColor, num threshold) {
+  Image src,
+  int x,
+  int y,
+  List<num> refColor,
+  num threshold,
+) {
   final pixel = src.getPixel(x, y);
   final compareAlpha = refColor.length > 3;
   final pixelColor = rgbToLab(pixel.r, pixel.g, pixel.b);
@@ -152,8 +167,14 @@ bool _testPixelLabColorDistance(
 
 // Adam Milazzo (2015). A More Efficient Flood Fill.
 // http://www.adammil.net/blog/v126_A_More_Efficient_Flood_Fill.html
-void _fill4(Image src, int x, int y, _TestPixel array, _MarkPixel mark,
-    Uint8List visited) {
+void _fill4(
+  Image src,
+  int x,
+  int y,
+  _TestPixel array,
+  _MarkPixel mark,
+  Uint8List visited,
+) {
   if (visited[y * src.width + x] == 1) {
     return;
   }
@@ -179,8 +200,14 @@ void _fill4(Image src, int x, int y, _TestPixel array, _MarkPixel mark,
   _fill4Core(src, x, y, array, mark, visited);
 }
 
-void _fill4Core(Image src, int x, int y, _TestPixel array, _MarkPixel mark,
-    Uint8List visited) {
+void _fill4Core(
+  Image src,
+  int x,
+  int y,
+  _TestPixel array,
+  _MarkPixel mark,
+  Uint8List visited,
+) {
   if (visited[y * src.width + x] == 1) {
     return;
   }

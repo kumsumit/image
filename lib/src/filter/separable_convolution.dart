@@ -6,10 +6,12 @@ import 'separable_kernel.dart';
 /// given [kernel].
 ///
 /// gaussianBlur is an example of such a filter.
-Image separableConvolution(Image src,
-    {required SeparableKernel kernel,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image separableConvolution(
+  Image src, {
+  required SeparableKernel kernel,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: src.numChannels);
   }

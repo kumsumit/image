@@ -31,10 +31,14 @@ Future<ExecuteResult> _getResult(_Params p) async {
     exception = e;
   }
   Isolate.exit(
-      p.port,
-      ExecuteResult(p.command?.outputImage, p.command?.outputBytes,
-          p.command?.outputObject,
-          exception: exception));
+    p.port,
+    ExecuteResult(
+      p.command?.outputImage,
+      p.command?.outputBytes,
+      p.command?.outputObject,
+      exception: exception,
+    ),
+  );
 }
 
 Future<ExecuteResult> executeCommandAsync(Command? command) async {

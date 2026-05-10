@@ -3,13 +3,15 @@ import '../image/image.dart';
 import '../util/math_util.dart';
 
 /// Apply the hexagon pixelate filter to the image.
-Image hexagonPixelate(Image src,
-    {int? centerX,
-    int? centerY,
-    int size = 5,
-    num amount = 1,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image hexagonPixelate(
+  Image src, {
+  int? centerX,
+  int? centerY,
+  int size = 5,
+  num amount = 1,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: src.numChannels);
   }

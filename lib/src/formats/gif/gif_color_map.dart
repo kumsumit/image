@@ -8,14 +8,14 @@ class GifColorMap {
   final PaletteUint8 _palette;
 
   GifColorMap(this.numColors)
-      : _palette = PaletteUint8(numColors, 3),
-        bitsPerPixel = _bitSize(numColors);
+    : _palette = PaletteUint8(numColors, 3),
+      bitsPerPixel = _bitSize(numColors);
 
   GifColorMap.from(GifColorMap other)
-      : bitsPerPixel = other.bitsPerPixel,
-        numColors = other.numColors,
-        transparent = other.transparent,
-        _palette = PaletteUint8.from(other._palette);
+    : bitsPerPixel = other.bitsPerPixel,
+      numColors = other.numColors,
+      transparent = other.transparent,
+      _palette = PaletteUint8.from(other._palette);
 
   ColorUint8 color(int index) {
     final r = red(index);

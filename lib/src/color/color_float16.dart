@@ -15,7 +15,7 @@ class ColorFloat16 extends Iterable<num> implements Color {
   ColorFloat16(int numChannels) : data = Uint16List(numChannels);
 
   ColorFloat16.from(ColorFloat16 other)
-      : data = Uint16List.fromList(other.data);
+    : data = Uint16List.fromList(other.data);
 
   ColorFloat16.fromList(List<double> color) : data = Uint16List(color.length) {
     final l = color.length;
@@ -145,8 +145,8 @@ class ColorFloat16 extends Iterable<num> implements Color {
   num getChannel(Channel channel) => channel == Channel.luminance
       ? luminance
       : channel.index < data.length
-          ? Float16.float16ToDouble(data[channel.index])
-          : 0;
+      ? Float16.float16ToDouble(data[channel.index])
+      : 0;
 
   @override
   num getChannelNormalized(Channel channel) =>
@@ -198,7 +198,10 @@ class ColorFloat16 extends Iterable<num> implements Color {
   int get hashCode => Object.hashAll(toList());
 
   @override
-  Color convert({Format? format, int? numChannels, num? alpha}) =>
-      convertColor(this,
-          format: format, numChannels: numChannels, alpha: alpha);
+  Color convert({Format? format, int? numChannels, num? alpha}) => convertColor(
+    this,
+    format: format,
+    numChannels: numChannels,
+    alpha: alpha,
+  );
 }

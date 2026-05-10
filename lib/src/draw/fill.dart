@@ -4,10 +4,12 @@ import '../image/image.dart';
 import '../util/math_util.dart';
 
 /// Set all of the pixels of an [image] to the given [color].
-Image fill(Image image,
-    {required Color color,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image fill(
+  Image image, {
+  required Color color,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (mask == null) {
     return image..clear(color);
   }

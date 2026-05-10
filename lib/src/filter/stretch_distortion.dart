@@ -3,12 +3,14 @@ import '../image/image.dart';
 import '../image/interpolation.dart';
 import '../util/math_util.dart';
 
-Image stretchDistortion(Image src,
-    {int? centerX,
-    int? centerY,
-    Interpolation interpolation = Interpolation.nearest,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image stretchDistortion(
+  Image src, {
+  int? centerX,
+  int? centerY,
+  Interpolation interpolation = Interpolation.nearest,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: src.numChannels);
   }

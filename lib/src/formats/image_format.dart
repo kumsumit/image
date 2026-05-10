@@ -13,5 +13,5 @@ enum ImageFormat {
   tiff,
   webp,
   custom,
-  invalid
+  invalid,
 }

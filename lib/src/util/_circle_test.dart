@@ -71,6 +71,6 @@ num circleTest(Pixel p, int x, int y, num rad2, {bool antialias = true}) {
   return antialias
       ? total / 9
       : total > 0
-          ? 1
-          : 0;
+      ? 1
+      : 0;
 }

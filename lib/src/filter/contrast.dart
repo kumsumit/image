@@ -16,11 +16,13 @@ enum ContrastMode { proportional, scurve }
 /// and values above 100 will increase the contrast. A contrast of 100
 /// will have no affect.
 
-Image contrast(Image src,
-    {required num contrast,
-    Image? mask,
-    Channel maskChannel = Channel.luminance,
-    ContrastMode mode = ContrastMode.proportional}) {
+Image contrast(
+  Image src, {
+  required num contrast,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+  ContrastMode mode = ContrastMode.proportional,
+}) {
   if (contrast == 100.0) {
     return src;
   }

@@ -107,8 +107,10 @@ class PsdLayer {
 
     final sig = input.readUint32();
     if (sig != signature) {
-      throw ImageException('Invalid PSD layer signature: '
-          '${sig.toRadixString(16)}');
+      throw ImageException(
+        'Invalid PSD layer signature: '
+        '${sig.toRadixString(16)}',
+      );
     }
 
     blendMode = input.readUint32();
@@ -153,8 +155,10 @@ class PsdLayer {
       while (!extra.isEOS) {
         final sig = extra.readUint32();
         if (sig != signature) {
-          throw ImageException('PSD invalid signature for layer additional '
-              'data: ${sig.toRadixString(16)}');
+          throw ImageException(
+            'PSD invalid signature for layer additional '
+            'data: ${sig.toRadixString(16)}',
+          );
         }
 
         final tag = extra.readString(4);
@@ -177,7 +181,8 @@ class PsdLayer {
           final numFx = data.readUint16();
 
           for (var j = 0; j < numFx; ++j) {
-            /*var tag =*/ data.readString(4); // 8BIM
+            /*var tag =*/
+            data.readString(4); // 8BIM
             final fxTag = data.readString(4);
             final size = data.readUint32();
 
@@ -195,7 +200,7 @@ class PsdLayer {
                   data.readUint16(),
                   data.readUint16(),
                   data.readUint16(),
-                  data.readUint16()
+                  data.readUint16(),
                 ]
                 ..blendMode = data.readString(8)
                 ..enabled = data.readByte() != 0
@@ -206,7 +211,7 @@ class PsdLayer {
                   data.readUint16(),
                   data.readUint16(),
                   data.readUint16(),
-                  data.readUint16()
+                  data.readUint16(),
                 ];
             } else if (fxTag == 'isdw') {
               final fx = PsdInnerShadowEffect();
@@ -222,7 +227,7 @@ class PsdLayer {
                   data.readUint16(),
                   data.readUint16(),
                   data.readUint16(),
-                  data.readUint16()
+                  data.readUint16(),
                 ]
                 ..blendMode = data.readString(8)
                 ..enabled = data.readByte() != 0
@@ -233,7 +238,7 @@ class PsdLayer {
                   data.readUint16(),
                   data.readUint16(),
                   data.readUint16(),
-                  data.readUint16()
+                  data.readUint16(),
                 ];
             } else if (fxTag == 'oglw') {
               final fx = PsdOuterGlowEffect();
@@ -247,7 +252,7 @@ class PsdLayer {
                   data.readUint16(),
                   data.readUint16(),
                   data.readUint16(),
-                  data.readUint16()
+                  data.readUint16(),
                 ]
                 ..blendMode = data.readString(8)
                 ..enabled = data.readByte() != 0
@@ -258,7 +263,7 @@ class PsdLayer {
                   data.readUint16(),
                   data.readUint16(),
                   data.readUint16(),
-                  data.readUint16()
+                  data.readUint16(),
                 ];
               }
             } else if (fxTag == 'iglw') {
@@ -273,7 +278,7 @@ class PsdLayer {
                   data.readUint16(),
                   data.readUint16(),
                   data.readUint16(),
-                  data.readUint16()
+                  data.readUint16(),
                 ]
                 ..blendMode = data.readString(8)
                 ..enabled = data.readByte() != 0
@@ -286,7 +291,7 @@ class PsdLayer {
                     data.readUint16(),
                     data.readUint16(),
                     data.readUint16(),
-                    data.readUint16()
+                    data.readUint16(),
                   ];
               }
             } else if (fxTag == 'bevl') {
@@ -304,14 +309,14 @@ class PsdLayer {
                   data.readUint16(),
                   data.readUint16(),
                   data.readUint16(),
-                  data.readUint16()
+                  data.readUint16(),
                 ]
                 ..shadowColor = [
                   data.readUint16(),
                   data.readUint16(),
                   data.readUint16(),
                   data.readUint16(),
-                  data.readUint16()
+                  data.readUint16(),
                 ]
                 ..bevelStyle = data.readByte()
                 ..highlightOpacity = data.readByte()
@@ -326,14 +331,14 @@ class PsdLayer {
                     data.readUint16(),
                     data.readUint16(),
                     data.readUint16(),
-                    data.readUint16()
+                    data.readUint16(),
                   ]
                   ..realShadowColor = [
                     data.readUint16(),
                     data.readUint16(),
                     data.readUint16(),
                     data.readUint16(),
-                    data.readUint16()
+                    data.readUint16(),
                   ];
               }
             } else if (fxTag == 'sofi') {
@@ -347,7 +352,7 @@ class PsdLayer {
                   data.readUint16(),
                   data.readUint16(),
                   data.readUint16(),
-                  data.readUint16()
+                  data.readUint16(),
                 ]
                 ..opacity = data.readByte()
                 ..enabled = data.readByte() != 0
@@ -356,7 +361,7 @@ class PsdLayer {
                   data.readUint16(),
                   data.readUint16(),
                   data.readUint16(),
-                  data.readUint16()
+                  data.readUint16(),
                 ];
             } else {
               data.skip(size);
@@ -373,8 +378,9 @@ class PsdLayer {
   // Is this layer a folder?
   int type() {
     if (additionalData.containsKey(PsdLayerSectionDivider.tagName)) {
-      final section = additionalData[PsdLayerSectionDivider.tagName]
-          as PsdLayerSectionDivider;
+      final section =
+          additionalData[PsdLayerSectionDivider.tagName]
+              as PsdLayerSectionDivider;
       return section.type;
     }
     return PsdLayerSectionDivider.normal;
@@ -397,6 +403,11 @@ class PsdLayer {
     }
 
     layerImage = PsdImage.createImageFromChannels(
-        psd.colorMode, psd.depth, width, height, channels);
+      psd.colorMode,
+      psd.depth,
+      width,
+      height,
+      channels,
+    );
   }
 }

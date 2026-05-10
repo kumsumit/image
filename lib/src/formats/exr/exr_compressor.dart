@@ -19,8 +19,11 @@ abstract class ExrCompressor {
   int decodedHeight = 0;
 
   factory ExrCompressor(
-      ExrCompressorType type, ExrPart hdr, int? maxScanLineSize,
-      [int? numScanLines]) {
+    ExrCompressorType type,
+    ExrPart hdr,
+    int? maxScanLineSize, [
+    int? numScanLines,
+  ]) {
     switch (type) {
       case ExrCompressorType.rle:
         return ExrRleCompressor(hdr, maxScanLineSize);
@@ -34,7 +37,11 @@ abstract class ExrCompressor {
         return ExrPxr24Compressor(hdr, maxScanLineSize, numScanLines ?? 16);
       case ExrCompressorType.b44:
         return ExrB44Compressor(
-            hdr, maxScanLineSize, numScanLines ?? 32, false);
+          hdr,
+          maxScanLineSize,
+          numScanLines ?? 32,
+          false,
+        );
       case ExrCompressorType.b44a:
         return ExrB44Compressor(hdr, maxScanLineSize, numScanLines ?? 32, true);
       default:
@@ -43,7 +50,11 @@ abstract class ExrCompressor {
   }
 
   factory ExrCompressor.tile(
-      ExrCompressorType type, int tileLineSize, int numTileLines, ExrPart hdr) {
+    ExrCompressorType type,
+    int tileLineSize,
+    int numTileLines,
+    ExrPart hdr,
+  ) {
     switch (type) {
       case ExrCompressorType.rle:
         return ExrRleCompressor(hdr, tileLineSize * numTileLines);
@@ -67,13 +78,23 @@ abstract class ExrCompressor {
 
   int numScanLines();
 
-  Uint8List compress(InputBuffer input, int x, int y,
-      [int? width, int? height]) {
+  Uint8List compress(
+    InputBuffer input,
+    int x,
+    int y, [
+    int? width,
+    int? height,
+  ]) {
     throw ImageException('Unsupported compression type');
   }
 
-  Uint8List uncompress(InputBuffer input, int x, int y,
-      [int? width, int? height]) {
+  Uint8List uncompress(
+    InputBuffer input,
+    int x,
+    int y, [
+    int? width,
+    int? height,
+  ]) {
     throw ImageException('Unsupported compression type');
   }
 

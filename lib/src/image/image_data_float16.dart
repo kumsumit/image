@@ -13,14 +13,14 @@ class ImageDataFloat16 extends ImageData {
   final Uint16List data;
 
   ImageDataFloat16(int width, int height, int numChannels)
-      : data = Uint16List(width * height * numChannels),
-        super(width, height, numChannels);
+    : data = Uint16List(width * height * numChannels),
+      super(width, height, numChannels);
 
   ImageDataFloat16.from(ImageDataFloat16 other, {bool skipPixels = false})
-      : data = skipPixels
-            ? Uint16List(other.data.length)
-            : Uint16List.fromList(other.data),
-        super(other.width, other.height, other.numChannels);
+    : data = skipPixels
+          ? Uint16List(other.data.length)
+          : Uint16List.fromList(other.data),
+      super(other.width, other.height, other.numChannels);
 
   @override
   ImageDataFloat16 clone({bool noPixels = false}) =>

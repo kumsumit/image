@@ -9,13 +9,15 @@ import '../util/math_util.dart';
 ///
 /// The rgb channels will be divided by [div] and add [offset], allowing
 /// filters to normalize and offset the filtered pixel value.
-Image convolution(Image src,
-    {required List<num> filter,
-    num div = 1.0,
-    num offset = 0.0,
-    num amount = 1,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image convolution(
+  Image src, {
+  required List<num> filter,
+  num div = 1.0,
+  num offset = 0.0,
+  num amount = 1,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: src.numChannels);
   }

@@ -137,11 +137,12 @@ class WebPDecoder extends Decoder {
 
       if (firstImage == null || lastImage == null) {
         firstImage = Image(
-            width: _info!.width,
-            height: _info!.height,
-            numChannels: image.numChannels,
-            format: image.format,
-            frameDuration: image.frameDuration);
+          width: _info!.width,
+          height: _info!.height,
+          numChannels: image.numChannels,
+          format: image.format,
+          frameDuration: image.frameDuration,
+        );
         lastImage = firstImage;
       } else {
         lastImage = Image.from(lastImage);
@@ -200,7 +201,8 @@ class WebPDecoder extends Decoder {
       return false;
     }
 
-    /*int fileSize =*/ input.readUint32();
+    /*int fileSize =*/
+    input.readUint32();
 
     tag = input.readString(4);
     if (tag != 'WEBP') {
@@ -235,8 +237,10 @@ class WebPDecoder extends Decoder {
           webp.format = WebPFormat.lossless;
           break;
         case 'ALPH':
-          webp!.alphaData =
-              InputBuffer(input.buffer, bigEndian: input.bigEndian);
+          webp!.alphaData = InputBuffer(
+            input.buffer,
+            bigEndian: input.bigEndian,
+          );
           webp.alphaData!.offset = input.offset;
           webp.alphaSize = size;
           input.skip(diskSize);

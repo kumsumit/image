@@ -15,28 +15,37 @@ class DrawPixelCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  DrawPixelCmd(Command? input, this.x, this.y, this.color,
-      {Color? filter,
-      this.alpha,
-      this.blend = BlendMode.alpha,
-      this.linearBlend = false,
-      this.mask,
-      this.maskChannel = Channel.luminance})
-      : _filter = filter,
-        super(input);
+  DrawPixelCmd(
+    Command? input,
+    this.x,
+    this.y,
+    this.color, {
+    Color? filter,
+    this.alpha,
+    this.blend = BlendMode.alpha,
+    this.linearBlend = false,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : _filter = filter,
+       super(input);
 
   @override
   Future<void> executeCommand() async {
     final img = await input?.getImage();
     final maskImg = await mask?.getImage();
     outputImage = img != null
-        ? drawPixel(img, x, y, color,
+        ? drawPixel(
+            img,
+            x,
+            y,
+            color,
             filter: _filter,
             alpha: alpha,
             blend: blend,
             linearBlend: linearBlend,
             mask: maskImg,
-            maskChannel: maskChannel)
+            maskChannel: maskChannel,
+          )
         : null;
   }
 }

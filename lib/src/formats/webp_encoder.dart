@@ -76,11 +76,29 @@ class WebPEncoder extends Encoder {
     // Choose best predictor mode per 32×32 block.
     // This is done on the subtracted data.
     final predModes = _selectPredictorModes(
-        r, g, b, a, width, height, predBlockW, predBlockH, predBlockSize);
+      r,
+      g,
+      b,
+      a,
+      width,
+      height,
+      predBlockW,
+      predBlockH,
+      predBlockSize,
+    );
 
     // Apply Predictor Transform
     _applyPredictorTransform(
-        r, g, b, a, width, height, predBlockW, predBlockSize, predModes);
+      r,
+      g,
+      b,
+      a,
+      width,
+      height,
+      predBlockW,
+      predBlockSize,
+      predModes,
+    );
 
     final bw = _BitWriter()
       // Write Subtract Green Transform
@@ -341,10 +359,12 @@ class WebPEncoder extends Encoder {
                     pB = (b[li] + b[ti]) >> 1;
                   default: // 11: select
                     final tli = ti - 1;
-                    final sl = (r[li] - r[tli]).abs() +
+                    final sl =
+                        (r[li] - r[tli]).abs() +
                         (g[li] - g[tli]).abs() +
                         (b[li] - b[tli]).abs();
-                    final st = (r[ti] - r[tli]).abs() +
+                    final st =
+                        (r[ti] - r[tli]).abs() +
                         (g[ti] - g[tli]).abs() +
                         (b[ti] - b[tli]).abs();
                     if (sl <= st) {
@@ -439,11 +459,13 @@ class WebPEncoder extends Encoder {
               pA = (origA[li] + origA[ti]) >> 1;
             default: // 11: select(top, left, topLeft)
               final tli = ti - 1;
-              final sl = (origR[li] - origR[tli]).abs() +
+              final sl =
+                  (origR[li] - origR[tli]).abs() +
                   (origG[li] - origG[tli]).abs() +
                   (origB[li] - origB[tli]).abs() +
                   (origA[li] - origA[tli]).abs();
-              final st = (origR[ti] - origR[tli]).abs() +
+              final st =
+                  (origR[ti] - origR[tli]).abs() +
                   (origG[ti] - origG[tli]).abs() +
                   (origB[ti] - origB[tli]).abs() +
                   (origA[ti] - origA[tli]).abs();
@@ -471,7 +493,11 @@ class WebPEncoder extends Encoder {
   /// Write a VP8L predictor sub-image inline (no RIFF, no signature, no
   /// transform loop) using per-block predictor [modes].
   void _writePredictorSubImage(
-      _BitWriter bw, int blockW, int blockH, List<int> modes) {
+    _BitWriter bw,
+    int blockW,
+    int blockH,
+    List<int> modes,
+  ) {
     final n = blockW * blockH;
     // Build green-channel frequency table for the sub-image pixels.
     final greenFreq = List<int>.filled(280, 0);
@@ -611,7 +637,7 @@ class WebPEncoder extends Encoder {
     final nodeLeft = List<int>.filled(maxNodes, -1);
     final nodeRight = List<int>.filled(maxNodes, -1);
 
-    for (var countMin = 1;; countMin *= 2) {
+    for (var countMin = 1; ; countMin *= 2) {
       for (var k = 0; k < syms.length; k++) {
         nodeFreq[k] = freq[syms[k]];
         if (nodeFreq[k] < countMin) nodeFreq[k] = countMin;
@@ -886,7 +912,7 @@ class WebPEncoder extends Encoder {
     //  yoffset=6
     118, 113, 103, 92, 80, 68, 60, 56, 54, 57, 61, 69, 81, 93, 104, 114,
     //  yoffset=7
-    119, 116, 111, 106, 97, 88, 84, 74, 72, 75, 85, 89, 98, 107, 112, 117
+    119, 116, 111, 106, 97, 88, 84, 74, 72, 75, 85, 89, 98, 107, 112, 117,
   ];
 }
 

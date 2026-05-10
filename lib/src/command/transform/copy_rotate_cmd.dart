@@ -6,9 +6,11 @@ class CopyRotateCmd extends Command {
   num angle;
   Interpolation interpolation;
 
-  CopyRotateCmd(Command? input,
-      {required this.angle, this.interpolation = Interpolation.nearest})
-      : super(input);
+  CopyRotateCmd(
+    Command? input, {
+    required this.angle,
+    this.interpolation = Interpolation.nearest,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {

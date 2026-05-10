@@ -9,8 +9,9 @@ void main() {
     const path = 'test/_data/webp';
 
     test('webp invalid decode', () async {
-      final webp =
-          decodeWebP(File('$path/invalid_last_row.webp').readAsBytesSync());
+      final webp = decodeWebP(
+        File('$path/invalid_last_row.webp').readAsBytesSync(),
+      );
       expect(webp, isNotNull);
       expect(webp!.getPixel(0, webp.height - 2).a, isNot(0));
       // guard against bug where the last decoded row is empty
@@ -193,8 +194,9 @@ void main() {
       group('encode', () {
         test('round-trip lossless', () {
           // Decode a lossless webp, encode it, decode again, compare.
-          final bytes =
-              File('test/_data/webp/1_webp_ll.webp').readAsBytesSync();
+          final bytes = File(
+            'test/_data/webp/1_webp_ll.webp',
+          ).readAsBytesSync();
           final original = WebPDecoder().decode(bytes)!;
 
           final encoded = encodeWebP(original);

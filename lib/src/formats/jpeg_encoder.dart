@@ -11,10 +11,7 @@ import 'encoder.dart';
 import 'jpeg/jpeg_marker.dart';
 
 /// JPEG Chroma (sub)sampling format.
-enum JpegChroma {
-  yuv444,
-  yuv420,
-}
+enum JpegChroma { yuv444, yuv420 }
 
 /// Encode an image to the JPEG format.
 ///
@@ -225,17 +222,20 @@ class JpegEncoder extends Encoder {
       final b = p.b.toInt();
 
       // calculate YUV values
-      ydu[pos] = ((_rgbYuvTable[r] +
+      ydu[pos] =
+          ((_rgbYuvTable[r] +
                   _rgbYuvTable[(g + 256)] +
                   _rgbYuvTable[(b + 512)]) >>
               16) -
           128.0;
-      udu[pos] = ((_rgbYuvTable[(r + 768)] +
+      udu[pos] =
+          ((_rgbYuvTable[(r + 768)] +
                   _rgbYuvTable[(g + 1024)] +
                   _rgbYuvTable[(b + 1280)]) >>
               16) -
           128.0;
-      vdu[pos] = ((_rgbYuvTable[(r + 1280)] +
+      vdu[pos] =
+          ((_rgbYuvTable[(r + 1280)] +
                   _rgbYuvTable[(g + 1536)] +
                   _rgbYuvTable[(b + 1792)]) >>
               16) -
@@ -254,11 +254,11 @@ class JpegEncoder extends Encoder {
     for (var posOut = 0; posOut < 64; posOut++) {
       final Float32List du = posOut < 32
           ? posOut % 8 < 4
-              ? duIn1
-              : duIn2
+                ? duIn1
+                : duIn2
           : posOut % 8 < 4
-              ? duIn3
-              : duIn4;
+          ? duIn3
+          : duIn4;
       final int pos = (((posOut % 32) ~/ 8) << 4) + ((posOut % 4) << 1);
       duOut[posOut] = (du[pos] + du[pos + 1] + du[pos + 8] + du[pos + 9]) / 4;
     }
@@ -335,7 +335,7 @@ class JpegEncoder extends Encoder {
       112,
       100,
       103,
-      99
+      99,
     ];
 
     for (var i = 0; i < 64; i++) {
@@ -412,7 +412,7 @@ class JpegEncoder extends Encoder {
       99,
       99,
       99,
-      99
+      99,
     ];
 
     for (var j = 0; j < 64; j++) {
@@ -433,7 +433,7 @@ class JpegEncoder extends Encoder {
       1.0,
       0.785694958,
       0.541196100,
-      0.275899379
+      0.275899379,
     ];
 
     var k = 0;
@@ -467,14 +467,22 @@ class JpegEncoder extends Encoder {
   }
 
   void _initHuffmanTable() {
-    _ydcHuffman =
-        _computeHuffmanTable(stdDcLuminanceNrCodes, stdDcLuminanceValues);
-    _uvdcHuffman =
-        _computeHuffmanTable(stdDcChrominanceNrCodes, stdDcChrominanceValues);
-    _yacHuffman =
-        _computeHuffmanTable(stdAcLuminanceNrCodes, stdAcLuminanceValues);
-    _uvacHuffman =
-        _computeHuffmanTable(stdAcChrominanceNrCodes, stdAcChrominanceValues);
+    _ydcHuffman = _computeHuffmanTable(
+      stdDcLuminanceNrCodes,
+      stdDcLuminanceValues,
+    );
+    _uvdcHuffman = _computeHuffmanTable(
+      stdDcChrominanceNrCodes,
+      stdDcChrominanceValues,
+    );
+    _yacHuffman = _computeHuffmanTable(
+      stdAcLuminanceNrCodes,
+      stdAcLuminanceValues,
+    );
+    _uvacHuffman = _computeHuffmanTable(
+      stdAcChrominanceNrCodes,
+      stdAcChrominanceValues,
+    );
   }
 
   void _initCategoryNumber() {
@@ -688,7 +696,7 @@ class JpegEncoder extends Encoder {
       0x49,
       0x4C,
       0x45,
-      0x00
+      0x00,
     ];
     out
       ..writeUint16(blockSize)
@@ -956,7 +964,7 @@ class JpegEncoder extends Encoder {
     57,
     58,
     62,
-    63
+    63,
   ];
 
   static const List<int> stdDcLuminanceNrCodes = [
@@ -976,7 +984,7 @@ class JpegEncoder extends Encoder {
     0,
     0,
     0,
-    0
+    0,
   ];
 
   static const List<int> stdDcLuminanceValues = [
@@ -991,7 +999,7 @@ class JpegEncoder extends Encoder {
     8,
     9,
     10,
-    11
+    11,
   ];
 
   static const List<int> stdAcLuminanceNrCodes = [
@@ -1011,7 +1019,7 @@ class JpegEncoder extends Encoder {
     0,
     0,
     1,
-    0x7d
+    0x7d,
   ];
 
   static const List<int> stdAcLuminanceValues = [
@@ -1176,7 +1184,7 @@ class JpegEncoder extends Encoder {
     0xf7,
     0xf8,
     0xf9,
-    0xfa
+    0xfa,
   ];
 
   static const List<int> stdDcChrominanceNrCodes = [
@@ -1196,7 +1204,7 @@ class JpegEncoder extends Encoder {
     0,
     0,
     0,
-    0
+    0,
   ];
 
   static const List<int> stdDcChrominanceValues = [
@@ -1211,7 +1219,7 @@ class JpegEncoder extends Encoder {
     8,
     9,
     10,
-    11
+    11,
   ];
 
   static const List<int> stdAcChrominanceNrCodes = [
@@ -1231,7 +1239,7 @@ class JpegEncoder extends Encoder {
     0,
     1,
     2,
-    0x77
+    0x77,
   ];
 
   static const List<int> stdAcChrominanceValues = [
@@ -1396,7 +1404,7 @@ class JpegEncoder extends Encoder {
     0xf7,
     0xf8,
     0xf9,
-    0xfa
+    0xfa,
   ];
 
   int _byteNew = 0;

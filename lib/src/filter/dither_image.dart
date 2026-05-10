@@ -8,27 +8,27 @@ enum DitherKernel {
   falseFloydSteinberg,
   floydSteinberg,
   stucki,
-  atkinson
+  atkinson,
 }
 
 const _ditherKernels = [
   [
     [0, 0, 0],
     [0, 0, 0],
-    [0, 0, 0]
+    [0, 0, 0],
   ],
   // FalseFloydSteinberg
   [
     [3 / 8, 1, 0],
     [3 / 8, 0, 1],
-    [2 / 8, 1, 1]
+    [2 / 8, 1, 1],
   ],
   // FloydSteinberg
   [
     [7 / 16, 1, 0],
     [3 / 16, -1, 1],
     [5 / 16, 0, 1],
-    [1 / 16, 1, 1]
+    [1 / 16, 1, 1],
   ],
   // Stucki
   [
@@ -43,7 +43,7 @@ const _ditherKernels = [
     [2 / 42, -1, 2],
     [4 / 42, 0, 2],
     [2 / 42, 1, 2],
-    [1 / 42, 2, 2]
+    [1 / 42, 2, 2],
   ],
   //Atkinson:
   [
@@ -52,17 +52,19 @@ const _ditherKernels = [
     [1 / 8, -1, 1],
     [1 / 8, 0, 1],
     [1 / 8, 1, 1],
-    [1 / 8, 0, 2]
-  ]
+    [1 / 8, 0, 2],
+  ],
 ];
 
 /// Dither an image to reduce banding patterns when reducing the number of
 /// colors.
 /// Derived from http://jsbin.com/iXofIji/2/edit
-Image ditherImage(Image image,
-    {Quantizer? quantizer,
-    DitherKernel kernel = DitherKernel.floydSteinberg,
-    bool serpentine = false}) {
+Image ditherImage(
+  Image image, {
+  Quantizer? quantizer,
+  DitherKernel kernel = DitherKernel.floydSteinberg,
+  bool serpentine = false,
+}) {
   quantizer ??= NeuralQuantizer(image);
 
   if (kernel == DitherKernel.none) {
@@ -76,8 +78,12 @@ Image ditherImage(Image image,
   var direction = serpentine ? -1 : 1;
 
   final palette = quantizer.palette;
-  final indexedImage =
-      Image(width: width, height: height, numChannels: 1, palette: palette);
+  final indexedImage = Image(
+    width: width,
+    height: height,
+    numChannels: 1,
+    palette: palette,
+  );
 
   final imageCopy = image.clone();
 

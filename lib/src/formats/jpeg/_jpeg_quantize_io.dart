@@ -28,8 +28,12 @@ Uint8List _createDctClip() {
 // Christoph Loeffler, Adriaan Ligtenberg, George S. Moschytz,
 // "Practical Fast 1-D DCT Algorithms with 11 Multiplications",
 // IEEE Intl. Conf. on Acoustics, Speech & Signal Processing, 1989, 988-991.
-void quantizeAndInverse(Int16List quantizationTable, Int32List coefBlock,
-    Uint8List dataOut, Int32List dataIn) {
+void quantizeAndInverse(
+  Int16List quantizationTable,
+  Int32List coefBlock,
+  Uint8List dataOut,
+  Int32List dataIn,
+) {
   final p = dataIn;
 
   // IDCT constants (20.12 fixed point format)
@@ -211,8 +215,9 @@ void quantizeAndInverse(Int16List quantizationTable, Int32List coefBlock,
 }
 
 Image getImageFromJpeg(JpegData jpeg) {
-  final orientation =
-      jpeg.exif.imageIfd.hasOrientation ? jpeg.exif.imageIfd.orientation! : 0;
+  final orientation = jpeg.exif.imageIfd.hasOrientation
+      ? jpeg.exif.imageIfd.orientation!
+      : 0;
 
   final w = jpeg.width!;
   final h = jpeg.height!;
@@ -425,9 +430,12 @@ Image getImageFromJpeg(JpegData jpeg) {
             final cbShifted = cb - 128;
             final cyScaled = cy << 8;
             cc = 255 - ((cyScaled + 359 * crShifted) >> 8).clamp(0, 255);
-            cm = 255 -
-                ((cyScaled - 88 * cbShifted - 183 * crShifted) >> 8)
-                    .clamp(0, 255);
+            cm =
+                255 -
+                ((cyScaled - 88 * cbShifted - 183 * crShifted) >> 8).clamp(
+                  0,
+                  255,
+                );
             cy = 255 - ((cyScaled + 454 * cbShifted) >> 8).clamp(0, 255);
           }
           final r = (cc * ck) >> 8;

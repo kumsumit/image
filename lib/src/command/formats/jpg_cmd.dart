@@ -51,7 +51,7 @@ class EncodeJpgFileCmd extends EncodeJpgCmd {
   String path;
 
   EncodeJpgFileCmd(Command? input, this.path, {int quality = 100})
-      : super(input, quality: quality);
+    : super(input, quality: quality);
 
   @override
   Future<void> executeCommand() async {

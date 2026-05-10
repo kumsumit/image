@@ -175,8 +175,8 @@ void main() {
 
       test("multipageTiff", () {
         final f = files.whereType<File>().firstWhere(
-              (x) => x.path.endsWith("UF1_id1cS2300G0C2.tif"),
-            );
+          (x) => x.path.endsWith("UF1_id1cS2300G0C2.tif"),
+        );
         final bytes = f.readAsBytesSync();
         final image = decodeTiff(bytes);
         expect(image, isNotNull);

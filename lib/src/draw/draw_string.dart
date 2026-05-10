@@ -13,16 +13,19 @@ import 'draw_pixel.dart';
 /// You can load your own font, or use one of the existing ones
 /// such as: arial14, arial24, or arial48.
 ///  Fonts can be create with a tool such as: https://ttf2fnt.com/
-Image drawString(Image image, String string,
-    {required BitmapFont font,
-    int? x,
-    int? y,
-    Color? color,
-    bool rightJustify = false,
-    bool wrap = false,
-    BlendMode blend = BlendMode.alpha,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image drawString(
+  Image image,
+  String string, {
+  required BitmapFont font,
+  int? x,
+  int? y,
+  Color? color,
+  bool rightJustify = false,
+  bool wrap = false,
+  BlendMode blend = BlendMode.alpha,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (blend == BlendMode.alpha && color?.a == 0) {
     return image;
   }
@@ -75,15 +78,18 @@ Image drawString(Image image, String string,
             return image;
           }
 
-          drawString(image, subString,
-              font: font,
-              x: sx,
-              y: sy,
-              color: color,
-              blend: blend,
-              mask: mask,
-              maskChannel: maskChannel,
-              rightJustify: rightJustify);
+          drawString(
+            image,
+            subString,
+            font: font,
+            x: sx,
+            y: sy,
+            color: color,
+            blend: blend,
+            mask: mask,
+            maskChannel: maskChannel,
+            rightJustify: rightJustify,
+          );
 
           subString = "";
           x2 = sx;
@@ -96,15 +102,18 @@ Image drawString(Image image, String string,
         }
 
         if (subString.isNotEmpty) {
-          drawString(image, subString,
-              font: font,
-              x: sx,
-              y: sy,
-              color: color,
-              blend: blend,
-              mask: mask,
-              maskChannel: maskChannel,
-              rightJustify: rightJustify);
+          drawString(
+            image,
+            subString,
+            font: font,
+            x: sx,
+            y: sy,
+            color: color,
+            blend: blend,
+            mask: mask,
+            maskChannel: maskChannel,
+            rightJustify: rightJustify,
+          );
         }
       }
 
@@ -147,11 +156,16 @@ Image drawString(Image image, String string,
       for (var yi = sy; yi < y2; ++yi) {
         for (var xi = sx; xi < x2; ++xi, cIter.moveNext()) {
           final p = cIter.current;
-          drawPixel(image, xi + ch.xOffset, yi + ch.yOffset, p,
-              filter: color,
-              blend: blend,
-              mask: mask,
-              maskChannel: maskChannel);
+          drawPixel(
+            image,
+            xi + ch.xOffset,
+            yi + ch.yOffset,
+            p,
+            filter: color,
+            blend: blend,
+            mask: mask,
+            maskChannel: maskChannel,
+          );
         }
       }
 

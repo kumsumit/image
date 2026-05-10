@@ -12,29 +12,32 @@ class BulgeDistortionCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  BulgeDistortionCmd(Command? input,
-      {this.centerX,
-      this.centerY,
-      this.radius,
-      this.scale = 0.5,
-      this.interpolation = Interpolation.nearest,
-      this.mask,
-      this.maskChannel = Channel.luminance})
-      : super(input);
+  BulgeDistortionCmd(
+    Command? input, {
+    this.centerX,
+    this.centerY,
+    this.radius,
+    this.scale = 0.5,
+    this.interpolation = Interpolation.nearest,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {
     final img = await input?.getImage();
     final maskImg = await mask?.getImage();
     outputImage = img != null
-        ? bulgeDistortion(img,
+        ? bulgeDistortion(
+            img,
             centerX: centerX,
             centerY: centerY,
             radius: radius,
             scale: scale,
             interpolation: interpolation,
             mask: maskImg,
-            maskChannel: maskChannel)
+            maskChannel: maskChannel,
+          )
         : null;
   }
 }

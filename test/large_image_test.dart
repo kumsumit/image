@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:image/image.dart';
 import 'package:test/test.dart';
 
@@ -8,7 +7,7 @@ void main() {
       // Create a moderately large image to test memory handling
       const width = 4096;
       const height = 4096;
-      final image = Image(width: width, height: height, numChannels: 3);
+      final image = Image(width: width, height: height);
 
       expect(image.width, equals(width));
       expect(image.height, equals(height));
@@ -25,7 +24,7 @@ void main() {
     });
 
     test('Resize large image', () {
-      final largeImage = Image(width: 2048, height: 2048, numChannels: 3);
+      final largeImage = Image(width: 2048, height: 2048);
       fill(largeImage, color: ColorRgb8(100, 150, 200));
 
       final resized = copyResize(largeImage, width: 512, height: 512);
@@ -36,7 +35,10 @@ void main() {
 
       // Check that resize preserved approximate color
       final pixel = resized.getPixel(0, 0);
-      expect(pixel.r, closeTo(100, 10)); // Allow some tolerance due to interpolation
+      expect(
+        pixel.r,
+        closeTo(100, 10),
+      ); // Allow some tolerance due to interpolation
       expect(pixel.g, closeTo(150, 10));
       expect(pixel.b, closeTo(200, 10));
     });

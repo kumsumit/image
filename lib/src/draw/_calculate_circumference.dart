@@ -22,15 +22,17 @@ List<Point> calculateCircumference(Image image, int x0, int y0, int radius) {
     Point(x0 - radius, y0),
     Point(x0 + radius, y0),
     Point(x0, y0 - radius),
-    Point(x0, y0 + radius)
+    Point(x0, y0 + radius),
   ];
 
   if (radius == 1) {
     return points;
   }
 
-  for (var f = 1 - radius, ddFx = 0, ddFy = -(radius << 1), x = 0, y = radius;
-      x < y;) {
+  for (
+    var f = 1 - radius, ddFx = 0, ddFy = -(radius << 1), x = 0, y = radius;
+    x < y;
+  ) {
     if (f >= 0) {
       f += ddFy += 2;
       --y;

@@ -82,7 +82,10 @@ class PngDecoder extends Decoder {
           final y = physData.readUint32();
           final unit = physData.readByte();
           _info.pixelDimensions = PngPhysicalPixelDimensions(
-              xPxPerUnit: x, yPxPerUnit: y, unitSpecifier: unit);
+            xPxPerUnit: x,
+            yPxPerUnit: y,
+            unitSpecifier: unit,
+          );
           _input.skip(4); // CRC
           break;
         case 'IHDR':
@@ -200,20 +203,22 @@ class PngDecoder extends Decoder {
           final dispose = _input.readByte();
           final blend = _input.readByte();
           final frame = InternalPngFrame(
-              sequenceNumber: sequenceNumber,
-              width: width,
-              height: height,
-              xOffset: xOffset,
-              yOffset: yOffset,
-              delayNum: delayNum,
-              delayDen: delayDen,
-              dispose: PngDisposeMode.values[dispose],
-              blend: PngBlendMode.values[blend]);
+            sequenceNumber: sequenceNumber,
+            width: width,
+            height: height,
+            xOffset: xOffset,
+            yOffset: yOffset,
+            delayNum: delayNum,
+            delayDen: delayDen,
+            dispose: PngDisposeMode.values[dispose],
+            blend: PngBlendMode.values[blend],
+          );
           _info.frames.add(frame);
           _input.skip(4); // CRC
           break;
         case 'fdAT':
-          /*int sequenceNumber =*/ _input.readUint32();
+          /*int sequenceNumber =*/
+          _input.readUint32();
           final frame = _info.frames.last as InternalPngFrame;
           frame.fdat.add(inputPos);
           _input.skip(chunkSize - 4);
@@ -229,18 +234,24 @@ class PngDecoder extends Decoder {
             final b = _info.palette![p3 + 2]!;
             if (_info.transparency != null) {
               final isTransparent = _info.transparency!.contains(paletteIndex);
-              _info.backgroundColor =
-                  ColorRgba8(r, g, b, isTransparent ? 0 : 255);
+              _info.backgroundColor = ColorRgba8(
+                r,
+                g,
+                b,
+                isTransparent ? 0 : 255,
+              );
             } else {
               _info.backgroundColor = ColorRgb8(r, g, b);
             }
           } else if (_info.colorType == PngColorType.grayscale ||
               _info.colorType == PngColorType.grayscaleAlpha) {
-            /*int gray =*/ _input.readUint16();
+            /*int gray =*/
+            _input.readUint16();
             chunkSize -= 2;
           } else if (_info.colorType == PngColorType.rgb ||
               _info.colorType == PngColorType.rgba) {
-            /*int r =*/ _input
+            /*int r =*/
+            _input
               ..readUint16()
               /*int g =*/
               ..readUint16()
@@ -362,12 +373,12 @@ class PngDecoder extends Decoder {
     var numChannels = _info.colorType == PngColorType.indexed
         ? 1
         : _info.colorType == PngColorType.grayscale
-            ? 1
-            : _info.colorType == PngColorType.grayscaleAlpha
-                ? 2
-                : _info.colorType == PngColorType.rgba
-                    ? 4
-                    : 3;
+        ? 1
+        : _info.colorType == PngColorType.grayscaleAlpha
+        ? 2
+        : _info.colorType == PngColorType.rgba
+        ? 4
+        : 3;
 
     List<int> uncompressed;
     try {
@@ -419,10 +430,10 @@ class PngDecoder extends Decoder {
       final to8bit = _info.bits == 1
           ? 255
           : _info.bits == 2
-              ? 85
-              : _info.bits == 4
-                  ? 17
-                  : 1;
+          ? 85
+          : _info.bits == 4
+          ? 17
+          : 1;
       for (var i = 0; i < numColors; ++i) {
         final g = i * to8bit;
         palette.setRgba(i, g, g, g, 255);
@@ -438,12 +449,12 @@ class PngDecoder extends Decoder {
     final format = _info.bits == 1
         ? Format.uint1
         : _info.bits == 2
-            ? Format.uint2
-            : _info.bits == 4
-                ? Format.uint4
-                : _info.bits == 16
-                    ? Format.uint16
-                    : Format.uint8;
+        ? Format.uint2
+        : _info.bits == 4
+        ? Format.uint4
+        : _info.bits == 16
+        ? Format.uint16
+        : Format.uint8;
 
     if (_info.colorType == PngColorType.grayscale &&
         _info.transparency != null &&
@@ -456,11 +467,12 @@ class PngDecoder extends Decoder {
     }
 
     final image = Image(
-        width: width,
-        height: height,
-        numChannels: numChannels,
-        palette: palette,
-        format: format);
+      width: width,
+      height: height,
+      numChannels: numChannels,
+      palette: palette,
+      format: format,
+    );
 
     if (_info.exif != null) {
       image.exif = _info.exif!;
@@ -493,7 +505,10 @@ class PngDecoder extends Decoder {
 
     if (_info.iccpData != null) {
       image.iccProfile = IccProfile(
-          _info.iccpName, IccProfileCompression.deflate, _info.iccpData!);
+        _info.iccpName,
+        IccProfileCompression.deflate,
+        _info.iccpData!,
+      );
     }
 
     if (_info.textData.isNotEmpty) {
@@ -548,35 +563,43 @@ class PngDecoder extends Decoder {
 
       final dispose = prevFrame.dispose;
       if (dispose == PngDisposeMode.background) {
-        fillRect(lastImage,
-            x1: prevFrame.xOffset,
-            y1: prevFrame.yOffset,
-            x2: prevFrame.xOffset + prevFrame.width - 1,
-            y2: prevFrame.yOffset + prevFrame.height - 1,
-            color: _info.backgroundColor ?? ColorRgba8(0, 0, 0, 0),
-            alphaBlend: false);
+        fillRect(
+          lastImage,
+          x1: prevFrame.xOffset,
+          y1: prevFrame.yOffset,
+          x2: prevFrame.xOffset + prevFrame.width - 1,
+          y2: prevFrame.yOffset + prevFrame.height - 1,
+          color: _info.backgroundColor ?? ColorRgba8(0, 0, 0, 0),
+          alphaBlend: false,
+        );
       } else if (dispose == PngDisposeMode.previous && i > 1) {
         final prevImage = firstImage.getFrame(i - 2);
-        lastImage = compositeImage(lastImage, prevImage,
-            dstX: prevFrame.xOffset,
-            dstY: prevFrame.yOffset,
-            dstW: prevFrame.width,
-            dstH: prevFrame.height,
-            srcX: prevFrame.xOffset,
-            srcY: prevFrame.yOffset,
-            srcW: prevFrame.width,
-            srcH: prevFrame.height);
+        lastImage = compositeImage(
+          lastImage,
+          prevImage,
+          dstX: prevFrame.xOffset,
+          dstY: prevFrame.yOffset,
+          dstW: prevFrame.width,
+          dstH: prevFrame.height,
+          srcX: prevFrame.xOffset,
+          srcY: prevFrame.yOffset,
+          srcW: prevFrame.width,
+          srcH: prevFrame.height,
+        );
       }
 
       // Convert to MS
       lastImage.frameDuration = (frame.delay * 1000).toInt();
 
-      lastImage = compositeImage(lastImage, image,
-          dstX: frame.xOffset,
-          dstY: frame.yOffset,
-          blend: frame.blend == PngBlendMode.over
-              ? BlendMode.alpha
-              : BlendMode.direct);
+      lastImage = compositeImage(
+        lastImage,
+        image,
+        dstX: frame.xOffset,
+        dstY: frame.yOffset,
+        blend: frame.blend == PngBlendMode.over
+            ? BlendMode.alpha
+            : BlendMode.direct,
+      );
 
       firstImage.addFrame(lastImage);
     }
@@ -585,15 +608,23 @@ class PngDecoder extends Decoder {
   }
 
   // Process a pass of an interlaced image.
-  void _processPass(InputBuffer input, Image image, int xOffset, int yOffset,
-      int xStep, int yStep, int passWidth, int passHeight) {
+  void _processPass(
+    InputBuffer input,
+    Image image,
+    int xOffset,
+    int yOffset,
+    int xStep,
+    int yStep,
+    int passWidth,
+    int passHeight,
+  ) {
     final channels = (_info.colorType == PngColorType.grayscaleAlpha)
         ? 2
         : (_info.colorType == PngColorType.rgb)
-            ? 3
-            : (_info.colorType == PngColorType.rgba)
-                ? 4
-                : 1;
+        ? 3
+        : (_info.colorType == PngColorType.rgba)
+        ? 4
+        : 1;
 
     final pixelDepth = channels * _info.bits;
     final bpp = (pixelDepth + 7) >> 3;
@@ -603,9 +634,11 @@ class PngDecoder extends Decoder {
 
     final pixel = [0, 0, 0, 0];
 
-    for (var srcY = 0, dstY = yOffset, ri = 0;
-        srcY < passHeight;
-        ++srcY, dstY += yStep, ri = 1 - ri, _progressY++) {
+    for (
+      var srcY = 0, dstY = yOffset, ri = 0;
+      srcY < passHeight;
+      ++srcY, dstY += yStep, ri = 1 - ri, _progressY++
+    ) {
       final filterType = PngFilterType.values[input.readByte()];
       inData[ri] = input.readBytes(rowBytes).toUint8List();
 
@@ -625,9 +658,11 @@ class PngDecoder extends Decoder {
       final blockHeight = xStep;
       final blockWidth = xStep - xOffset;
 
-      for (var srcX = 0, dstX = xOffset;
-          srcX < passWidth;
-          ++srcX, dstX += xStep) {
+      for (
+        var srcX = 0, dstX = xOffset;
+        srcX < passWidth;
+        ++srcX, dstX += xStep
+      ) {
         _readPixel(rowInput, pixel);
         _setPixel(image.getPixel(dstX, dstY), pixel);
 
@@ -646,10 +681,10 @@ class PngDecoder extends Decoder {
     final channels = (_info.colorType == PngColorType.grayscaleAlpha)
         ? 2
         : (_info.colorType == PngColorType.rgb)
-            ? 3
-            : (_info.colorType == PngColorType.rgba)
-                ? 4
-                : 1;
+        ? 3
+        : (_info.colorType == PngColorType.rgba)
+        ? 4
+        : 1;
 
     final pixelDepth = channels * _info.bits;
 
@@ -691,7 +726,11 @@ class PngDecoder extends Decoder {
   }
 
   void _unfilter(
-      PngFilterType filterType, int bpp, List<int> row, List<int>? prevRow) {
+    PngFilterType filterType,
+    int bpp,
+    List<int> row,
+    List<int>? prevRow,
+  ) {
     final rowBytes = row.length;
 
     switch (filterType) {
@@ -788,14 +827,14 @@ class PngDecoder extends Decoder {
     final mask = (numBits == 1)
         ? 1
         : (numBits == 2)
-            ? 3
-            : (numBits == 4)
-                ? 0xf
-                : (numBits == 8)
-                    ? 0xff
-                    : (numBits == 16)
-                        ? 0xffff
-                        : 0;
+        ? 3
+        : (numBits == 4)
+        ? 0xf
+        : (numBits == 8)
+        ? 0xff
+        : (numBits == 16)
+        ? 0xffff
+        : 0;
 
     final octet = (_bitBuffer >> (_bitBufferLen - numBits)) & mask;
 

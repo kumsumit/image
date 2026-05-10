@@ -6,11 +6,13 @@ import '../util/_circle_test.dart';
 import '../util/image_exception.dart';
 
 /// Returns a resized and square cropped copy of the [src] image of [size] size.
-Image copyResizeCropSquare(Image src,
-    {required int size,
-    Interpolation interpolation = Interpolation.nearest,
-    num radius = 0,
-    bool antialias = false}) {
+Image copyResizeCropSquare(
+  Image src, {
+  required int size,
+  Interpolation interpolation = Interpolation.nearest,
+  num radius = 0,
+  bool antialias = false,
+}) {
   if (size <= 0) {
     throw ImageException('Invalid size');
   }
@@ -34,8 +36,9 @@ Image copyResizeCropSquare(Image src,
   final xOffset = (width - size) ~/ 2;
   final yOffset = (height - size) ~/ 2;
 
-  final scaleX =
-      interpolation == Interpolation.nearest ? Int32List(size) : null;
+  final scaleX = interpolation == Interpolation.nearest
+      ? Int32List(size)
+      : null;
 
   if (scaleX != null) {
     for (var x = 0; x < size; ++x) {
@@ -45,7 +48,8 @@ Image copyResizeCropSquare(Image src,
 
   Image? firstFrame;
   for (final frame in src.frames) {
-    final dst = firstFrame?.addFrame() ??
+    final dst =
+        firstFrame?.addFrame() ??
         Image.fromResized(frame, width: size, height: size, noAnimation: true);
     firstFrame ??= dst;
 
@@ -106,8 +110,11 @@ Image copyResizeCropSquare(Image src,
         } else {
           final x = p.x * dx;
           final y = p.y * dy;
-          final sp =
-              frame.getPixelInterpolate(x, y, interpolation: interpolation);
+          final sp = frame.getPixelInterpolate(
+            x,
+            y,
+            interpolation: interpolation,
+          );
           final spa = sp.a * a;
           p.setRgba(sp.r, sp.g, sp.b, spa);
         }

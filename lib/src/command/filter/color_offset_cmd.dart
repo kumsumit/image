@@ -10,27 +10,30 @@ class ColorOffsetCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  ColorOffsetCmd(Command? input,
-      {this.red = 0,
-      this.green = 0,
-      this.blue = 0,
-      this.alpha = 0,
-      this.mask,
-      this.maskChannel = Channel.luminance})
-      : super(input);
+  ColorOffsetCmd(
+    Command? input, {
+    this.red = 0,
+    this.green = 0,
+    this.blue = 0,
+    this.alpha = 0,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {
     final img = await input?.getImage();
     final maskImg = await mask?.getImage();
     outputImage = img != null
-        ? g.colorOffset(img,
+        ? g.colorOffset(
+            img,
             red: red,
             green: green,
             blue: blue,
             alpha: alpha,
             mask: maskImg,
-            maskChannel: maskChannel)
+            maskChannel: maskChannel,
+          )
         : null;
   }
 }

@@ -29,8 +29,12 @@ class GifImageDesc {
       colorMap = GifColorMap(1 << bitsPerPixel);
 
       for (var i = 0; i < colorMap!.numColors; ++i) {
-        colorMap!
-            .setColor(i, input.readByte(), input.readByte(), input.readByte());
+        colorMap!.setColor(
+          i,
+          input.readByte(),
+          input.readByte(),
+          input.readByte(),
+        );
       }
     }
 

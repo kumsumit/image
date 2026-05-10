@@ -116,10 +116,11 @@ class TgaDecoder extends Decoder {
     final bpp = info!.pixelDepth;
     final hasAlpha = bpp == 16 || bpp == 32;
     final image = Image(
-        width: info!.width,
-        height: info!.height,
-        numChannels: hasAlpha ? 4 : 3,
-        withPalette: info!.hasColorMap);
+      width: info!.width,
+      height: info!.height,
+      numChannels: hasAlpha ? 4 : 3,
+      withPalette: info!.hasColorMap,
+    );
 
     const rleBit = 0x80;
     const rleMask = 0x7f;
@@ -247,16 +248,18 @@ class TgaDecoder extends Decoder {
     input.offset = info!.imageOffset;
 
     final bpp = info!.pixelDepth;
-    final hasAlpha = bpp == 16 ||
+    final hasAlpha =
+        bpp == 16 ||
         bpp == 32 ||
         (info!.hasColorMap &&
             (info!.colorMapDepth == 16 || info!.colorMapDepth == 32));
 
     final image = Image(
-        width: info!.width,
-        height: info!.height,
-        numChannels: hasAlpha ? 4 : 3,
-        withPalette: info!.hasColorMap);
+      width: info!.width,
+      height: info!.height,
+      numChannels: hasAlpha ? 4 : 3,
+      withPalette: info!.hasColorMap,
+    );
 
     if (info!.hasColorMap) {
       _decodeColorMap(info!.colorMap!, image.palette!);

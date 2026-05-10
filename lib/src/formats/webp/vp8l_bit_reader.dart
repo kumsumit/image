@@ -26,7 +26,8 @@ class VP8LBitReader {
   int prefetchBits() {
     var b2 = 0;
     if (bitPos < 32) {
-      b2 = (_buffer[0] >> bitPos) +
+      b2 =
+          (_buffer[0] >> bitPos) +
           ((_buffer[1] & bitMask[bitPos]) * (bitMask[32 - bitPos] + 1));
     } else if (bitPos == 32) {
       b2 = _buffer[1];
@@ -123,6 +124,6 @@ class VP8LBitReader {
     536870911,
     1073741823,
     2147483647,
-    4294967295
+    4294967295,
   ];
 }

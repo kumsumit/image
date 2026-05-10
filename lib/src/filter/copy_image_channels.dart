@@ -4,15 +4,17 @@ import '../util/math_util.dart';
 
 /// Copy channels from the [from] image to the [src] image. If [scaled] is
 /// true, then the from image will be scaled to the src image resolution.
-Image copyImageChannels(Image src,
-    {required Image from,
-    bool scaled = false,
-    Channel? red,
-    Channel? green,
-    Channel? blue,
-    Channel? alpha,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image copyImageChannels(
+  Image src, {
+  required Image from,
+  bool scaled = false,
+  Channel? red,
+  Channel? green,
+  Channel? blue,
+  Channel? alpha,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: src.numChannels);
   }
@@ -27,14 +29,18 @@ Image copyImageChannels(Image src,
         fromPixel.setPosition(p.x, p.y);
       }
 
-      final r =
-          red != null ? fromPixel.getChannelNormalized(red) : p.rNormalized;
-      final g =
-          green != null ? fromPixel.getChannelNormalized(green) : p.gNormalized;
-      final b =
-          blue != null ? fromPixel.getChannelNormalized(blue) : p.bNormalized;
-      final a =
-          alpha != null ? fromPixel.getChannelNormalized(alpha) : p.aNormalized;
+      final r = red != null
+          ? fromPixel.getChannelNormalized(red)
+          : p.rNormalized;
+      final g = green != null
+          ? fromPixel.getChannelNormalized(green)
+          : p.gNormalized;
+      final b = blue != null
+          ? fromPixel.getChannelNormalized(blue)
+          : p.bNormalized;
+      final a = alpha != null
+          ? fromPixel.getChannelNormalized(alpha)
+          : p.aNormalized;
 
       final msk = mask?.getPixel(p.x, p.y).getChannelNormalized(maskChannel);
       if (msk == null) {

@@ -7,8 +7,11 @@ enum SolarizeMode { highlights, shadows }
 /// {threshold} should be int from 1 to 254. If {mode} is
 /// SolarizeMode.highlights, bright objects become black, otherwise it will
 /// solarize shadows.
-Image solarize(Image src,
-    {required int threshold, SolarizeMode mode = SolarizeMode.highlights}) {
+Image solarize(
+  Image src, {
+  required int threshold,
+  SolarizeMode mode = SolarizeMode.highlights,
+}) {
   final max = src.maxChannelValue;
   final thresholdRange = (max * (threshold / 255)).toInt();
   if (src.hasPalette) {

@@ -14,10 +14,10 @@ class ColorFloat64 extends Iterable<num> implements Color {
   ColorFloat64(int numChannels) : data = Float64List(numChannels);
 
   ColorFloat64.from(ColorFloat64 other)
-      : data = Float64List.fromList(other.data);
+    : data = Float64List.fromList(other.data);
 
   ColorFloat64.fromList(List<double> color)
-      : data = Float64List.fromList(color);
+    : data = Float64List.fromList(color);
 
   ColorFloat64.rgb(num r, num g, num b) : data = Float64List(3) {
     data[0] = r.toDouble();
@@ -128,8 +128,8 @@ class ColorFloat64 extends Iterable<num> implements Color {
   num getChannel(Channel channel) => channel == Channel.luminance
       ? luminance
       : channel.index < data.length
-          ? data[channel.index]
-          : 0;
+      ? data[channel.index]
+      : 0;
 
   @override
   num getChannelNormalized(Channel channel) =>
@@ -181,7 +181,10 @@ class ColorFloat64 extends Iterable<num> implements Color {
   int get hashCode => Object.hashAll(toList());
 
   @override
-  Color convert({Format? format, int? numChannels, num? alpha}) =>
-      convertColor(this,
-          format: format, numChannels: numChannels, alpha: alpha);
+  Color convert({Format? format, int? numChannels, num? alpha}) => convertColor(
+    this,
+    format: format,
+    numChannels: numChannels,
+    alpha: alpha,
+  );
 }

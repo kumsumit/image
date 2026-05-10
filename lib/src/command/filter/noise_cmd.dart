@@ -11,20 +11,28 @@ class NoiseCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  NoiseCmd(Command? input, this.sigma,
-      {this.type = g.NoiseType.gaussian,
-      this.random,
-      this.mask,
-      this.maskChannel = Channel.luminance})
-      : super(input);
+  NoiseCmd(
+    Command? input,
+    this.sigma, {
+    this.type = g.NoiseType.gaussian,
+    this.random,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {
     final img = await input?.getImage();
     final maskImg = await mask?.getImage();
     outputImage = img != null
-        ? g.noise(img, sigma,
-            type: type, random: random, mask: maskImg, maskChannel: maskChannel)
+        ? g.noise(
+            img,
+            sigma,
+            type: type,
+            random: random,
+            mask: maskImg,
+            maskChannel: maskChannel,
+          )
         : null;
   }
 }

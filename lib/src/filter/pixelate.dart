@@ -7,7 +7,7 @@ enum PixelateMode {
   upperLeft,
 
   /// Use the average of the pixels within a block for the block color.
-  average
+  average,
 }
 
 /// Pixelate the [src] image.
@@ -17,12 +17,14 @@ enum PixelateMode {
 /// block will be used for the block color. Otherwise if [mode] is
 /// [PixelateMode.average], the average of all the pixels in the block will be
 /// used for the block color.
-Image pixelate(Image src,
-    {required int size,
-    PixelateMode mode = PixelateMode.upperLeft,
-    num amount = 1,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image pixelate(
+  Image src, {
+  required int size,
+  PixelateMode mode = PixelateMode.upperLeft,
+  num amount = 1,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (size <= 1) {
     return src;
   }
@@ -38,8 +40,9 @@ Image pixelate(Image src,
           final x2 = (p.x ~/ size) * size;
           final y2 = (p.y ~/ size) * size;
           final p2 = frame.getPixel(x2, y2);
-          final msk =
-              mask?.getPixel(p.x, p.y).getChannelNormalized(maskChannel);
+          final msk = mask
+              ?.getPixel(p.x, p.y)
+              .getChannelNormalized(maskChannel);
           final mx = (msk ?? 1) * amount;
           if (mx == 1) {
             p.set(p2);
@@ -62,8 +65,9 @@ Image pixelate(Image src,
         for (final p in frame) {
           final x2 = (p.x ~/ size) * size;
           final y2 = (p.y ~/ size) * size;
-          final msk =
-              mask?.getPixel(p.x, p.y).getChannelNormalized(maskChannel);
+          final msk = mask
+              ?.getPixel(p.x, p.y)
+              .getChannelNormalized(maskChannel);
           final mx = (msk ?? 1) * amount;
           if (x2 != lx || y2 <= ly) {
             lx = x2;

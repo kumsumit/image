@@ -8,17 +8,19 @@ import 'blend_mode.dart';
 import 'draw_line.dart';
 
 /// Draw a rectangle in the image [dst] with the [color].
-Image drawRect(Image dst,
-    {required int x1,
-    required int y1,
-    required int x2,
-    required int y2,
-    required Color color,
-    num thickness = 1,
-    num radius = 0,
-    BlendMode blend = BlendMode.alpha,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image drawRect(
+  Image dst, {
+  required int x1,
+  required int y1,
+  required int x2,
+  required int y2,
+  required Color color,
+  num thickness = 1,
+  num radius = 0,
+  BlendMode blend = BlendMode.alpha,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   final x0 = min(x1, x2);
   final y0 = min(y1, y2);
   x1 = max(x1, x2);
@@ -36,12 +38,33 @@ Image drawRect(Image dst,
       color: color,
       blend: blend,
     );
-    drawLine(dst,
-        x1: x1, y1: y0 + rad, x2: x1, y2: y1 - rad, color: color, blend: blend);
-    drawLine(dst,
-        x1: x0 + rad, y1: y1, x2: x1 - rad, y2: y1, color: color, blend: blend);
-    drawLine(dst,
-        x1: x0, y1: y0 + rad, x2: x0, y2: y1 - rad, color: color, blend: blend);
+    drawLine(
+      dst,
+      x1: x1,
+      y1: y0 + rad,
+      x2: x1,
+      y2: y1 - rad,
+      color: color,
+      blend: blend,
+    );
+    drawLine(
+      dst,
+      x1: x0 + rad,
+      y1: y1,
+      x2: x1 - rad,
+      y2: y1,
+      color: color,
+      blend: blend,
+    );
+    drawLine(
+      dst,
+      x1: x0,
+      y1: y0 + rad,
+      x2: x0,
+      y2: y1 - rad,
+      color: color,
+      blend: blend,
+    );
 
     final c1x = x0 + rad;
     final c1y = y0 + rad;
@@ -52,72 +75,84 @@ Image drawRect(Image dst,
     final c4x = x0 + rad;
     final c4y = y1 - rad;
 
-    drawAntialiasCircle(dst,
-        x: c1x,
-        y: c1y,
-        radius: rad,
-        color: color,
-        blend: blend,
-        maskChannel: maskChannel,
-        mask: mask,
-        quadrants: topLeftQuadrant);
+    drawAntialiasCircle(
+      dst,
+      x: c1x,
+      y: c1y,
+      radius: rad,
+      color: color,
+      blend: blend,
+      maskChannel: maskChannel,
+      mask: mask,
+      quadrants: topLeftQuadrant,
+    );
 
-    drawAntialiasCircle(dst,
-        x: c2x,
-        y: c2y,
-        radius: rad,
-        color: color,
-        blend: blend,
-        maskChannel: maskChannel,
-        mask: mask,
-        quadrants: topRightQuadrant);
+    drawAntialiasCircle(
+      dst,
+      x: c2x,
+      y: c2y,
+      radius: rad,
+      color: color,
+      blend: blend,
+      maskChannel: maskChannel,
+      mask: mask,
+      quadrants: topRightQuadrant,
+    );
 
-    drawAntialiasCircle(dst,
-        x: c3x,
-        y: c3y,
-        radius: rad,
-        color: color,
-        blend: blend,
-        maskChannel: maskChannel,
-        mask: mask,
-        quadrants: bottomRightQuadrant);
+    drawAntialiasCircle(
+      dst,
+      x: c3x,
+      y: c3y,
+      radius: rad,
+      color: color,
+      blend: blend,
+      maskChannel: maskChannel,
+      mask: mask,
+      quadrants: bottomRightQuadrant,
+    );
 
-    drawAntialiasCircle(dst,
-        x: c4x,
-        y: c4y,
-        radius: rad,
-        color: color,
-        blend: blend,
-        maskChannel: maskChannel,
-        mask: mask,
-        quadrants: bottomLeftQuadrant);
+    drawAntialiasCircle(
+      dst,
+      x: c4x,
+      y: c4y,
+      radius: rad,
+      color: color,
+      blend: blend,
+      maskChannel: maskChannel,
+      mask: mask,
+      quadrants: bottomLeftQuadrant,
+    );
 
     return dst;
   }
 
   final ht = thickness / 2;
 
-  drawLine(dst,
-      x1: x0,
-      y1: y0,
-      x2: x1,
-      y2: y0,
-      color: color,
-      thickness: thickness,
-      blend: blend,
-      mask: mask,
-      maskChannel: maskChannel);
+  drawLine(
+    dst,
+    x1: x0,
+    y1: y0,
+    x2: x1,
+    y2: y0,
+    color: color,
+    thickness: thickness,
+    blend: blend,
+    mask: mask,
+    maskChannel: maskChannel,
+  );
 
-  drawLine(dst,
-      x1: x0,
-      y1: y1,
-      x2: x1,
-      y2: y1,
-      color: color,
-      thickness: thickness,
-      blend: blend,
-      mask: mask,
-      maskChannel: maskChannel);
+  drawLine(
+    dst,
+    x1: x0,
+    y1: y1,
+    x2: x1,
+    y2: y1,
+    color: color,
+    thickness: thickness,
+    blend: blend,
+    mask: mask,
+    maskChannel: maskChannel,
+  );
 
   final isEvenThickness = (ht - ht.toInt()) == 0;
   final dh = isEvenThickness ? 1 : 0;
@@ -127,27 +162,31 @@ Image drawRect(Image dst,
   final bx0 = (x0 + ht).floor();
   final bx1 = ((x1 - ht) + dh).ceil();
 
-  drawLine(dst,
-      x1: bx0,
-      y1: by0,
-      x2: bx0,
-      y2: by1,
-      color: color,
-      thickness: thickness,
-      blend: blend,
-      mask: mask,
-      maskChannel: maskChannel);
+  drawLine(
+    dst,
+    x1: bx0,
+    y1: by0,
+    x2: bx0,
+    y2: by1,
+    color: color,
+    thickness: thickness,
+    blend: blend,
+    mask: mask,
+    maskChannel: maskChannel,
+  );
 
-  drawLine(dst,
-      x1: bx1,
-      y1: by0,
-      x2: bx1,
-      y2: by1,
-      color: color,
-      thickness: thickness,
-      blend: blend,
-      mask: mask,
-      maskChannel: maskChannel);
+  drawLine(
+    dst,
+    x1: bx1,
+    y1: by0,
+    x2: bx1,
+    y2: by1,
+    color: color,
+    thickness: thickness,
+    blend: blend,
+    mask: mask,
+    maskChannel: maskChannel,
+  );
 
   return dst;
 }

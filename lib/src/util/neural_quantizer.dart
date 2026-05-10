@@ -42,8 +42,11 @@ class NeuralQuantizer extends Quantizer {
 
   /// 10 is a reasonable [samplingFactor] according to
   /// https://scientificgems.wordpress.com/stuff/neuquant-fast-high-quality-image-quantization/.
-  NeuralQuantizer(Image image,
-      {int numberOfColors = 256, this.samplingFactor = 10}) {
+  NeuralQuantizer(
+    Image image, {
+    int numberOfColors = 256,
+    this.samplingFactor = 10,
+  }) {
     _initialize(numberOfColors);
     addImage(image);
   }
@@ -129,8 +132,12 @@ class NeuralQuantizer extends Quantizer {
 
   void _copyColorMap() {
     for (var i = 0; i < netSize; ++i) {
-      palette.setRgb(i, _palette.get(i, 2).abs(), _palette.get(i, 1).abs(),
-          _palette.get(i, 0).abs());
+      palette.setRgb(
+        i,
+        _palette.get(i, 2).abs(),
+        _palette.get(i, 1).abs(),
+        _palette.get(i, 0).abs(),
+      );
     }
   }
 
@@ -386,7 +393,13 @@ class NeuralQuantizer extends Quantizer {
   }
 
   void _alterNeighbors(
-      double alpha, int rad, int i, double b, double g, double r) {
+    double alpha,
+    int rad,
+    int i,
+    double b,
+    double g,
+    double r,
+  ) {
     var lo = i - rad;
     if (lo < specials - 1) {
       lo = specials - 1;

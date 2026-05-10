@@ -13,23 +13,25 @@ class FillRectCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  FillRectCmd(Command? input,
-      {required this.x1,
-      required this.y1,
-      required this.x2,
-      required this.y2,
-      required this.color,
-      this.radius = 0,
-      this.mask,
-      this.maskChannel = Channel.luminance})
-      : super(input);
+  FillRectCmd(
+    Command? input, {
+    required this.x1,
+    required this.y1,
+    required this.x2,
+    required this.y2,
+    required this.color,
+    this.radius = 0,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {
     final img = await input?.getImage();
     final maskImg = await mask?.getImage();
     outputImage = img != null
-        ? fillRect(img,
+        ? fillRect(
+            img,
             x1: x1,
             y1: y1,
             x2: x2,
@@ -37,7 +39,8 @@ class FillRectCmd extends Command {
             color: color,
             radius: radius,
             mask: maskImg,
-            maskChannel: maskChannel)
+            maskChannel: maskChannel,
+          )
         : null;
   }
 }

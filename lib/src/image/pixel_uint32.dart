@@ -18,23 +18,23 @@ class PixelUint32 extends Iterable<num> implements Pixel {
   final ImageDataUint32 image;
 
   PixelUint32.imageData(this.image)
-      : _x = -1,
-        _y = 0,
-        _index = -image.numChannels;
+    : _x = -1,
+      _y = 0,
+      _index = -image.numChannels;
 
   PixelUint32.image(Image image)
-      : _x = -1,
-        _y = 0,
-        _index = -image.numChannels,
-        image = image.data is ImageDataUint32
-            ? image.data as ImageDataUint32
-            : ImageDataUint32(0, 0, 0);
+    : _x = -1,
+      _y = 0,
+      _index = -image.numChannels,
+      image = image.data is ImageDataUint32
+          ? image.data as ImageDataUint32
+          : ImageDataUint32(0, 0, 0);
 
   PixelUint32.from(PixelUint32 other)
-      : _x = other._x,
-        _y = other._y,
-        _index = other._index,
-        image = other.image;
+    : _x = other._x,
+      _y = other._y,
+      _index = other._index,
+      image = other.image;
 
   @override
   PixelUint32 clone() => PixelUint32.from(this);
@@ -186,8 +186,8 @@ class PixelUint32 extends Iterable<num> implements Pixel {
   num getChannel(Channel channel) => channel == Channel.luminance
       ? luminance
       : channel.index < numChannels
-          ? data[_index + channel.index]
-          : 0;
+      ? data[_index + channel.index]
+      : 0;
 
   @override
   num getChannelNormalized(Channel channel) =>
@@ -269,7 +269,10 @@ class PixelUint32 extends Iterable<num> implements Pixel {
   int get hashCode => Object.hashAll(toList());
 
   @override
-  Color convert({Format? format, int? numChannels, num? alpha}) =>
-      convertColor(this,
-          format: format, numChannels: numChannels, alpha: alpha);
+  Color convert({Format? format, int? numChannels, num? alpha}) => convertColor(
+    this,
+    format: format,
+    numChannels: numChannels,
+    alpha: alpha,
+  );
 }

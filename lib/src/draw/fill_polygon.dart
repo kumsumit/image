@@ -9,12 +9,14 @@ import '../util/point.dart';
 import 'blend_mode.dart';
 
 /// Fill a polygon defined by the given [vertices].
-Image fillPolygon(Image src,
-    {required List<Point> vertices,
-    BlendMode blend = BlendMode.alpha,
-    required Color color,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image fillPolygon(
+  Image src, {
+  required List<Point> vertices,
+  BlendMode blend = BlendMode.alpha,
+  required Color color,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (blend == BlendMode.alpha && color.a == 0) {
     return src;
   }
@@ -26,20 +28,29 @@ Image fillPolygon(Image src,
   }
 
   if (numVertices == 1) {
-    return drawPixel(src, vertices[0].xi, vertices[0].yi, color,
-        blend: blend, mask: mask, maskChannel: maskChannel);
+    return drawPixel(
+      src,
+      vertices[0].xi,
+      vertices[0].yi,
+      color,
+      blend: blend,
+      mask: mask,
+      maskChannel: maskChannel,
+    );
   }
 
   if (numVertices == 2) {
-    return drawLine(src,
-        x1: vertices[0].xi,
-        y1: vertices[0].yi,
-        x2: vertices[1].xi,
-        y2: vertices[1].yi,
-        color: color,
-        blend: blend,
-        mask: mask,
-        maskChannel: maskChannel);
+    return drawLine(
+      src,
+      x1: vertices[0].xi,
+      y1: vertices[0].yi,
+      x2: vertices[1].xi,
+      y2: vertices[1].yi,
+      color: color,
+      blend: blend,
+      mask: mask,
+      maskChannel: maskChannel,
+    );
   }
 
   var xMin = 0;
@@ -86,8 +97,15 @@ Image fillPolygon(Image src,
       }
       // Even number of intersections means inside
       if (intersections & 0x1 == 1) {
-        drawPixel(src, xi, yi, color,
-            blend: blend, mask: mask, maskChannel: maskChannel);
+        drawPixel(
+          src,
+          xi,
+          yi,
+          color,
+          blend: blend,
+          mask: mask,
+          maskChannel: maskChannel,
+        );
       }
     }
   }

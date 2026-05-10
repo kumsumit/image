@@ -4,8 +4,11 @@ import '../image/image.dart';
 import '../image/interpolation.dart';
 
 /// Returns a copy of the [src] image, rotated by [angle] degrees.
-Image copyRotate(Image src,
-    {required num angle, Interpolation interpolation = Interpolation.nearest}) {
+Image copyRotate(
+  Image src, {
+  required num angle,
+  Interpolation interpolation = Interpolation.nearest,
+}) {
   final num nAngle = angle % 360.0;
 
   // You can't interpolate index pixels
@@ -46,11 +49,14 @@ Image copyRotate(Image src,
   final numFrames = src.numFrames;
   for (var i = 0; i < numFrames; ++i) {
     final frame = src.frames[i];
-    final dst = firstFrame?.addFrame() ??
-        Image.fromResized(src,
-            width: (ux + vx).toInt(),
-            height: (uy + vy).toInt(),
-            noAnimation: true);
+    final dst =
+        firstFrame?.addFrame() ??
+        Image.fromResized(
+          src,
+          width: (ux + vx).toInt(),
+          height: (uy + vy).toInt(),
+          noAnimation: true,
+        );
     firstFrame ??= dst;
     final bg = frame.backgroundColor ?? src.backgroundColor;
     if (bg != null) {
@@ -63,8 +69,11 @@ Image copyRotate(Image src,
       final x2 = w2 + (x - dw2) * ca + (y - dh2) * sa;
       final y2 = h2 - (x - dw2) * sa + (y - dh2) * ca;
       if (frame.isBoundsSafe(x2, y2)) {
-        final c =
-            frame.getPixelInterpolate(x2, y2, interpolation: interpolation);
+        final c = frame.getPixelInterpolate(
+          x2,
+          y2,
+          interpolation: interpolation,
+        );
         dst.setPixel(x, y, c);
       }
     }
@@ -76,9 +85,14 @@ Image copyRotate(Image src,
 Image _rotate90(Image src) {
   Image? firstFrame;
   for (final frame in src.frames) {
-    final dst = firstFrame?.addFrame() ??
-        Image.fromResized(frame,
-            width: frame.height, height: frame.width, noAnimation: true);
+    final dst =
+        firstFrame?.addFrame() ??
+        Image.fromResized(
+          frame,
+          width: frame.height,
+          height: frame.width,
+          noAnimation: true,
+        );
     firstFrame ??= dst;
     final hm1 = frame.height - 1;
     for (var y = 0; y < dst.height; ++y) {
@@ -95,7 +109,8 @@ Image _rotate180(Image src) {
   for (final frame in src.frames) {
     final wm1 = frame.width - 1;
     final hm1 = frame.height - 1;
-    final dst = firstFrame?.addFrame() ??
+    final dst =
+        firstFrame?.addFrame() ??
         Image.from(frame, noAnimation: true, noPixels: true);
     firstFrame ??= dst;
     for (var y = 0; y < dst.height; ++y) {
@@ -111,9 +126,14 @@ Image _rotate270(Image src) {
   Image? firstFrame;
   for (final frame in src.frames) {
     final wm1 = src.width - 1;
-    final dst = firstFrame?.addFrame() ??
-        Image.fromResized(frame,
-            width: frame.height, height: frame.width, noAnimation: true);
+    final dst =
+        firstFrame?.addFrame() ??
+        Image.fromResized(
+          frame,
+          width: frame.height,
+          height: frame.width,
+          noAnimation: true,
+        );
     firstFrame ??= dst;
     for (var y = 0; y < dst.height; ++y) {
       for (var x = 0; x < dst.width; ++x) {

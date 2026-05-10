@@ -66,7 +66,12 @@ class VP8L {
     image = Image(width: _ioWidth, height: _ioHeight, numChannels: 4);
 
     if (!_decodeImageData(
-        _pixels!, webp.width, webp.height, webp.height, _processRows)) {
+      _pixels!,
+      webp.width,
+      webp.height,
+      webp.height,
+      _processRows,
+    )) {
       return null;
     }
 
@@ -129,19 +134,20 @@ class VP8L {
       case VP8LImageTransformType.crossColor:
         transform.bits = br.readBits(3) + 2;
         transform.data = _decodeImageStream(
-            _subSampleSize(transform.xsize, transform.bits),
-            _subSampleSize(transform.ysize, transform.bits),
-            false);
+          _subSampleSize(transform.xsize, transform.bits),
+          _subSampleSize(transform.ysize, transform.bits),
+          false,
+        );
         break;
       case VP8LImageTransformType.colorIndexing:
         final numColors = br.readBits(8) + 1;
         final bits = (numColors > 16)
             ? 0
             : (numColors > 4)
-                ? 1
-                : (numColors > 2)
-                    ? 2
-                    : 3;
+            ? 1
+            : (numColors > 2)
+            ? 2
+            : 3;
         transformSize[0] = _subSampleSize(transform.xsize, bits);
         transform.bits = bits;
         transform.data = _decodeImageStream(numColors, 1, false);
@@ -182,7 +188,11 @@ class VP8L {
 
     // Read the Huffman codes (may recurse).
     if (!_readHuffmanCodes(
-        transformXsize, transformYsize, colorCacheBits, isLevel0)) {
+      transformXsize,
+      transformYsize,
+      colorCacheBits,
+      isLevel0,
+    )) {
       throw ImageException('Invalid Huffman Codes');
     }
 
@@ -212,7 +222,12 @@ class VP8L {
 
     // Use the Huffman trees to decode the LZ77 encoded data.
     if (!_decodeImageData(
-        data, transformXsize, transformYsize, transformYsize, null)) {
+      data,
+      transformXsize,
+      transformYsize,
+      transformYsize,
+      null,
+    )) {
       throw ImageException('Failed to decode image data.');
     }
 
@@ -222,8 +237,13 @@ class VP8L {
     return data;
   }
 
-  bool _decodeImageData(Uint32List data, int width, int height, int lastRow,
-      void Function(int, bool)? processFunc) {
+  bool _decodeImageData(
+    Uint32List data,
+    int width,
+    int height,
+    int lastRow,
+    void Function(int, bool)? processFunc,
+  ) {
     var row = _lastPixel ~/ width;
     var col = _lastPixel % width;
 
@@ -458,8 +478,9 @@ class VP8L {
     var inPtr = _ioWidth * currentRow;
 
     while (numRows > 0) {
-      final numRowsToProcess =
-          (numRows > _numArgbCacheRows) ? _numArgbCacheRows : numRows;
+      final numRowsToProcess = (numRows > _numArgbCacheRows)
+          ? _numArgbCacheRows
+          : numRows;
       // Extract alpha (which is stored in the green plane).
       //final output = _opaque;
       final width = _ioWidth; // the final width (!= dec->width)
@@ -591,8 +612,12 @@ class VP8L {
     final startRow = _lastRow;
     final endRow = startRow + numRows;
     final rowsOut = InputBuffer(_opaque!, offset: _ioWidth * startRow);
-    _transforms[0]
-        .colorIndexInverseTransformAlpha(startRow, endRow, rows, rowsOut);
+    _transforms[0].colorIndexInverseTransformAlpha(
+      startRow,
+      endRow,
+      rows,
+      rowsOut,
+    );
   }
 
   // Processes (transforms, scales & color-converts) the rows decoded after the
@@ -664,12 +689,22 @@ class VP8L {
     // Inverse transforms.
     while (n-- > 0) {
       _transforms[n].inverseTransform(
-          startRow, endRow, _pixels!, rowsOut, _pixels!, rowsOut);
+        startRow,
+        endRow,
+        _pixels!,
+        rowsOut,
+        _pixels!,
+        rowsOut,
+      );
     }
   }
 
   bool _readHuffmanCodes(
-      int xSize, int ySize, int colorCacheBits, bool allowRecursion) {
+    int xSize,
+    int ySize,
+    int colorCacheBits,
+    bool allowRecursion,
+  ) {
     Uint32List? huffmanImage;
     var numHtreeGroups = 1;
     var numHtreeGroupsMax = 1;
@@ -725,7 +760,11 @@ class VP8L {
     }
 
     final htreeGroups = _readHuffmanCodesHelper(
-        colorCacheBits, numHtreeGroups, numHtreeGroupsMax, mapping);
+      colorCacheBits,
+      numHtreeGroups,
+      numHtreeGroupsMax,
+      mapping,
+    );
     if (htreeGroups == null) {
       return false;
     }
@@ -758,14 +797,20 @@ class VP8L {
     12,
     13,
     14,
-    15
+    15,
   ];
   static const _huffmanTableBits = 8;
 
   // Stores code in table[0], table[step], table[2*step], ..., table[end-step].
   // Assumes that end is an integer multiple of step.
   void _replicateValue(
-      HuffmanCodeList table, int key, int step, int end, int bits, int value) {
+    HuffmanCodeList table,
+    int key,
+    int step,
+    int end,
+    int bits,
+    int value,
+  ) {
     var currentEnd = end;
     do {
       currentEnd -= step;
@@ -800,8 +845,13 @@ class VP8L {
     return step != 0 ? (key & (step - 1)) + step : key;
   }
 
-  int _buildHuffmanTable(HuffmanCodeList? rootTable, int rootBits,
-      Int32List codeLengths, int codeLengthsSize, Uint16List? sorted) {
+  int _buildHuffmanTable(
+    HuffmanCodeList? rootTable,
+    int rootBits,
+    Int32List codeLengths,
+    int codeLengthsSize,
+    Uint16List? sorted,
+  ) {
     var totalSize = 1 << rootBits;
     final count = Int32List(_maxAllowedCodeLength + 1);
     final offset = Int32List(_maxAllowedCodeLength + 1);
@@ -881,15 +931,23 @@ class VP8L {
           final bits = len & 0xff;
           final value = sorted![symbol++];
           _replicateValue(
-              rootTable, tableOffset + key, step, tableSize, bits, value);
+            rootTable,
+            tableOffset + key,
+            step,
+            tableSize,
+            bits,
+            value,
+          );
           key = _getNextKey(key, len);
         }
       }
 
       // Fill in 2nd level tables and add pointers to root table.
-      for (var len = rootBits + 1, step = 2;
-          len <= _maxAllowedCodeLength;
-          ++len, step <<= 1) {
+      for (
+        var len = rootBits + 1, step = 2;
+        len <= _maxAllowedCodeLength;
+        ++len, step <<= 1
+      ) {
         numOpen <<= 1;
         numNodes += numOpen;
         numOpen -= count[len];
@@ -915,8 +973,14 @@ class VP8L {
           if (rootTable != null) {
             final bits = (len - rootBits) & 0xff;
             final value = sorted![symbol++];
-            _replicateValue(rootTable, tableOffset + (key >> rootBits), step,
-                tableSize, bits, value);
+            _replicateValue(
+              rootTable,
+              tableOffset + (key >> rootBits),
+              step,
+              tableSize,
+              bits,
+              value,
+            );
           }
           key = _getNextKey(key, len);
         }
@@ -931,10 +995,19 @@ class VP8L {
     return totalSize;
   }
 
-  int _vp8lBuildHuffmanTable(HuffmanTables? rootTable, int rootBits,
-      Int32List codeLengths, int codeLengthsSize) {
-    final totalSize =
-        _buildHuffmanTable(null, rootBits, codeLengths, codeLengthsSize, null);
+  int _vp8lBuildHuffmanTable(
+    HuffmanTables? rootTable,
+    int rootBits,
+    Int32List codeLengths,
+    int codeLengthsSize,
+  ) {
+    final totalSize = _buildHuffmanTable(
+      null,
+      rootBits,
+      codeLengths,
+      codeLengthsSize,
+      null,
+    );
     if (totalSize == 0 || rootTable == null) {
       return totalSize;
     }
@@ -967,8 +1040,13 @@ class VP8L {
     }
 
     final sorted = Uint16List(codeLengthsSize);
-    _buildHuffmanTable(rootTable.currentSegment!.currentTable, rootBits,
-        codeLengths, codeLengthsSize, sorted);
+    _buildHuffmanTable(
+      rootTable.currentSegment!.currentTable,
+      rootBits,
+      codeLengths,
+      codeLengthsSize,
+      sorted,
+    );
 
     return totalSize;
   }
@@ -982,11 +1060,18 @@ class VP8L {
   static const _codeLengthRepeatOffsets = <int>[3, 3, 11];
 
   bool _readHuffmanCodeLengths(
-      Int32List codeLengthCodeLengths, int numSymbols, Int32List codeLengths) {
+    Int32List codeLengthCodeLengths,
+    int numSymbols,
+    Int32List codeLengths,
+  ) {
     var prevCodeLen = _defaultCodeLength;
     final tables = HuffmanTables(1 << _lengthsTableBits);
-    if (_vp8lBuildHuffmanTable(tables, _lengthsTableBits, codeLengthCodeLengths,
-            _numCodeLengthCodes) ==
+    if (_vp8lBuildHuffmanTable(
+          tables,
+          _lengthsTableBits,
+          codeLengthCodeLengths,
+          _numCodeLengthCodes,
+        ) ==
         0) {
       return false;
     }
@@ -1038,7 +1123,10 @@ class VP8L {
   }
 
   int _readHuffmanCode(
-      int alphabetSize, Int32List codeLengths, HuffmanTables? table) {
+    int alphabetSize,
+    Int32List codeLengths,
+    HuffmanTables? table,
+  ) {
     var size = 0;
     var ok = false;
 
@@ -1069,13 +1157,20 @@ class VP8L {
       }
 
       ok = _readHuffmanCodeLengths(
-          codeLengthCodeLengths, alphabetSize, codeLengths);
+        codeLengthCodeLengths,
+        alphabetSize,
+        codeLengths,
+      );
     }
 
     ok = ok && !br.isEOS;
     if (ok) {
       size = _vp8lBuildHuffmanTable(
-          table, _huffmanTableBits, codeLengths, alphabetSize);
+        table,
+        _huffmanTableBits,
+        codeLengths,
+        alphabetSize,
+      );
     }
 
     return size;
@@ -1086,7 +1181,7 @@ class VP8L {
     _numLiteralCodes,
     _numLiteralCodes,
     _numLiteralCodes,
-    _numDistanceCodes
+    _numDistanceCodes,
   ];
 
   // Memory needed for lookup tables of one Huffman tree group. Red, blue, alpha
@@ -1110,7 +1205,7 @@ class VP8L {
     _fixedTableSize + 912,
     _fixedTableSize + 1168,
     _fixedTableSize + 1680,
-    _fixedTableSize + 2704
+    _fixedTableSize + 2704,
   ];
 
   static const _literalMap = <int>[0, 1, 1, 1, 0];
@@ -1144,8 +1239,12 @@ class VP8L {
     }
   }
 
-  List<HTreeGroup>? _readHuffmanCodesHelper(int colorCacheBits,
-      int numHtreeGroups, int numHtreeGroupsMax, Int32List? mapping) {
+  List<HTreeGroup>? _readHuffmanCodesHelper(
+    int colorCacheBits,
+    int numHtreeGroups,
+    int numHtreeGroupsMax,
+    Int32List? mapping,
+  ) {
     final maxAlphabetSize =
         _alphabetSize[0] + ((colorCacheBits > 0) ? 1 << colorCacheBits : 0);
     final tableSize = _tableSize[colorCacheBits];
@@ -1156,8 +1255,10 @@ class VP8L {
 
     final codeLengths = Int32List(maxAlphabetSize);
     final htreeGroups = List<HTreeGroup>.generate(
-        numHtreeGroups, (_) => HTreeGroup(),
-        growable: false);
+      numHtreeGroups,
+      (_) => HTreeGroup(),
+      growable: false,
+    );
 
     _huffmanTables = HuffmanTables(numHtreeGroups * tableSize);
 
@@ -1185,8 +1286,11 @@ class VP8L {
           if (j == 0 && colorCacheBits > 0) {
             alphabetSize += 1 << colorCacheBits;
           }
-          final size =
-              _readHuffmanCode(alphabetSize, codeLengths, _huffmanTables);
+          final size = _readHuffmanCode(
+            alphabetSize,
+            codeLengths,
+            _huffmanTables,
+          );
           htrees[j] = _huffmanTables!.currentSegment!.currentTable!;
           if (size == 0) {
             return null;
@@ -1197,7 +1301,9 @@ class VP8L {
           totalSize += htrees[j][0].bits;
           _huffmanTables!.currentSegment!.currentOffset += size;
           _huffmanTables!.currentSegment!.currentTable = HuffmanCodeList.from(
-              _huffmanTables!.currentSegment!.currentTable!, size);
+            _huffmanTables!.currentSegment!.currentTable!,
+            size,
+          );
 
           if (j <= _alpha) {
             var localMaxBits = codeLengths[0];
@@ -1299,7 +1405,12 @@ class VP8L {
 
   HTreeGroup _getHtreeGroupForPos(int x, int y) {
     final metaIndex = _getMetaIndex(
-        _huffmanImage, _huffmanXsize, _huffmanSubsampleBits, x, y);
+      _huffmanImage,
+      _huffmanXsize,
+      _huffmanSubsampleBits,
+      x,
+      y,
+    );
     return _htreeGroups[metaIndex];
   }
 
@@ -1432,7 +1543,7 @@ class VP8L {
     0x71,
     0x7f,
     0x60,
-    0x70
+    0x70,
   ];
 
   static const vp8lMagicByte = 0x2f;
@@ -1504,9 +1615,13 @@ class InternalVP8L extends VP8L {
 
   set ioHeight(int? height) => _ioHeight = height ?? 0;
 
-  bool decodeImageData(Uint32List data, int width, int height, int lastRow,
-          void Function(int, bool) processFunc) =>
-      _decodeImageData(data, width, height, lastRow, processFunc);
+  bool decodeImageData(
+    Uint32List data,
+    int width,
+    int height,
+    int lastRow,
+    void Function(int, bool) processFunc,
+  ) => _decodeImageData(data, width, height, lastRow, processFunc);
 
   Uint32List? decodeImageStream(int xsize, int ysize, bool isLevel0) =>
       _decodeImageStream(xsize, ysize, isLevel0);

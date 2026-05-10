@@ -8,9 +8,12 @@ class FillCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  FillCmd(Command? input,
-      {required this.color, this.mask, this.maskChannel = Channel.luminance})
-      : super(input);
+  FillCmd(
+    Command? input, {
+    required this.color,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {

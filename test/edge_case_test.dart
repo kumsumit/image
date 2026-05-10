@@ -1,11 +1,10 @@
-import 'dart:typed_data';
 import 'package:image/image.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('Edge Case Tests', () {
     test('Empty image operations', () {
-      final emptyImage = Image(width: 0, height: 0, numChannels: 3);
+      final emptyImage = Image(width: 0, height: 0);
       expect(emptyImage.width, equals(0));
       expect(emptyImage.height, equals(0));
       // Operations on empty image should not crash
@@ -15,8 +14,8 @@ void main() {
     });
 
     test('Single pixel image', () {
-      final pixelImage = Image(width: 1, height: 1, numChannels: 4);
-      pixelImage.setPixel(0, 0, ColorRgba8(255, 128, 64, 192));
+      final pixelImage = Image(width: 1, height: 1, numChannels: 4)
+        ..setPixel(0, 0, ColorRgba8(255, 128, 64, 192));
 
       final pixel = pixelImage.getPixel(0, 0);
       expect(pixel.r, equals(255));
@@ -50,7 +49,7 @@ void main() {
     });
 
     test('Invalid crop parameters', () {
-      final image = Image(width: 100, height: 100, numChannels: 3);
+      final image = Image(width: 100, height: 100);
       // Crop with negative x/y should handle gracefully
       final cropped = copyCrop(image, x: -10, y: -10, width: 50, height: 50);
       expect(cropped.width, equals(50));
@@ -58,7 +57,7 @@ void main() {
     });
 
     test('Large dimension resize', () {
-      final smallImage = Image(width: 2, height: 2, numChannels: 3);
+      final smallImage = Image(width: 2, height: 2);
       fill(smallImage, color: ColorRgb8(255, 255, 255));
 
       // Resize to very large

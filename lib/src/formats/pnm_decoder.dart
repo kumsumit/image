@@ -105,10 +105,11 @@ class PnmDecoder extends Decoder {
 
     if (info!.format == PnmFormat.pbm) {
       final image = Image(
-          width: info!.width,
-          height: info!.height,
-          numChannels: 1,
-          format: Format.uint1);
+        width: info!.width,
+        height: info!.height,
+        numChannels: 1,
+        format: Format.uint1,
+      );
       for (final p in image) {
         final tk = _getNextToken();
         if (tk == '1') {
@@ -125,10 +126,11 @@ class PnmDecoder extends Decoder {
         return null;
       }
       final image = Image(
-          width: info!.width,
-          height: info!.height,
-          numChannels: 1,
-          format: formatFromMaxValue(maxValue));
+        width: info!.width,
+        height: info!.height,
+        numChannels: 1,
+        format: formatFromMaxValue(maxValue),
+      );
       for (final p in image) {
         final g = _readValue(info!.format, maxValue);
         p.setRgb(g, g, g);
@@ -141,9 +143,10 @@ class PnmDecoder extends Decoder {
         return null;
       }
       final image = Image(
-          width: info!.width,
-          height: info!.height,
-          format: formatFromMaxValue(maxValue));
+        width: info!.width,
+        height: info!.height,
+        format: formatFromMaxValue(maxValue),
+      );
       for (final p in image) {
         final r = _readValue(info!.format, maxValue);
         final g = _readValue(info!.format, maxValue);

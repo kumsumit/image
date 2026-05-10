@@ -73,7 +73,8 @@ Future<void> testImageConversions(Image image) async {
 
       final oc = ic.convert(format: Format.uint8, numChannels: 4);
       final fnc = image.hasPalette ? 1 : image.numChannels;
-      final dbgName = '$testOutputPath/image/${image.format.name}/'
+      final dbgName =
+          '$testOutputPath/image/${image.format.name}/'
           '${image.format.name}_${fnc}_to_${format.name}_$nc.png';
       //print(dbgName);
       await encodePngFile(dbgName, oc);

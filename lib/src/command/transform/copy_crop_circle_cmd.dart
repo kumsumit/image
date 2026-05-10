@@ -7,20 +7,26 @@ class CopyCropCircleCmd extends Command {
   int? centerY;
   bool antialias;
 
-  CopyCropCircleCmd(Command? input,
-      {this.radius, this.centerX, this.centerY, this.antialias = true})
-      : super(input);
+  CopyCropCircleCmd(
+    Command? input, {
+    this.radius,
+    this.centerX,
+    this.centerY,
+    this.antialias = true,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {
     await input?.execute();
     final img = input?.outputImage;
     outputImage = img != null
-        ? copyCropCircle(img,
+        ? copyCropCircle(
+            img,
             radius: radius,
             centerX: centerX,
             centerY: centerY,
-            antialias: antialias)
+            antialias: antialias,
+          )
         : null;
   }
 }

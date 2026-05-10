@@ -8,16 +8,18 @@ import '../util/math_util.dart';
 
 /// Fill a rectangle in the image [src] with the given [color] with the corners
 /// [x1],[y1] and [x2],[y2].
-Image fillRect(Image src,
-    {required int x1,
-    required int y1,
-    required int x2,
-    required int y2,
-    required Color color,
-    num radius = 0,
-    bool alphaBlend = true,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image fillRect(
+  Image src, {
+  required int x1,
+  required int y1,
+  required int x2,
+  required int y2,
+  required Color color,
+  num radius = 0,
+  bool alphaBlend = true,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (alphaBlend && color.a == 0) {
     return src;
   }

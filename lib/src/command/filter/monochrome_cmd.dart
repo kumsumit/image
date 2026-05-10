@@ -9,23 +9,26 @@ class MonochromeCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  MonochromeCmd(Command? input,
-      {this.color,
-      this.amount = 1,
-      this.mask,
-      this.maskChannel = Channel.luminance})
-      : super(input);
+  MonochromeCmd(
+    Command? input, {
+    this.color,
+    this.amount = 1,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {
     final img = await input?.getImage();
     final maskImg = await mask?.getImage();
     outputImage = img != null
-        ? g.monochrome(img,
+        ? g.monochrome(
+            img,
             color: color,
             amount: amount,
             mask: maskImg,
-            maskChannel: maskChannel)
+            maskChannel: maskChannel,
+          )
         : null;
   }
 }

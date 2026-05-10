@@ -4,8 +4,12 @@ import '../util/color_util.dart';
 import '../util/math_util.dart';
 
 /// Convert the image to grayscale.
-Image grayscale(Image src,
-    {num amount = 1, Image? mask, Channel maskChannel = Channel.luminance}) {
+Image grayscale(
+  Image src, {
+  num amount = 1,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: src.numChannels);
   }

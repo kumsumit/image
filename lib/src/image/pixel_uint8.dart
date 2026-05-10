@@ -18,23 +18,23 @@ class PixelUint8 extends Iterable<num> implements Pixel {
   final ImageDataUint8 image;
 
   PixelUint8.imageData(this.image)
-      : _x = -1,
-        _y = 0,
-        _index = -image.numChannels;
+    : _x = -1,
+      _y = 0,
+      _index = -image.numChannels;
 
   PixelUint8.image(Image image)
-      : _x = -1,
-        _y = 0,
-        _index = -image.numChannels,
-        image = image.data is ImageDataUint8
-            ? image.data as ImageDataUint8
-            : ImageDataUint8(0, 0, 0);
+    : _x = -1,
+      _y = 0,
+      _index = -image.numChannels,
+      image = image.data is ImageDataUint8
+          ? image.data as ImageDataUint8
+          : ImageDataUint8(0, 0, 0);
 
   PixelUint8.from(PixelUint8 other)
-      : _x = other.x,
-        _y = other.y,
-        _index = other._index,
-        image = other.image;
+    : _x = other.x,
+      _y = other.y,
+      _index = other._index,
+      image = other.image;
 
   @override
   PixelUint8 clone() => PixelUint8.from(this);
@@ -124,8 +124,8 @@ class PixelUint8 extends Iterable<num> implements Pixel {
   num get(int ci) => palette != null
       ? palette!.get(data[_index], ci)
       : ci < numChannels
-          ? data[_index + ci]
-          : 0;
+      ? data[_index + ci]
+      : 0;
 
   @override
   num operator [](int ci) => get(ci);
@@ -145,8 +145,8 @@ class PixelUint8 extends Iterable<num> implements Pixel {
   @override
   num get r => palette == null
       ? numChannels > 0
-          ? data[_index]
-          : 0
+            ? data[_index]
+            : 0
       : palette!.getRed(data[_index]);
 
   @override
@@ -159,10 +159,10 @@ class PixelUint8 extends Iterable<num> implements Pixel {
   @override
   num get g => palette == null
       ? numChannels == 2
-          ? data[_index]
-          : numChannels > 1
-              ? data[_index + 1]
-              : 0
+            ? data[_index]
+            : numChannels > 1
+            ? data[_index + 1]
+            : 0
       : palette!.getGreen(data[_index]);
 
   @override
@@ -177,10 +177,10 @@ class PixelUint8 extends Iterable<num> implements Pixel {
   @override
   num get b => palette == null
       ? numChannels == 2
-          ? data[_index]
-          : numChannels > 2
-              ? data[_index + 2]
-              : 0
+            ? data[_index]
+            : numChannels > 2
+            ? data[_index + 2]
+            : 0
       : palette!.getBlue(data[_index]);
 
   @override
@@ -195,10 +195,10 @@ class PixelUint8 extends Iterable<num> implements Pixel {
   @override
   num get a => palette == null
       ? numChannels == 2
-          ? data[_index + 1]
-          : numChannels > 3
-              ? data[_index + 3]
-              : 255
+            ? data[_index + 1]
+            : numChannels > 3
+            ? data[_index + 3]
+            : 255
       : palette!.getAlpha(data[_index]);
 
   @override
@@ -325,7 +325,10 @@ class PixelUint8 extends Iterable<num> implements Pixel {
   int get hashCode => Object.hashAll(toList());
 
   @override
-  Color convert({Format? format, int? numChannels, num? alpha}) =>
-      convertColor(this,
-          format: format, numChannels: numChannels, alpha: alpha);
+  Color convert({Format? format, int? numChannels, num? alpha}) => convertColor(
+    this,
+    format: format,
+    numChannels: numChannels,
+    alpha: alpha,
+  );
 }

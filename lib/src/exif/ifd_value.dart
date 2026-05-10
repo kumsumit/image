@@ -81,7 +81,7 @@ class IfdByteValue extends IfdValue {
   IfdByteValue.list(Uint8List value) : value = Uint8List.fromList(value);
 
   IfdByteValue.data(InputBuffer data, int count)
-      : value = Uint8List.fromList(data.readBytes(count).toUint8List());
+    : value = Uint8List.fromList(data.readBytes(count).toUint8List());
 
   @override
   IfdValue clone() => IfdByteValue.list(value);
@@ -129,8 +129,8 @@ class IfdValueAscii extends IfdValue {
   IfdValueAscii.list(List<int> value) : value = String.fromCharCodes(value);
 
   IfdValueAscii.data(InputBuffer data, int count)
-      // The final byte is a null terminator
-      : value = count == 0 ? '' : data.readString(count - 1);
+    // The final byte is a null terminator
+    : value = count == 0 ? '' : data.readString(count - 1);
 
   IfdValueAscii.string(this.value);
 
@@ -287,17 +287,19 @@ class IfdValueRational extends IfdValue {
   List<Rational> value;
 
   IfdValueRational(int numerator, int denominator)
-      : value = [Rational(numerator, denominator)];
+    : value = [Rational(numerator, denominator)];
 
   IfdValueRational.from(Rational r)
-      : value = [Rational(r.numerator, r.denominator)];
+    : value = [Rational(r.numerator, r.denominator)];
 
   IfdValueRational.list(List<Rational> value)
-      : value = List<Rational>.from(value);
+    : value = List<Rational>.from(value);
 
   IfdValueRational.data(InputBuffer data, int count)
-      : value = List<Rational>.generate(
-            count, (i) => Rational(data.readUint32(), data.readUint32()));
+    : value = List<Rational>.generate(
+        count,
+        (i) => Rational(data.readUint32(), data.readUint32()),
+      );
 
   @override
   IfdValue clone() => IfdValueRational.list(value);
@@ -355,8 +357,9 @@ class IfdValueSByte extends IfdValue {
   IfdValueSByte.list(List<int> value) : value = Int8List.fromList(value);
 
   IfdValueSByte.data(InputBuffer data, int count)
-      : value = Int8List.fromList(
-            Int8List.view(data.toUint8List().buffer, 0, count));
+    : value = Int8List.fromList(
+        Int8List.view(data.toUint8List().buffer, 0, count),
+      );
 
   @override
   IfdValue clone() => IfdValueSByte.list(value);
@@ -515,16 +518,18 @@ class IfdValueSRational extends IfdValue {
   List<Rational> value;
 
   IfdValueSRational(int numerator, int denominator)
-      : value = [Rational(numerator, denominator)];
+    : value = [Rational(numerator, denominator)];
 
   IfdValueSRational.from(Rational value) : value = [value];
 
   IfdValueSRational.data(InputBuffer data, int count)
-      : value = List<Rational>.generate(
-            count, (i) => Rational(data.readInt32(), data.readInt32()));
+    : value = List<Rational>.generate(
+        count,
+        (i) => Rational(data.readInt32(), data.readInt32()),
+      );
 
   IfdValueSRational.list(List<Rational> value)
-      : value = List<Rational>.from(value);
+    : value = List<Rational>.from(value);
 
   @override
   IfdValue clone() => IfdValueSRational.list(value);
@@ -579,7 +584,7 @@ class IfdValueSingle extends IfdValue {
   IfdValueSingle.list(List<double> value) : value = Float32List.fromList(value);
 
   IfdValueSingle.data(InputBuffer data, int count)
-      : value = Float32List(count) {
+    : value = Float32List(count) {
     for (int i = 0; i < count; ++i) {
       value[i] = data.readFloat32();
     }
@@ -636,7 +641,7 @@ class IfdValueDouble extends IfdValue {
   IfdValueDouble.list(List<double> value) : value = Float64List.fromList(value);
 
   IfdValueDouble.data(InputBuffer data, int count)
-      : value = Float64List(count) {
+    : value = Float64List(count) {
     for (int i = 0; i < count; ++i) {
       value[i] = data.readFloat64();
     }
@@ -689,7 +694,7 @@ class IfdValueUndefined extends IfdValue {
   IfdValueUndefined.list(List<int> value) : value = Uint8List.fromList(value);
 
   IfdValueUndefined.data(InputBuffer data, int count)
-      : value = Uint8List.fromList(data.readBytes(count).toUint8List());
+    : value = Uint8List.fromList(data.readBytes(count).toUint8List());
 
   @override
   IfdValue clone() => IfdValueUndefined.list(value);

@@ -6,9 +6,11 @@ class ReinhardTonemapCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  ReinhardTonemapCmd(Command? input,
-      {this.mask, this.maskChannel = Channel.luminance})
-      : super(input);
+  ReinhardTonemapCmd(
+    Command? input, {
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {

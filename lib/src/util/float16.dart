@@ -71,8 +71,8 @@ class Float16 {
     final d = (f is Float16)
         ? f.toDouble()
         : (f is num)
-            ? f.toDouble()
-            : 0;
+        ? f.toDouble()
+        : 0;
     return Float16(toDouble() + d);
   }
 
@@ -81,8 +81,8 @@ class Float16 {
     final d = (f is Float16)
         ? f.toDouble()
         : (f is num)
-            ? f.toDouble()
-            : 0;
+        ? f.toDouble()
+        : 0;
     return Float16(toDouble() - d.toDouble());
   }
 
@@ -90,8 +90,8 @@ class Float16 {
     final d = (f is Float16)
         ? f.toDouble()
         : (f is num)
-            ? f.toDouble()
-            : 0;
+        ? f.toDouble()
+        : 0;
     return Float16(toDouble() * d.toDouble());
   }
 
@@ -99,8 +99,8 @@ class Float16 {
     final d = (f is Float16)
         ? f.toDouble()
         : (f is num)
-            ? f.toDouble()
-            : 0;
+        ? f.toDouble()
+        : 0;
     return Float16(toDouble() / d.toDouble());
   }
 

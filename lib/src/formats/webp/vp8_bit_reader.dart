@@ -227,7 +227,7 @@ class VP8BitReader {
     1,
     1,
     1,
-    0
+    0,
   ];
 
   static const _newRange = [
@@ -358,6 +358,6 @@ class VP8BitReader {
     249,
     251,
     253,
-    127
+    127,
   ];
 }

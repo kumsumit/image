@@ -12,14 +12,14 @@ class ImageDataInt8 extends ImageData {
   final Int8List data;
 
   ImageDataInt8(int width, int height, int numChannels)
-      : data = Int8List(width * height * numChannels),
-        super(width, height, numChannels);
+    : data = Int8List(width * height * numChannels),
+      super(width, height, numChannels);
 
   ImageDataInt8.from(ImageDataInt8 other, {bool skipPixels = false})
-      : data = skipPixels
-            ? Int8List(other.data.length)
-            : Int8List.fromList(other.data),
-        super(other.width, other.height, other.numChannels);
+    : data = skipPixels
+          ? Int8List(other.data.length)
+          : Int8List.fromList(other.data),
+      super(other.width, other.height, other.numChannels);
 
   @override
   ImageDataInt8 clone({bool noPixels = false}) =>

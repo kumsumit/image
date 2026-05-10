@@ -10,13 +10,18 @@ import 'blend_mode.dart';
 /// If [filter] is provided, the color c will be scaled by the [filter]
 /// color. If [alpha] is provided, it will be used in place of the
 /// color alpha, as a normalized color value \[0, 1\].
-Image drawPixel(Image image, int x, int y, Color c,
-    {Color? filter,
-    num? alpha,
-    BlendMode blend = BlendMode.alpha,
-    bool linearBlend = false,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image drawPixel(
+  Image image,
+  int x,
+  int y,
+  Color c, {
+  Color? filter,
+  num? alpha,
+  BlendMode blend = BlendMode.alpha,
+  bool linearBlend = false,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (!image.isBoundsSafe(x, y)) {
     return image;
   }
@@ -31,14 +36,18 @@ Image drawPixel(Image image, int x, int y, Color c,
   final maskPixel = mask?.getPixelSafe(x, y);
   final msk = maskPixel?.getChannelNormalized(maskChannel) ?? 1;
 
-  var overlayR =
-      filter != null ? c.rNormalized * filter.rNormalized : c.rNormalized;
-  var overlayG =
-      filter != null ? c.gNormalized * filter.gNormalized : c.gNormalized;
-  var overlayB =
-      filter != null ? c.bNormalized * filter.bNormalized : c.bNormalized;
+  var overlayR = filter != null
+      ? c.rNormalized * filter.rNormalized
+      : c.rNormalized;
+  var overlayG = filter != null
+      ? c.gNormalized * filter.gNormalized
+      : c.gNormalized;
+  var overlayB = filter != null
+      ? c.bNormalized * filter.bNormalized
+      : c.bNormalized;
 
-  final a = (c.length < 4 ? 1.0 : c.aNormalized) *
+  final a =
+      (c.length < 4 ? 1.0 : c.aNormalized) *
       ((filter == null || filter.length < 4) ? 1.0 : filter.aNormalized);
 
   final overlayA = (alpha ?? a) * msk;
@@ -80,12 +89,18 @@ Image drawPixel(Image image, int x, int y, Color c,
       final firstBlendColorG = baseOverlayAlphaProduct + rightHandProductG;
       final firstBlendColorB = baseOverlayAlphaProduct + rightHandProductB;
 
-      final oR = (overlayR / overlayA.clamp(0.01, 1) * step(0, overlayA))
-          .clamp(0, 0.99);
-      final oG = (overlayG / overlayA.clamp(0.01, 1) * step(0, overlayA))
-          .clamp(0, 0.99);
-      final oB = (overlayB / overlayA.clamp(0.01, 1) * step(0, overlayA))
-          .clamp(0, 0.99);
+      final oR = (overlayR / overlayA.clamp(0.01, 1) * step(0, overlayA)).clamp(
+        0,
+        0.99,
+      );
+      final oG = (overlayG / overlayA.clamp(0.01, 1) * step(0, overlayA)).clamp(
+        0,
+        0.99,
+      );
+      final oB = (overlayB / overlayA.clamp(0.01, 1) * step(0, overlayA)).clamp(
+        0,
+        0.99,
+      );
 
       final secondBlendColorR =
           (baseR * overlayA) / (1 - oR) + rightHandProductR;
@@ -94,12 +109,18 @@ Image drawPixel(Image image, int x, int y, Color c,
       final secondBlendColorB =
           (baseB * overlayA) / (1 - oB) + rightHandProductB;
 
-      final colorChoiceR =
-          step(overlayR * baseA + baseR * overlayA, baseOverlayAlphaProduct);
-      final colorChoiceG =
-          step(overlayG * baseA + baseG * overlayA, baseOverlayAlphaProduct);
-      final colorChoiceB =
-          step(overlayB * baseA + baseB * overlayA, baseOverlayAlphaProduct);
+      final colorChoiceR = step(
+        overlayR * baseA + baseR * overlayA,
+        baseOverlayAlphaProduct,
+      );
+      final colorChoiceG = step(
+        overlayG * baseA + baseG * overlayA,
+        baseOverlayAlphaProduct,
+      );
+      final colorChoiceB = step(
+        overlayB * baseA + baseB * overlayA,
+        baseOverlayAlphaProduct,
+      );
 
       overlayR = mix(firstBlendColorR, secondBlendColorR, colorChoiceR);
       overlayG = mix(firstBlendColorG, secondBlendColorG, colorChoiceG);
@@ -127,33 +148,39 @@ Image drawPixel(Image image, int x, int y, Color c,
       break;
     case BlendMode.overlay:
       if (2.0 * baseR < baseA) {
-        overlayR = 2.0 * overlayR * baseR +
+        overlayR =
+            2.0 * overlayR * baseR +
             overlayR * (1.0 - baseA) +
             baseR * (1.0 - overlayA);
       } else {
-        overlayR = overlayA * baseA -
+        overlayR =
+            overlayA * baseA -
             2.0 * (baseA - baseR) * (overlayA - overlayR) +
             overlayR * (1.0 - baseA) +
             baseR * (1.0 - overlayA);
       }
 
       if (2.0 * baseG < baseA) {
-        overlayG = 2.0 * overlayG * baseG +
+        overlayG =
+            2.0 * overlayG * baseG +
             overlayG * (1.0 - baseA) +
             baseG * (1.0 - overlayA);
       } else {
-        overlayG = overlayA * baseA -
+        overlayG =
+            overlayA * baseA -
             2.0 * (baseA - baseG) * (overlayA - overlayG) +
             overlayG * (1.0 - baseA) +
             baseG * (1.0 - overlayA);
       }
 
       if (2.0 * baseB < baseA) {
-        overlayB = 2.0 * overlayB * baseB +
+        overlayB =
+            2.0 * overlayB * baseB +
             overlayB * (1.0 - baseA) +
             baseB * (1.0 - overlayA);
       } else {
-        overlayB = overlayA * baseA -
+        overlayB =
+            overlayA * baseA -
             2.0 * (baseA - baseB) * (overlayA - overlayB) +
             overlayB * (1.0 - baseA) +
             baseB * (1.0 - overlayA);
@@ -163,56 +190,62 @@ Image drawPixel(Image image, int x, int y, Color c,
       overlayR = baseA == 0
           ? 0
           : baseR *
-                  (overlayA * (baseR / baseA) +
-                      (2 * overlayR * (1 - (baseR / baseA)))) +
-              overlayR * (1 - baseA) +
-              baseR * (1 - overlayA);
+                    (overlayA * (baseR / baseA) +
+                        (2 * overlayR * (1 - (baseR / baseA)))) +
+                overlayR * (1 - baseA) +
+                baseR * (1 - overlayA);
 
       overlayG = baseA == 0
           ? 0
           : baseG *
-                  (overlayA * (baseG / baseA) +
-                      (2 * overlayG * (1 - (baseG / baseA)))) +
-              overlayG * (1 - baseA) +
-              baseG * (1 - overlayA);
+                    (overlayA * (baseG / baseA) +
+                        (2 * overlayG * (1 - (baseG / baseA)))) +
+                overlayG * (1 - baseA) +
+                baseG * (1 - overlayA);
 
       overlayB = baseA == 0
           ? 0
           : baseB *
-                  (overlayA * (baseB / baseA) +
-                      (2 * overlayB * (1 - (baseB / baseA)))) +
-              overlayB * (1 - baseA) +
-              baseB * (1 - overlayA);
+                    (overlayA * (baseB / baseA) +
+                        (2 * overlayB * (1 - (baseB / baseA)))) +
+                overlayB * (1 - baseA) +
+                baseB * (1 - overlayA);
       break;
     case BlendMode.hardLight:
       if (2.0 * overlayR < overlayA) {
-        overlayR = 2.0 * overlayR * baseR +
+        overlayR =
+            2.0 * overlayR * baseR +
             overlayR * (1.0 - baseA) +
             baseR * (1.0 - overlayA);
       } else {
-        overlayR = overlayA * baseA -
+        overlayR =
+            overlayA * baseA -
             2.0 * (baseA - baseR) * (overlayA - overlayR) +
             overlayR * (1.0 - baseA) +
             baseR * (1.0 - overlayA);
       }
 
       if (2.0 * overlayG < overlayA) {
-        overlayG = 2.0 * overlayG * baseG +
+        overlayG =
+            2.0 * overlayG * baseG +
             overlayG * (1.0 - baseA) +
             baseG * (1.0 - overlayA);
       } else {
-        overlayG = overlayA * baseA -
+        overlayG =
+            overlayA * baseA -
             2.0 * (baseA - baseG) * (overlayA - overlayG) +
             overlayG * (1.0 - baseA) +
             baseG * (1.0 - overlayA);
       }
 
       if (2.0 * overlayB < overlayA) {
-        overlayB = 2.0 * overlayB * baseB +
+        overlayB =
+            2.0 * overlayB * baseB +
             overlayB * (1.0 - baseA) +
             baseB * (1.0 - overlayA);
       } else {
-        overlayB = overlayA * baseA -
+        overlayB =
+            overlayA * baseA -
             2.0 * (baseA - baseB) * (overlayA - overlayB) +
             overlayB * (1.0 - baseA) +
             baseB * (1.0 - overlayA);

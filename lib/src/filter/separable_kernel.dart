@@ -25,19 +25,36 @@ class SeparableKernel {
   /// for a single dimension. If [horizontal is true, the filter will be
   /// applied to the horizontal axis, otherwise it will be applied to the
   /// vertical axis.
-  void apply(Image src, Image dst,
-      {bool horizontal = true,
-      Image? mask,
-      Channel maskChannel = Channel.luminance}) {
+  void apply(
+    Image src,
+    Image dst, {
+    bool horizontal = true,
+    Image? mask,
+    Channel maskChannel = Channel.luminance,
+  }) {
     if (horizontal) {
       for (var y = 0; y < src.height; ++y) {
         _applyCoefficientsLine(
-            src, dst, y, src.width, horizontal, mask, maskChannel);
+          src,
+          dst,
+          y,
+          src.width,
+          horizontal,
+          mask,
+          maskChannel,
+        );
       }
     } else {
       for (var x = 0; x < src.width; ++x) {
         _applyCoefficientsLine(
-            src, dst, x, src.height, horizontal, mask, maskChannel);
+          src,
+          dst,
+          x,
+          src.height,
+          horizontal,
+          mask,
+          maskChannel,
+        );
       }
     }
   }
@@ -59,8 +76,15 @@ class SeparableKernel {
     return x;
   }
 
-  void _applyCoefficientsLine(Image src, Image dst, int y, int width,
-      bool horizontal, Image? mask, Channel maskChannel) {
+  void _applyCoefficientsLine(
+    Image src,
+    Image dst,
+    int y,
+    int width,
+    bool horizontal,
+    Image? mask,
+    Channel maskChannel,
+  ) {
     final srcPixel = src.getPixelSafe(0, 0);
     final dstPixel = dst.getPixelSafe(0, 0);
     if ((!srcPixel.isValid) || (!dstPixel.isValid)) {

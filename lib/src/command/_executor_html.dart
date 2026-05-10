@@ -7,7 +7,10 @@ import 'execute_result.dart';
 Future<ExecuteResult> executeCommandAsync(Command? command) async {
   await command?.execute();
   return ExecuteResult(
-      command?.outputImage, command?.outputBytes, command?.outputObject);
+    command?.outputImage,
+    command?.outputBytes,
+    command?.outputObject,
+  );
 }
 
 Future<Image?> executeCommandImage(Command? command) async {

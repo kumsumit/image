@@ -14,8 +14,12 @@ class JpegComponent {
   late List<HuffmanNode?> huffmanTableAC;
   late int pred;
 
-  JpegComponent(this.hSamples, this.vSamples, this.quantizationTableList,
-      this.quantizationIndex);
+  JpegComponent(
+    this.hSamples,
+    this.vSamples,
+    this.quantizationTableList,
+    this.quantizationIndex,
+  );
 
   Int16List? get quantizationTable => quantizationTableList[quantizationIndex];
 }

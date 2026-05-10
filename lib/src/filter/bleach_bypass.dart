@@ -2,8 +2,12 @@ import '../color/channel.dart';
 import '../image/image.dart';
 import '../util/math_util.dart';
 
-Image bleachBypass(Image src,
-    {num amount = 1, Image? mask, Channel maskChannel = Channel.luminance}) {
+Image bleachBypass(
+  Image src, {
+  num amount = 1,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   const luminanceR = 0.2125;
   const luminanceG = 0.7154;
   const luminanceB = 0.0721;

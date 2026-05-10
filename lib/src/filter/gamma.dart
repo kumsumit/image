@@ -5,10 +5,12 @@ import '../image/image.dart';
 import '../util/math_util.dart';
 
 /// Apply gamma scaling
-Image gamma(Image src,
-    {required num gamma,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image gamma(
+  Image src, {
+  required num gamma,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: src.numChannels);
   }

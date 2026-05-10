@@ -67,7 +67,9 @@ void main() {
     test('psd palette support', () {
       // Test that palette is set for indexed color mode if present
       final decoder = PsdDecoder();
-      final psd = decoder.decode(File('test/_data/psd/psd1.psd').readAsBytesSync());
+      final psd = decoder.decode(
+        File('test/_data/psd/psd1.psd').readAsBytesSync(),
+      );
       expect(psd, isNotNull);
       // Assuming psd1.psd is RGB, palette should be null
       expect(decoder.info!.palette, isNull);

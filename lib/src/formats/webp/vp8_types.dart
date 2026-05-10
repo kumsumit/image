@@ -43,9 +43,11 @@ class VP8SegmentHeader {
 class VP8BandProbas {
   List<Uint8List> probas;
   VP8BandProbas()
-      : probas = List<Uint8List>.generate(
-            VP8.numCtx, (_) => Uint8List(VP8.numProbas),
-            growable: false);
+    : probas = List<Uint8List>.generate(
+        VP8.numCtx,
+        (_) => Uint8List(VP8.numProbas),
+        growable: false,
+      );
 }
 
 // Struct collecting all frame-persistent probabilities.
@@ -57,12 +59,15 @@ class VP8Proba {
   List<List<VP8BandProbas>> bands;
 
   VP8Proba()
-      : bands = List<List<VP8BandProbas>>.generate(
-            VP8.numTypes,
-            (_) => List<VP8BandProbas>.generate(
-                VP8.numBands, (_) => VP8BandProbas(),
-                growable: false),
-            growable: false) {
+    : bands = List<List<VP8BandProbas>>.generate(
+        VP8.numTypes,
+        (_) => List<VP8BandProbas>.generate(
+          VP8.numBands,
+          (_) => VP8BandProbas(),
+          growable: false,
+        ),
+        growable: false,
+      ) {
     segments.fillRange(0, segments.length, 255);
   }
 }
@@ -157,8 +162,8 @@ class VP8Random {
     _amplitude = (dithering < 0.0)
         ? 0
         : (dithering > 1.0)
-            ? (1 << randomDitherFix)
-            : ((1 << randomDitherFix) * dithering).toInt();
+        ? (1 << randomDitherFix)
+        : ((1 << randomDitherFix) * dithering).toInt();
   }
 
   // Returns a centered pseudo-random number with 'num_bits' amplitude.
@@ -251,6 +256,6 @@ class VP8Random {
     0x5181e5f0,
     0x78853bbc,
     0x009f9494,
-    0x27e5ed3c
+    0x27e5ed3c,
   ];
 }

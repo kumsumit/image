@@ -5,9 +5,11 @@ class TrimCmd extends Command {
   TrimMode mode;
   Trim sides;
 
-  TrimCmd(Command? input,
-      {this.mode = TrimMode.transparent, this.sides = Trim.all})
-      : super(input);
+  TrimCmd(
+    Command? input, {
+    this.mode = TrimMode.transparent,
+    this.sides = Trim.all,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {

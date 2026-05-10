@@ -5,8 +5,8 @@ class PvrColorBoundingBox<PvrColor extends PvrColorRgbCore<PvrColor>> {
   PvrColor max;
 
   PvrColorBoundingBox(PvrColor min, PvrColor max)
-      : min = min.copy(),
-        max = max.copy();
+    : min = min.copy(),
+      max = max.copy();
 
   void add(PvrColor c) {
     min.setMin(c);

@@ -88,7 +88,12 @@ class WebPAlpha {
   }
 
   bool _dequantizeLevels(
-      Uint8List data, int width, int height, int row, int numRows) {
+    Uint8List data,
+    int width,
+    int height,
+    int row,
+    int numRows,
+  ) {
     if (width <= 0 ||
         height <= 0 ||
         row < 0 ||
@@ -104,8 +109,13 @@ class WebPAlpha {
     // Decode (with special row processing).
     return _use8bDecode
         ? _vp8l.decodeAlphaData(_vp8l.webp.width, _vp8l.webp.height, lastRow)
-        : _vp8l.decodeImageData(_vp8l.pixels!, _vp8l.webp.width,
-            _vp8l.webp.height, lastRow, _vp8l.extractAlphaRows);
+        : _vp8l.decodeImageData(
+            _vp8l.pixels!,
+            _vp8l.webp.width,
+            _vp8l.webp.height,
+            lastRow,
+            _vp8l.extractAlphaRows,
+          );
   }
 
   bool _decodeAlphaHeader() {

@@ -8,30 +8,41 @@ import 'draw_pixel.dart';
 
 /// Draw a circle into the [image] with a center of [x],[y] and
 /// the given [radius] and [color].
-Image drawCircle(Image image,
-    {required int x,
-    required int y,
-    required int radius,
-    required Color color,
-    bool antialias = false,
-    BlendMode blend = BlendMode.alpha,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image drawCircle(
+  Image image, {
+  required int x,
+  required int y,
+  required int radius,
+  required Color color,
+  bool antialias = false,
+  BlendMode blend = BlendMode.alpha,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (antialias) {
-    return drawAntialiasCircle(image,
-        x: x,
-        y: y,
-        radius: radius,
-        color: color,
-        blend: blend,
-        mask: mask,
-        maskChannel: maskChannel);
+    return drawAntialiasCircle(
+      image,
+      x: x,
+      y: y,
+      radius: radius,
+      color: color,
+      blend: blend,
+      mask: mask,
+      maskChannel: maskChannel,
+    );
   }
 
   final points = calculateCircumference(image, x, y, radius);
   for (final pt in points) {
-    drawPixel(image, pt.xi, pt.yi, color,
-        blend: blend, mask: mask, maskChannel: maskChannel);
+    drawPixel(
+      image,
+      pt.xi,
+      pt.yi,
+      color,
+      blend: blend,
+      mask: mask,
+      maskChannel: maskChannel,
+    );
   }
   return image;
 }

@@ -20,10 +20,12 @@ Image bumpToNormal(Image src, {num strength = 2.0}) {
     for (var y = 0; y < frame.height; ++y) {
       for (var x = 0; x < frame.width; ++x) {
         final height = frame.getPixel(x, y).r / mx;
-        var du = (height -
+        var du =
+            (height -
                 frame.getPixel(x < frame.width - 1 ? x + 1 : x, y).r / mx) *
             strength;
-        var dv = (height -
+        var dv =
+            (height -
                 frame.getPixel(x, y < frame.height - 1 ? y + 1 : y).r / mx) *
             strength;
         final z = du.abs() + dv.abs();
@@ -38,8 +40,13 @@ Image bumpToNormal(Image src, {num strength = 2.0}) {
         final nY = dv * 0.5 + 0.5;
         final nZ = dw;
 
-        dest.frames[frame.frameIndex]
-            .setPixelRgb(x, y, nX * mx, nY * mx, nZ * mx);
+        dest.frames[frame.frameIndex].setPixelRgb(
+          x,
+          y,
+          nX * mx,
+          nY * mx,
+          nZ * mx,
+        );
       }
     }
   }

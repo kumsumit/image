@@ -34,7 +34,10 @@ class BmpEncoder extends Encoder {
     } else if (format == Format.uint1 && nc == 2) {
       // => uint2 palette
       image = image.convert(
-          format: Format.uint2, numChannels: 1, withPalette: true);
+        format: Format.uint2,
+        numChannels: 1,
+        withPalette: true,
+      );
       palette = image.palette;
     } else if (format == Format.uint1 && nc == 3 && palette == null) {
       // => uint4 palette
@@ -90,14 +93,16 @@ class BmpEncoder extends Encoder {
       bpp = 16;
     }
 
-    final compression =
-        bpp > 8 ? BmpCompression.bitfields : BmpCompression.none;
+    final compression = bpp > 8
+        ? BmpCompression.bitfields
+        : BmpCompression.none;
 
     final imageStride = image.rowStride;
     final fileStride = ((image.width * bpp + 31) ~/ 32) * 4;
     final rowPaddingSize = fileStride - imageStride;
-    final rowPadding =
-        rowPaddingSize > 0 ? List<int>.filled(rowPaddingSize, 0xff) : null;
+    final rowPadding = rowPaddingSize > 0
+        ? List<int>.filled(rowPaddingSize, 0xff)
+        : null;
 
     final implicitPaletteSize = bpp >= 1 && bpp <= 8 ? 1 << bpp : 0;
 

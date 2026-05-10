@@ -7,9 +7,12 @@ class SketchCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  SketchCmd(Command? input,
-      {this.amount = 1, this.mask, this.maskChannel = Channel.luminance})
-      : super(input);
+  SketchCmd(
+    Command? input, {
+    this.amount = 1,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {

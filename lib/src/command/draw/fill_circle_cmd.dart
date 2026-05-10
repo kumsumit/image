@@ -14,23 +14,25 @@ class FillCircleCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  FillCircleCmd(Command? input,
-      {required this.x,
-      required this.y,
-      required this.radius,
-      required this.color,
-      this.antialias = false,
-      this.blend = BlendMode.alpha,
-      this.mask,
-      this.maskChannel = Channel.luminance})
-      : super(input);
+  FillCircleCmd(
+    Command? input, {
+    required this.x,
+    required this.y,
+    required this.radius,
+    required this.color,
+    this.antialias = false,
+    this.blend = BlendMode.alpha,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {
     final img = await input?.getImage();
     final maskImg = await mask?.getImage();
     outputImage = img != null
-        ? fillCircle(img,
+        ? fillCircle(
+            img,
             x: x,
             y: y,
             radius: radius,
@@ -38,7 +40,8 @@ class FillCircleCmd extends Command {
             antialias: antialias,
             blend: blend,
             mask: maskImg,
-            maskChannel: maskChannel)
+            maskChannel: maskChannel,
+          )
         : null;
   }
 }

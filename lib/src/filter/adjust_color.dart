@@ -41,19 +41,21 @@ import '../util/math_util.dart';
 /// [amount] controls how much affect this filter has on the [src] image, where
 /// 0.0 has no effect and 1.0 has full effect.
 ///
-Image adjustColor(Image src,
-    {Color? blacks,
-    Color? whites,
-    Color? mids,
-    num? contrast,
-    num? saturation,
-    num? brightness,
-    num? gamma,
-    num? exposure,
-    num? hue,
-    num amount = 1,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image adjustColor(
+  Image src, {
+  Color? blacks,
+  Color? whites,
+  Color? mids,
+  num? contrast,
+  num? saturation,
+  num? brightness,
+  num? gamma,
+  num? exposure,
+  num? hue,
+  num amount = 1,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (amount == 0) {
     return src;
   }

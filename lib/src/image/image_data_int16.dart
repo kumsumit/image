@@ -12,14 +12,14 @@ class ImageDataInt16 extends ImageData {
   final Int16List data;
 
   ImageDataInt16(int width, int height, int numChannels)
-      : data = Int16List(width * height * numChannels),
-        super(width, height, numChannels);
+    : data = Int16List(width * height * numChannels),
+      super(width, height, numChannels);
 
   ImageDataInt16.from(ImageDataInt16 other, {bool skipPixels = false})
-      : data = skipPixels
-            ? Int16List(other.data.length)
-            : Int16List.fromList(other.data),
-        super(other.width, other.height, other.numChannels);
+    : data = skipPixels
+          ? Int16List(other.data.length)
+          : Int16List.fromList(other.data),
+      super(other.width, other.height, other.numChannels);
 
   @override
   ImageDataInt16 clone({bool noPixels = false}) =>

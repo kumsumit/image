@@ -3,8 +3,11 @@ import '../image/image.dart';
 import '../util/math_util.dart';
 
 /// Invert the colors of the [src] image.
-Image invert(Image src,
-    {Image? mask, Channel maskChannel = Channel.luminance}) {
+Image invert(
+  Image src, {
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: src.numChannels);
   }
@@ -22,8 +25,9 @@ Image invert(Image src,
     } else {
       if (max != 0.0) {
         for (final p in frame) {
-          final msk =
-              mask?.getPixel(p.x, p.y).getChannelNormalized(maskChannel);
+          final msk = mask
+              ?.getPixel(p.x, p.y)
+              .getChannelNormalized(maskChannel);
 
           if (msk == null) {
             p

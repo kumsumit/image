@@ -4,13 +4,15 @@ import '../util/math_util.dart';
 
 /// Add the [red], [green], [blue] and [alpha] values to the [src] image
 /// colors, a per-channel brightness.
-Image colorOffset(Image src,
-    {num red = 0,
-    num green = 0,
-    num blue = 0,
-    num alpha = 0,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image colorOffset(
+  Image src, {
+  num red = 0,
+  num green = 0,
+  num blue = 0,
+  num alpha = 0,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: src.numChannels);
   }

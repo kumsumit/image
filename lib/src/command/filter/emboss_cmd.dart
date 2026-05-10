@@ -7,9 +7,12 @@ class EmbossCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  EmbossCmd(Command? input,
-      {this.amount = 1, this.mask, this.maskChannel = Channel.luminance})
-      : super(input);
+  EmbossCmd(
+    Command? input, {
+    this.amount = 1,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {

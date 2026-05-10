@@ -7,17 +7,24 @@ class ChromaticAberrationCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  ChromaticAberrationCmd(Command? input,
-      {this.shift = 5, this.mask, this.maskChannel = Channel.luminance})
-      : super(input);
+  ChromaticAberrationCmd(
+    Command? input, {
+    this.shift = 5,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {
     final img = await input?.getImage();
     final maskImg = await mask?.getImage();
     outputImage = img != null
-        ? chromaticAberration(img,
-            shift: shift, mask: maskImg, maskChannel: maskChannel)
+        ? chromaticAberration(
+            img,
+            shift: shift,
+            mask: maskImg,
+            maskChannel: maskChannel,
+          )
         : null;
   }
 }

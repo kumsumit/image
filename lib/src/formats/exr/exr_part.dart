@@ -110,7 +110,7 @@ class ExrPart {
             value.readInt32(),
             value.readInt32(),
             value.readInt32(),
-            value.readInt32()
+            value.readInt32(),
           ];
           width = (dataWindow[2] - dataWindow[0]) + 1;
           height = (dataWindow[3] - dataWindow[1]) + 1;
@@ -120,7 +120,7 @@ class ExrPart {
             value.readInt32(),
             value.readInt32(),
             value.readInt32(),
-            value.readInt32()
+            value.readInt32(),
           ];
           break;
         case 'lineOrder':
@@ -159,10 +159,11 @@ class ExrPart {
     }
 
     framebuffer = Image(
-        width: width,
-        height: height,
-        numChannels: numColorChannels,
-        format: colorFormat);
+      width: width,
+      height: height,
+      numChannels: numColorChannels,
+      format: colorFormat,
+    );
 
     for (var name in extraChannels.keys) {
       framebuffer!.setExtraChannel(name, extraChannels[name]!);
@@ -176,17 +177,31 @@ class ExrPart {
       }
 
       _numXTiles = _calculateNumTiles(
-          _numXLevels!, left, right, _tileWidth, _tileRoundingMode);
+        _numXLevels!,
+        left,
+        right,
+        _tileWidth,
+        _tileRoundingMode,
+      );
 
       _numYTiles = _calculateNumTiles(
-          _numYLevels!, top, bottom, _tileHeight, _tileRoundingMode);
+        _numYLevels!,
+        top,
+        bottom,
+        _tileHeight,
+        _tileRoundingMode,
+      );
 
       _bytesPerPixel = _calculateBytesPerPixel();
       _maxBytesPerTileLine = _bytesPerPixel * _tileWidth!;
       //_tileBufferSize = _maxBytesPerTileLine * _tileHeight;
 
       _compressor = ExrCompressor(
-          _compressionType, this, _maxBytesPerTileLine, _tileHeight);
+        _compressionType,
+        this,
+        _maxBytesPerTileLine,
+        _tileHeight,
+      );
 
       var lx = 0;
       var ly = 0;
@@ -334,10 +349,16 @@ class ExrPart {
   }
 
   List<int> _calculateNumTiles(
-          int numLevels, int min, int max, int? size, int? rmode) =>
-      List<int>.generate(numLevels,
-          (i) => (_levelSize(min, max, i, rmode) + size! - 1) ~/ size,
-          growable: false);
+    int numLevels,
+    int min,
+    int max,
+    int? size,
+    int? rmode,
+  ) => List<int>.generate(
+    numLevels,
+    (i) => (_levelSize(min, max, i, rmode) + size! - 1) ~/ size,
+    growable: false,
+  );
 
   int _levelSize(int mn, int mx, int l, int? rmode) {
     if (l < 0) {
@@ -400,7 +421,7 @@ class ExrPart {
 @internal
 class InternalExrPart extends ExrPart {
   InternalExrPart(int index, bool tiled, InputBuffer input)
-      : super(index, tiled, input);
+    : super(index, tiled, input);
 
   List<Uint32List?>? get offsets => _offsets;
 

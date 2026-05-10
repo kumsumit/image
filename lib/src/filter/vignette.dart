@@ -22,13 +22,15 @@ num _smoothStep(num edge0, num edge1, num x) {
 /// vignette effect where the [color] is fully applied. The radius values are in
 /// normalized percentage of the image size \[0, 1\].
 /// [amount] controls the blend of the effect with the original image.
-Image vignette(Image src,
-    {num start = 0.3,
-    num end = 0.85,
-    num amount = 0.9,
-    Color? color,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image vignette(
+  Image src, {
+  num start = 0.3,
+  num end = 0.85,
+  num amount = 0.9,
+  Color? color,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: src.numChannels);
   }

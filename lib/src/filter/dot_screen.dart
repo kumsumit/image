@@ -5,14 +5,16 @@ import '../image/image.dart';
 import '../util/math_util.dart';
 
 /// Apply the dot screen filter to the image.
-Image dotScreen(Image src,
-    {num angle = 180,
-    num size = 5.75,
-    int? centerX,
-    int? centerY,
-    num amount = 1,
-    Image? mask,
-    Channel maskChannel = Channel.luminance}) {
+Image dotScreen(
+  Image src, {
+  num angle = 180,
+  num size = 5.75,
+  int? centerX,
+  int? centerY,
+  num amount = 1,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (src.hasPalette) {
     src = src.convert(numChannels: src.numChannels);
   }

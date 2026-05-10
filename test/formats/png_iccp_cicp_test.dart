@@ -28,8 +28,9 @@ void main() {
       //   row 2: (0,255,255,255) (255,0,255,255) (255,128,0,255) (200,0,0,128)
       //   row 3: (0,0,0,0) × 4
       test('decodes pixel values correctly (not all-black)', () async {
-        final bytes =
-            await File('test/_data/png/rgba_iccp_cicp.png').readAsBytes();
+        final bytes = await File(
+          'test/_data/png/rgba_iccp_cicp.png',
+        ).readAsBytes();
         final image = decodePng(bytes);
         expect(image, isNotNull, reason: 'PNG should be decodable');
         expect(image!.width, equals(4));
@@ -69,11 +70,15 @@ void main() {
       });
 
       test('iCCP name is preserved in iccProfile metadata', () async {
-        final bytes =
-            await File('test/_data/png/rgba_iccp_cicp.png').readAsBytes();
+        final bytes = await File(
+          'test/_data/png/rgba_iccp_cicp.png',
+        ).readAsBytes();
         final image = decodePng(bytes)!;
-        expect(image.iccProfile, isNotNull,
-            reason: 'ICC profile should be stored as metadata');
+        expect(
+          image.iccProfile,
+          isNotNull,
+          reason: 'ICC profile should be stored as metadata',
+        );
         expect(image.iccProfile!.name, equals('Display P3'));
       });
 
@@ -84,34 +89,53 @@ void main() {
       //
       // After the fix: the 'cICP' case reads the four bytes and stores them in
       // info.cicpData, which is then accessible via PngDecoder.info.
-      test('cICP chunk is parsed and stored (not silently discarded)',
-          () async {
-        final bytes =
-            await File('test/_data/png/rgba_iccp_cicp.png').readAsBytes();
-        final decoder = PngDecoder()..startDecode(bytes);
+      test(
+        'cICP chunk is parsed and stored (not silently discarded)',
+        () async {
+          final bytes = await File(
+            'test/_data/png/rgba_iccp_cicp.png',
+          ).readAsBytes();
+          final decoder = PngDecoder()..startDecode(bytes);
 
-        // These assertions FAIL before the fix and PASS after the fix.
-        expect(decoder.info.cicpData, isNotNull,
-            reason: 'cICP chunk should be stored, not discarded');
+          // These assertions FAIL before the fix and PASS after the fix.
+          expect(
+            decoder.info.cicpData,
+            isNotNull,
+            reason: 'cICP chunk should be stored, not discarded',
+          );
 
-        final cicp = decoder.info.cicpData!;
-        // Our test PNG has cICP = [12, 13, 0, 1] (Display P3, sRGB transfer,
-        // identity matrix, full range).
-        expect(cicp.colourPrimaries, equals(12),
-            reason: '12 = Display P3 colour primaries');
-        expect(cicp.transferCharacteristics, equals(13),
-            reason: '13 = sRGB / Display P3 transfer function');
-        expect(cicp.matrixCoefficients, equals(0),
-            reason: '0 = identity / RGB (required for still images)');
-        expect(cicp.videoFullRangeFlag, equals(1),
-            reason: '1 = full range (0–255)');
-      });
+          final cicp = decoder.info.cicpData!;
+          // Our test PNG has cICP = [12, 13, 0, 1] (Display P3, sRGB transfer,
+          // identity matrix, full range).
+          expect(
+            cicp.colourPrimaries,
+            equals(12),
+            reason: '12 = Display P3 colour primaries',
+          );
+          expect(
+            cicp.transferCharacteristics,
+            equals(13),
+            reason: '13 = sRGB / Display P3 transfer function',
+          );
+          expect(
+            cicp.matrixCoefficients,
+            equals(0),
+            reason: '0 = identity / RGB (required for still images)',
+          );
+          expect(
+            cicp.videoFullRangeFlag,
+            equals(1),
+            reason: '1 = full range (0–255)',
+          );
+        },
+      );
 
       // Round-trip test: encode with cICP, decode, verify the data is
       // preserved.
       test('cICP round-trips through encoder', () async {
-        final bytes =
-            await File('test/_data/png/rgba_iccp_cicp.png').readAsBytes();
+        final bytes = await File(
+          'test/_data/png/rgba_iccp_cicp.png',
+        ).readAsBytes();
         final original = decodePng(bytes)!;
 
         // Encode with the cICP metadata
@@ -128,8 +152,11 @@ void main() {
         // Decode the re-encoded PNG
         final reDecoder = PngDecoder()..startDecode(encoded);
 
-        expect(reDecoder.info.cicpData, isNotNull,
-            reason: 'cICP should survive a PNG encode/decode round-trip');
+        expect(
+          reDecoder.info.cicpData,
+          isNotNull,
+          reason: 'cICP should survive a PNG encode/decode round-trip',
+        );
         expect(reDecoder.info.cicpData, equals(expectedCicp));
       });
     });

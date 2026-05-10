@@ -18,51 +18,113 @@ class WebPFilters {
     null, // WEBP_FILTER_NONE
     horizontalFilter, // WEBP_FILTER_HORIZONTAL
     verticalFilter, // WEBP_FILTER_VERTICAL
-    gradientFilter // WEBP_FILTER_GRADIENT
+    gradientFilter, // WEBP_FILTER_GRADIENT
   ];
 
   static const unfilters = [
     null, // WEBP_FILTER_NONE
     horizontalUnfilter, // WEBP_FILTER_HORIZONTAL
     verticalUnfilter, // WEBP_FILTER_VERTICAL
-    gradientUnfilter // WEBP_FILTER_GRADIENT
+    gradientUnfilter, // WEBP_FILTER_GRADIENT
   ];
 
-  static void horizontalFilter(Uint8List data, int width, int height,
-      int stride, Uint8List filteredData) {
+  static void horizontalFilter(
+    Uint8List data,
+    int width,
+    int height,
+    int stride,
+    Uint8List filteredData,
+  ) {
     _doHorizontalFilter(
-        data, width, height, stride, 0, height, false, filteredData);
+      data,
+      width,
+      height,
+      stride,
+      0,
+      height,
+      false,
+      filteredData,
+    );
   }
 
   static void horizontalUnfilter(
-      int width, int height, int stride, int row, int numRows, Uint8List data) {
+    int width,
+    int height,
+    int stride,
+    int row,
+    int numRows,
+    Uint8List data,
+  ) {
     _doHorizontalFilter(data, width, height, stride, row, numRows, true, data);
   }
 
-  static void verticalFilter(Uint8List data, int width, int height, int stride,
-      Uint8List filteredData) {
+  static void verticalFilter(
+    Uint8List data,
+    int width,
+    int height,
+    int stride,
+    Uint8List filteredData,
+  ) {
     _doVerticalFilter(
-        data, width, height, stride, 0, height, false, filteredData);
+      data,
+      width,
+      height,
+      stride,
+      0,
+      height,
+      false,
+      filteredData,
+    );
   }
 
   static void verticalUnfilter(
-      int width, int height, int stride, int row, int numRows, Uint8List data) {
+    int width,
+    int height,
+    int stride,
+    int row,
+    int numRows,
+    Uint8List data,
+  ) {
     _doVerticalFilter(data, width, height, stride, row, numRows, true, data);
   }
 
-  static void gradientFilter(Uint8List data, int width, int height, int stride,
-      Uint8List filteredData) {
+  static void gradientFilter(
+    Uint8List data,
+    int width,
+    int height,
+    int stride,
+    Uint8List filteredData,
+  ) {
     _doGradientFilter(
-        data, width, height, stride, 0, height, false, filteredData);
+      data,
+      width,
+      height,
+      stride,
+      0,
+      height,
+      false,
+      filteredData,
+    );
   }
 
   static void gradientUnfilter(
-      int width, int height, int stride, int row, int numRows, Uint8List data) {
+    int width,
+    int height,
+    int stride,
+    int row,
+    int numRows,
+    Uint8List data,
+  ) {
     _doGradientFilter(data, width, height, stride, row, numRows, true, data);
   }
 
-  static void _predictLine(InputBuffer src, InputBuffer pred, InputBuffer dst,
-      int length, bool inverse) {
+  static void _predictLine(
+    InputBuffer src,
+    InputBuffer pred,
+    InputBuffer dst,
+    int length,
+    bool inverse,
+  ) {
     if (inverse) {
       for (var i = 0; i < length; ++i) {
         dst[i] = src[i] + pred[i];
@@ -74,8 +136,16 @@ class WebPFilters {
     }
   }
 
-  static void _doHorizontalFilter(Uint8List src, int width, int height,
-      int stride, int row, int numRows, bool inverse, Uint8List out) {
+  static void _doHorizontalFilter(
+    Uint8List src,
+    int width,
+    int height,
+    int stride,
+    int row,
+    int numRows,
+    bool inverse,
+    Uint8List out,
+  ) {
     final startOffset = row * stride;
     final lastRow = row + numRows;
     final s = InputBuffer(src, offset: startOffset);
@@ -85,8 +155,13 @@ class WebPFilters {
     if (row == 0) {
       // Leftmost pixel is the same as input for topmost scanline.
       o[0] = s[0];
-      _predictLine(InputBuffer.from(s, offset: 1), preds,
-          InputBuffer.from(o, offset: 1), width - 1, inverse);
+      _predictLine(
+        InputBuffer.from(s, offset: 1),
+        preds,
+        InputBuffer.from(o, offset: 1),
+        width - 1,
+        inverse,
+      );
       row = 1;
       preds.offset += stride;
       s.offset += stride;
@@ -97,8 +172,13 @@ class WebPFilters {
     while (row < lastRow) {
       // Leftmost pixel is predicted from above.
       _predictLine(s, InputBuffer.from(preds, offset: -stride), o, 1, inverse);
-      _predictLine(InputBuffer.from(s, offset: 1), preds,
-          InputBuffer.from(o, offset: 1), width - 1, inverse);
+      _predictLine(
+        InputBuffer.from(s, offset: 1),
+        preds,
+        InputBuffer.from(o, offset: 1),
+        width - 1,
+        inverse,
+      );
       ++row;
       preds.offset += stride;
       s.offset += stride;
@@ -106,8 +186,16 @@ class WebPFilters {
     }
   }
 
-  static void _doVerticalFilter(Uint8List src, int width, int height,
-      int stride, int row, int numRows, bool inverse, Uint8List out) {
+  static void _doVerticalFilter(
+    Uint8List src,
+    int width,
+    int height,
+    int stride,
+    int row,
+    int numRows,
+    bool inverse,
+    Uint8List out,
+  ) {
     final startOffset = row * stride;
     final lastRow = row + numRows;
     final s = InputBuffer(src, offset: startOffset);
@@ -118,8 +206,13 @@ class WebPFilters {
       // Very first top-left pixel is copied.
       o[0] = s[0];
       // Rest of top scan-line is left-predicted.
-      _predictLine(InputBuffer.from(s, offset: 1), preds,
-          InputBuffer.from(o, offset: 1), width - 1, inverse);
+      _predictLine(
+        InputBuffer.from(s, offset: 1),
+        preds,
+        InputBuffer.from(o, offset: 1),
+        width - 1,
+        inverse,
+      );
       row = 1;
       s.offset += stride;
       o.offset += stride;
@@ -143,12 +236,20 @@ class WebPFilters {
     return ((g & ~0xff) == 0)
         ? g
         : (g < 0)
-            ? 0
-            : 255; // clip to 8bit
+        ? 0
+        : 255; // clip to 8bit
   }
 
-  static void _doGradientFilter(Uint8List src, int width, int height,
-      int stride, int row, int numRows, bool inverse, Uint8List out) {
+  static void _doGradientFilter(
+    Uint8List src,
+    int width,
+    int height,
+    int stride,
+    int row,
+    int numRows,
+    bool inverse,
+    Uint8List out,
+  ) {
     final startOffset = row * stride;
     final lastRow = row + numRows;
     final s = InputBuffer(src, offset: startOffset);
@@ -158,8 +259,13 @@ class WebPFilters {
     // left prediction for top scan-line
     if (row == 0) {
       o[0] = s[0];
-      _predictLine(InputBuffer.from(s, offset: 1), preds,
-          InputBuffer.from(o, offset: 1), width - 1, inverse);
+      _predictLine(
+        InputBuffer.from(s, offset: 1),
+        preds,
+        InputBuffer.from(o, offset: 1),
+        width - 1,
+        inverse,
+      );
       row = 1;
       preds.offset += stride;
       s.offset += stride;
@@ -172,7 +278,10 @@ class WebPFilters {
       _predictLine(s, InputBuffer.from(preds, offset: -stride), o, 1, inverse);
       for (var w = 1; w < width; ++w) {
         final pred = _gradientPredictor(
-            preds[w - 1], preds[w - stride], preds[w - stride - 1]);
+          preds[w - 1],
+          preds[w - stride],
+          preds[w - stride - 1],
+        );
         o[w] = s[w] + (inverse ? pred : -pred);
       }
       ++row;

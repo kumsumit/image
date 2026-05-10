@@ -17,24 +17,28 @@ class DrawStringCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  DrawStringCmd(Command? input, this.string,
-      {required this.font,
-      this.x,
-      this.y,
-      this.color,
-      this.wrap = false,
-      this.rightJustify = false,
-      this.blend = BlendMode.alpha,
-      this.mask,
-      this.maskChannel = Channel.luminance})
-      : super(input);
+  DrawStringCmd(
+    Command? input,
+    this.string, {
+    required this.font,
+    this.x,
+    this.y,
+    this.color,
+    this.wrap = false,
+    this.rightJustify = false,
+    this.blend = BlendMode.alpha,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {
     final img = await input?.getImage();
     final maskImg = await mask?.getImage();
     outputImage = img != null
-        ? drawString(img, string,
+        ? drawString(
+            img,
+            string,
             font: font,
             x: x,
             y: y,
@@ -43,7 +47,8 @@ class DrawStringCmd extends Command {
             wrap: wrap,
             blend: blend,
             mask: maskImg,
-            maskChannel: maskChannel)
+            maskChannel: maskChannel,
+          )
         : null;
   }
 }

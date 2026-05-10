@@ -7,8 +7,12 @@ import '../util/math_util.dart';
 /// Apply sketch filter to the image.
 ///
 /// [amount] controls the strength of the effect, in the range \[0, 1\].
-Image sketch(Image src,
-    {num amount = 1, Image? mask, Channel maskChannel = Channel.luminance}) {
+Image sketch(
+  Image src, {
+  num amount = 1,
+  Image? mask,
+  Channel maskChannel = Channel.luminance,
+}) {
   if (amount == 0) {
     return src;
   }

@@ -17,20 +17,30 @@ abstract class ExrRleCompressor extends ExrCompressor {
 class InternalExrRleCompressor extends InternalExrCompressor
     implements ExrRleCompressor {
   InternalExrRleCompressor(ExrPart header, this._maxScanLineSize)
-      : super(header as InternalExrPart);
+    : super(header as InternalExrPart);
 
   @override
   int numScanLines() => 1;
 
   @override
-  Uint8List compress(InputBuffer input, int x, int y,
-      [int? width, int? height]) {
+  Uint8List compress(
+    InputBuffer input,
+    int x,
+    int y, [
+    int? width,
+    int? height,
+  ]) {
     throw ImageException('Rle compression not yet supported.');
   }
 
   @override
-  Uint8List uncompress(InputBuffer input, int x, int y,
-      [int? width, int? height]) {
+  Uint8List uncompress(
+    InputBuffer input,
+    int x,
+    int y, [
+    int? width,
+    int? height,
+  ]) {
     final out = OutputBuffer(size: input.length * 2);
 
     width ??= header.width;

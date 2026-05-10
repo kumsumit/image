@@ -7,7 +7,11 @@ import '../../util/input_buffer.dart';
 @internal
 class ExrHuffman {
   static void uncompress(
-      InputBuffer compressed, int nCompressed, Uint16List? raw, int nRaw) {
+    InputBuffer compressed,
+    int nCompressed,
+    Uint16List? raw,
+    int nRaw,
+  ) {
     if (nCompressed == 0) {
       if (nRaw != 0) {
         throw ImageException('Incomplete huffman data');
@@ -34,22 +38,33 @@ class ExrHuffman {
 
     final freq = List<int>.filled(_huffmanEncodingSize, 0);
     final hdec = List<ExrHufDec>.generate(
-        _huffmanDecodingSize, (_) => ExrHufDec(),
-        growable: false);
+      _huffmanDecodingSize,
+      (_) => ExrHufDec(),
+      growable: false,
+    );
 
     unpackEncTable(compressed, nCompressed - 20, im, iM, freq);
 
     if (nBits > 8 * (nCompressed - (compressed.offset - start))) {
-      throw ImageException('Error in header for Huffman-encoded data '
-          '(invalid number of bits).');
+      throw ImageException(
+        'Error in header for Huffman-encoded data '
+        '(invalid number of bits).',
+      );
     }
 
     buildDecTable(freq, im, iM, hdec);
     decode(freq, hdec, compressed, nBits, iM, nRaw, raw);
   }
 
-  static void decode(List<int> hcode, List<ExrHufDec> hdecod, InputBuffer input,
-      int ni, int rlc, int no, Uint16List? out) {
+  static void decode(
+    List<int> hcode,
+    List<ExrHufDec> hdecod,
+    InputBuffer input,
+    int ni,
+    int rlc,
+    int no,
+    Uint16List? out,
+  ) {
     final cLc = [0, 0];
     final ie = input.offset + (ni + 7) ~/ 8; // input byte size
     var oi = 0;
@@ -61,8 +76,9 @@ class ExrHuffman {
 
       // Access decoding table
       while (cLc[1] >= _huffmanDecodingBits) {
-        final pl = hdecod[
-            (cLc[0] >> (cLc[1] - _huffmanDecodingBits)) & _huffmanDecodingMask];
+        final pl =
+            hdecod[(cLc[0] >> (cLc[1] - _huffmanDecodingBits)) &
+                _huffmanDecodingMask];
 
         if (pl.len != 0) {
           // Get short code
@@ -70,8 +86,10 @@ class ExrHuffman {
           oi = getCode(pl.lit, rlc, cLc, input, out, oi, no);
         } else {
           if (pl.p == null) {
-            throw ImageException('Error in Huffman-encoded data '
-                '(invalid code).');
+            throw ImageException(
+              'Error in Huffman-encoded data '
+              '(invalid code).',
+            );
           }
 
           // Search long code
@@ -96,8 +114,10 @@ class ExrHuffman {
           }
 
           if (j == pl.lit) {
-            throw ImageException('Error in Huffman-encoded data '
-                '(invalid code).');
+            throw ImageException(
+              'Error in Huffman-encoded data '
+              '(invalid code).',
+            );
           }
         }
       }
@@ -109,26 +129,38 @@ class ExrHuffman {
     cLc[1] -= i;
 
     while (cLc[1] > 0) {
-      final pl = hdecod[
-          (cLc[0] << (_huffmanDecodingBits - cLc[1])) & _huffmanDecodingMask];
+      final pl =
+          hdecod[(cLc[0] << (_huffmanDecodingBits - cLc[1])) &
+              _huffmanDecodingMask];
 
       if (pl.len != 0) {
         cLc[1] -= pl.len;
         oi = getCode(pl.lit, rlc, cLc, input, out, oi, no);
       } else {
-        throw ImageException('Error in Huffman-encoded data '
-            '(invalid code).');
+        throw ImageException(
+          'Error in Huffman-encoded data '
+          '(invalid code).',
+        );
       }
     }
 
     if (oi != no) {
-      throw ImageException('Error in Huffman-encoded data '
-          '(decoded data are shorter than expected).');
+      throw ImageException(
+        'Error in Huffman-encoded data '
+        '(decoded data are shorter than expected).',
+      );
     }
   }
 
-  static int getCode(int po, int rlc, List<int> cLc, InputBuffer input,
-      Uint16List? out, int oi, int oe) {
+  static int getCode(
+    int po,
+    int rlc,
+    List<int> cLc,
+    InputBuffer input,
+    Uint16List? out,
+    int oi,
+    int oe,
+  ) {
     if (po == rlc) {
       if (cLc[1] < 8) {
         getChar(cLc, input);
@@ -139,8 +171,10 @@ class ExrHuffman {
       var cs = (cLc[0] >> cLc[1]) & 0xff;
 
       if (oi + cs > oe) {
-        throw ImageException('Error in Huffman-encoded data '
-            '(decoded data are longer than expected).');
+        throw ImageException(
+          'Error in Huffman-encoded data '
+          '(decoded data are longer than expected).',
+        );
       }
 
       final s = out![oi - 1];
@@ -151,14 +185,20 @@ class ExrHuffman {
     } else if (oi < oe) {
       out![oi++] = po;
     } else {
-      throw ImageException('Error in Huffman-encoded data '
-          '(decoded data are longer than expected).');
+      throw ImageException(
+        'Error in Huffman-encoded data '
+        '(decoded data are longer than expected).',
+      );
     }
     return oi;
   }
 
   static void buildDecTable(
-      List<int> hcode, int im, int iM, List<ExrHufDec> hdecod) {
+    List<int> hcode,
+    int im,
+    int iM,
+    List<ExrHufDec> hdecod,
+  ) {
     // Init hashtable & loop on all codes.
     // Assumes that hufClearDecTable(hdecod) has already been called.
     for (; im <= iM; im++) {
@@ -169,8 +209,10 @@ class ExrHuffman {
         // Error: c is supposed to be an l-bit code,
         // but c contains a value that is greater
         // than the largest l-bit number.
-        throw ImageException('Error in Huffman-encoded data '
-            '(invalid code table entry).');
+        throw ImageException(
+          'Error in Huffman-encoded data '
+          '(invalid code table entry).',
+        );
       }
 
       if (l > _huffmanDecodingBits) {
@@ -180,8 +222,10 @@ class ExrHuffman {
         if (pl.len != 0) {
           // Error: a short code has already
           // been stored in table entry *pl.
-          throw ImageException('Error in Huffman-encoded data '
-              '(invalid code table entry).');
+          throw ImageException(
+            'Error in Huffman-encoded data '
+            '(invalid code table entry).',
+          );
         }
 
         pl.lit++;
@@ -208,8 +252,10 @@ class ExrHuffman {
           if (pl.len != 0 || pl.p != null) {
             // Error: a short code or a long code has
             // already been stored in table entry *pl.
-            throw ImageException('Error in Huffman-encoded data '
-                '(invalid code table entry).');
+            throw ImageException(
+              'Error in Huffman-encoded data '
+              '(invalid code table entry).',
+            );
           }
 
           pl
@@ -221,29 +267,40 @@ class ExrHuffman {
   }
 
   static void unpackEncTable(
-      InputBuffer p, int ni, int im, int iM, List<int> hcode) {
+    InputBuffer p,
+    int ni,
+    int im,
+    int iM,
+    List<int> hcode,
+  ) {
     final pcode = p.offset;
     final cLc = [0, 0];
 
     for (; im <= iM; im++) {
       if (p.offset - pcode > ni) {
-        throw ImageException('Error in Huffman-encoded data '
-            '(unexpected end of code table data).');
+        throw ImageException(
+          'Error in Huffman-encoded data '
+          '(unexpected end of code table data).',
+        );
       }
 
       final l = hcode[im] = getBits(6, cLc, p); // code length
 
       if (l == _longZeroCodeRun) {
         if (p.offset - pcode > ni) {
-          throw ImageException('Error in Huffman-encoded data '
-              '(unexpected end of code table data).');
+          throw ImageException(
+            'Error in Huffman-encoded data '
+            '(unexpected end of code table data).',
+          );
         }
 
         var zerun = getBits(8, cLc, p) + _shortestLongRun;
 
         if (im + zerun > iM + 1) {
-          throw ImageException('Error in Huffman-encoded data '
-              '(code table is longer than expected).');
+          throw ImageException(
+            'Error in Huffman-encoded data '
+            '(code table is longer than expected).',
+          );
         }
 
         while (zerun-- != 0) {
@@ -255,8 +312,10 @@ class ExrHuffman {
         var zerun = l - _shortZeroCodeRun + 2;
 
         if (im + zerun > iM + 1) {
-          throw ImageException('Error in Huffman-encoded data '
-              '(code table is longer than expected).');
+          throw ImageException(
+            'Error in Huffman-encoded data '
+            '(code table is longer than expected).',
+          );
         }
 
         while (zerun-- != 0) {

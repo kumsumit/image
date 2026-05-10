@@ -48,19 +48,34 @@ class VP8Filter {
   }
 
   // on macroblock edges
-  void vFilter16(InputBuffer p, int stride, int thresh, int? iThreshold,
-      int hevThreshold) {
+  void vFilter16(
+    InputBuffer p,
+    int stride,
+    int thresh,
+    int? iThreshold,
+    int hevThreshold,
+  ) {
     _filterLoop26(p, stride, 1, 16, thresh, iThreshold, hevThreshold);
   }
 
-  void hFilter16(InputBuffer p, int stride, int thresh, int? iThreshold,
-      int hevThreshold) {
+  void hFilter16(
+    InputBuffer p,
+    int stride,
+    int thresh,
+    int? iThreshold,
+    int hevThreshold,
+  ) {
     _filterLoop26(p, 1, stride, 16, thresh, iThreshold, hevThreshold);
   }
 
   // on three inner edges
-  void vFilter16i(InputBuffer p, int stride, int thresh, int? iThreshold,
-      int hevThreshold) {
+  void vFilter16i(
+    InputBuffer p,
+    int stride,
+    int thresh,
+    int? iThreshold,
+    int hevThreshold,
+  ) {
     final p2 = InputBuffer.from(p);
     for (var k = 3; k > 0; --k) {
       p2.offset += 4 * stride;
@@ -68,8 +83,13 @@ class VP8Filter {
     }
   }
 
-  void hFilter16i(InputBuffer p, int stride, int thresh, int? iThreshold,
-      int hevThreshold) {
+  void hFilter16i(
+    InputBuffer p,
+    int stride,
+    int thresh,
+    int? iThreshold,
+    int hevThreshold,
+  ) {
     final p2 = InputBuffer.from(p);
     for (var k = 3; k > 0; --k) {
       p2.offset += 4;
@@ -78,36 +98,67 @@ class VP8Filter {
   }
 
   // 8-pixels wide variant, for chroma filtering
-  void vFilter8(InputBuffer u, InputBuffer v, int stride, int thresh,
-      int? ithresh, int hevThresh) {
+  void vFilter8(
+    InputBuffer u,
+    InputBuffer v,
+    int stride,
+    int thresh,
+    int? ithresh,
+    int hevThresh,
+  ) {
     _filterLoop26(u, stride, 1, 8, thresh, ithresh, hevThresh);
     _filterLoop26(v, stride, 1, 8, thresh, ithresh, hevThresh);
   }
 
-  void hFilter8(InputBuffer u, InputBuffer v, int stride, int thresh,
-      int? ithresh, int hevThresh) {
+  void hFilter8(
+    InputBuffer u,
+    InputBuffer v,
+    int stride,
+    int thresh,
+    int? ithresh,
+    int hevThresh,
+  ) {
     _filterLoop26(u, 1, stride, 8, thresh, ithresh, hevThresh);
     _filterLoop26(v, 1, stride, 8, thresh, ithresh, hevThresh);
   }
 
-  void vFilter8i(InputBuffer u, InputBuffer v, int stride, int thresh,
-      int ithresh, int hevThresh) {
+  void vFilter8i(
+    InputBuffer u,
+    InputBuffer v,
+    int stride,
+    int thresh,
+    int ithresh,
+    int hevThresh,
+  ) {
     final u2 = InputBuffer.from(u, offset: 4 * stride);
     final v2 = InputBuffer.from(v, offset: 4 * stride);
     _filterLoop24(u2, stride, 1, 8, thresh, ithresh, hevThresh);
     _filterLoop24(v2, stride, 1, 8, thresh, ithresh, hevThresh);
   }
 
-  void hFilter8i(InputBuffer u, InputBuffer v, int stride, int thresh,
-      int ithresh, int hevThresh) {
+  void hFilter8i(
+    InputBuffer u,
+    InputBuffer v,
+    int stride,
+    int thresh,
+    int ithresh,
+    int hevThresh,
+  ) {
     final u2 = InputBuffer.from(u, offset: 4);
     final v2 = InputBuffer.from(v, offset: 4);
     _filterLoop24(u2, 1, stride, 8, thresh, ithresh, hevThresh);
     _filterLoop24(v2, 1, stride, 8, thresh, ithresh, hevThresh);
   }
 
-  void _filterLoop26(InputBuffer p, int hstride, int vstride, int size,
-      int thresh, int? ithresh, int hevThresh) {
+  void _filterLoop26(
+    InputBuffer p,
+    int hstride,
+    int vstride,
+    int size,
+    int thresh,
+    int? ithresh,
+    int hevThresh,
+  ) {
     final p2 = InputBuffer.from(p);
     while (size-- > 0) {
       if (_needsFilter2(p2, hstride, thresh, ithresh)) {
@@ -121,8 +172,15 @@ class VP8Filter {
     }
   }
 
-  void _filterLoop24(InputBuffer p, int hstride, int vstride, int size,
-      int thresh, int ithresh, int hevThresh) {
+  void _filterLoop24(
+    InputBuffer p,
+    int hstride,
+    int vstride,
+    int size,
+    int thresh,
+    int ithresh,
+    int hevThresh,
+  ) {
     final p2 = InputBuffer.from(p);
     while (size-- > 0) {
       if (_needsFilter2(p2, hstride, thresh, ithresh)) {
@@ -270,14 +328,19 @@ class VP8Filter {
     transformOne(src, dst);
     if (doTwo) {
       transformOne(
-          InputBuffer.from(src, offset: 16), InputBuffer.from(dst, offset: 4));
+        InputBuffer.from(src, offset: 16),
+        InputBuffer.from(dst, offset: 4),
+      );
     }
   }
 
   void transformUV(InputBuffer src, InputBuffer dst) {
     transform(src, dst, true);
-    transform(InputBuffer.from(src, offset: 2 * 16),
-        InputBuffer.from(dst, offset: 4 * VP8.bps), true);
+    transform(
+      InputBuffer.from(src, offset: 2 * 16),
+      InputBuffer.from(dst, offset: 4 * VP8.bps),
+      true,
+    );
   }
 
   void transformDC(InputBuffer src, InputBuffer dst) {
@@ -294,16 +357,22 @@ class VP8Filter {
       transformDC(src, dst);
     }
     if (src[1 * 16] != 0) {
-      transformDC(InputBuffer.from(src, offset: 1 * 16),
-          InputBuffer.from(dst, offset: 4));
+      transformDC(
+        InputBuffer.from(src, offset: 1 * 16),
+        InputBuffer.from(dst, offset: 4),
+      );
     }
     if (src[2 * 16] != 0) {
-      transformDC(InputBuffer.from(src, offset: 2 * 16),
-          InputBuffer.from(dst, offset: 4 * VP8.bps));
+      transformDC(
+        InputBuffer.from(src, offset: 2 * 16),
+        InputBuffer.from(dst, offset: 4 * VP8.bps),
+      );
     }
     if (src[3 * 16] != 0) {
-      transformDC(InputBuffer.from(src, offset: 3 * 16),
-          InputBuffer.from(dst, offset: 4 * VP8.bps + 4));
+      transformDC(
+        InputBuffer.from(src, offset: 3 * 16),
+        InputBuffer.from(dst, offset: 4 * VP8.bps + 4),
+      );
     }
   }
 
@@ -329,7 +398,7 @@ class VP8Filter {
       _avg3(dst[top - 1], dst[top], dst[top + 1]),
       _avg3(dst[top], dst[top + 1], dst[top + 2]),
       _avg3(dst[top + 1], dst[top + 2], dst[top + 3]),
-      _avg3(dst[top + 2], dst[top + 3], dst[top + 4])
+      _avg3(dst[top + 2], dst[top + 3], dst[top + 4]),
     ];
 
     for (var i = 0; i < 4; ++i) {
@@ -411,8 +480,8 @@ class VP8Filter {
     dst[_dst(0, 3)] = _avg3(j, K, l);
     dst[_dst(0, 2)] = dst[_dst(1, 3)] = _avg3(i, j, K);
     dst[_dst(0, 1)] = dst[_dst(1, 2)] = dst[_dst(2, 3)] = _avg3(x, i, j);
-    dst[_dst(0, 0)] =
-        dst[_dst(1, 1)] = dst[_dst(2, 2)] = dst[_dst(3, 3)] = _avg3(a, x, i);
+    dst[_dst(0, 0)] = dst[_dst(1, 1)] = dst[_dst(2, 2)] = dst[_dst(3, 3)] =
+        _avg3(a, x, i);
     dst[_dst(1, 0)] = dst[_dst(2, 1)] = dst[_dst(3, 2)] = _avg3(b, a, x);
     dst[_dst(2, 0)] = dst[_dst(3, 1)] = _avg3(c, b, a);
     dst[_dst(3, 0)] = _avg3(d, c, b);
@@ -431,8 +500,8 @@ class VP8Filter {
     dst[_dst(0, 0)] = _avg3(a, b, c);
     dst[_dst(1, 0)] = dst[_dst(0, 1)] = _avg3(b, c, d);
     dst[_dst(2, 0)] = dst[_dst(1, 1)] = dst[_dst(0, 2)] = _avg3(c, d, e);
-    dst[_dst(3, 0)] =
-        dst[_dst(2, 1)] = dst[_dst(1, 2)] = dst[_dst(0, 3)] = _avg3(d, e, f);
+    dst[_dst(3, 0)] = dst[_dst(2, 1)] = dst[_dst(1, 2)] = dst[_dst(0, 3)] =
+        _avg3(d, e, f);
     dst[_dst(3, 1)] = dst[_dst(2, 2)] = dst[_dst(1, 3)] = _avg3(e, f, g);
     dst[_dst(3, 2)] = dst[_dst(2, 3)] = _avg3(f, g, h);
     dst[_dst(3, 3)] = _avg3(g, h, h);
@@ -496,8 +565,8 @@ class VP8Filter {
     dst[_dst(1, 0)] = _avg3(i, j, k);
     dst[_dst(3, 0)] = dst[_dst(1, 1)] = _avg3(j, k, l);
     dst[_dst(3, 1)] = dst[_dst(1, 2)] = _avg3(k, l, l);
-    dst[_dst(3, 2)] = dst[_dst(2, 2)] = dst[_dst(0, 3)] =
-        dst[_dst(1, 3)] = dst[_dst(2, 3)] = dst[_dst(3, 3)] = l;
+    dst[_dst(3, 2)] = dst[_dst(2, 2)] = dst[_dst(0, 3)] = dst[_dst(1, 3)] =
+        dst[_dst(2, 3)] = dst[_dst(3, 3)] = l;
   }
 
   // Horizontal-Down
@@ -639,7 +708,7 @@ class VP8Filter {
     _ld4,
     _vl4,
     _hd4,
-    _hu4
+    _hu4,
   ];
 
   static const predLuma16 = [
@@ -649,7 +718,7 @@ class VP8Filter {
     he16,
     dc16NoTop,
     dc16NoLeft,
-    dc16NoTopLeft
+    dc16NoTopLeft,
   ];
 
   static const predChroma8 = [
@@ -659,7 +728,7 @@ class VP8Filter {
     he8uv,
     dc8uvNoTop,
     dc8uvNoLeft,
-    dc8uvNoTopLeft
+    dc8uvNoTopLeft,
   ];
 
   static const kC1 = 20091 + (1 << 16);
@@ -706,22 +775,22 @@ class VP8Filter {
         sclip1[1020 + i] = (i < -128)
             ? -128
             : (i > 127)
-                ? 127
-                : i;
+            ? 127
+            : i;
       }
       for (var i = -112; i <= 112; ++i) {
         sclip2[112 + i] = (i < -16)
             ? -16
             : (i > 15)
-                ? 15
-                : i;
+            ? 15
+            : i;
       }
       for (var i = -255; i <= 255 + 255; ++i) {
         clip1[255 + i] = (i < 0)
             ? 0
             : (i > 255)
-                ? 255
-                : i;
+            ? 255
+            : i;
       }
       _tablesInitialized = true;
     }
@@ -730,8 +799,8 @@ class VP8Filter {
   static int _clip8b(int v) => ((v & -256) == 0)
       ? v
       : (v < 0)
-          ? 0
-          : 255;
+      ? 0
+      : 255;
 
   //static int __maxN = 0;
 

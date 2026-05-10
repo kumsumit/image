@@ -7,12 +7,12 @@ class PaletteInt16 extends Palette {
   final Int16List data;
 
   PaletteInt16(int numColors, int numChannels)
-      : data = Int16List(numColors * numChannels),
-        super(numColors, numChannels);
+    : data = Int16List(numColors * numChannels),
+      super(numColors, numChannels);
 
   PaletteInt16.from(PaletteInt16 other)
-      : data = Int16List.fromList(other.data),
-        super(other.numColors, other.numChannels);
+    : data = Int16List.fromList(other.data),
+      super(other.numColors, other.numChannels);
 
   @override
   PaletteInt16 clone() => PaletteInt16.from(this);

@@ -8,12 +8,13 @@ class RemapColorsCmd extends Command {
   Channel blue;
   Channel alpha;
 
-  RemapColorsCmd(Command? input,
-      {this.red = Channel.red,
-      this.green = Channel.green,
-      this.blue = Channel.blue,
-      this.alpha = Channel.alpha})
-      : super(input);
+  RemapColorsCmd(
+    Command? input, {
+    this.red = Channel.red,
+    this.green = Channel.green,
+    this.blue = Channel.blue,
+    this.alpha = Channel.alpha,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {

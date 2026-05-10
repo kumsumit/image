@@ -8,22 +8,25 @@ class QuantizeCmd extends Command {
   d.DitherKernel dither;
   bool ditherSerpentine;
 
-  QuantizeCmd(Command? input,
-      {this.numberOfColors = 256,
-      this.method = g.QuantizeMethod.neuralNet,
-      this.dither = d.DitherKernel.none,
-      this.ditherSerpentine = false})
-      : super(input);
+  QuantizeCmd(
+    Command? input, {
+    this.numberOfColors = 256,
+    this.method = g.QuantizeMethod.neuralNet,
+    this.dither = d.DitherKernel.none,
+    this.ditherSerpentine = false,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {
     final img = await input?.getImage();
     outputImage = img != null
-        ? g.quantize(img,
+        ? g.quantize(
+            img,
             numberOfColors: numberOfColors,
             method: method,
             dither: dither,
-            ditherSerpentine: ditherSerpentine)
+            ditherSerpentine: ditherSerpentine,
+          )
         : null;
   }
 }

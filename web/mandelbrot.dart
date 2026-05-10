@@ -55,7 +55,8 @@ void main() {
       image.setPixelRgba(x, y, 0, 255, 0, 255);
     } else {
       final z = sqrt(newRe * newRe + newIm * newIm);
-      final b = 256.0 *
+      final b =
+          256.0 *
           logN(1.75 + i - logN(logN(z, log2), log2), log2) /
           log2MaxIterations;
       final brightness = b.toInt();

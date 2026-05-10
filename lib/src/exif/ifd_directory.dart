@@ -27,8 +27,9 @@ class IfdDirectory {
 
   void copy(IfdDirectory other) {
     other.data.forEach((tag, value) => data[tag] = value.clone());
-    other.sub.directories
-        .forEach((tag, value) => sub.directories[tag] = value.clone());
+    other.sub.directories.forEach(
+      (tag, value) => sub.directories[tag] = value.clone(),
+    );
   }
 
   /// The size in bytes of the data written by this directory. Can be used to
@@ -122,9 +123,12 @@ class IfdDirectory {
               } else if (value is Rational) {
                 data[tag] = IfdValueRational.from(value);
               } else if (value is List<List<int>>) {
-                data[tag] = IfdValueRational.list(List<Rational>.generate(
+                data[tag] = IfdValueRational.list(
+                  List<Rational>.generate(
                     value.length,
-                    (index) => Rational(value[index][0], value[index][1])));
+                    (index) => Rational(value[index][0], value[index][1]),
+                  ),
+                );
               }
               break;
             case IfdValueType.sByte:
@@ -161,9 +165,12 @@ class IfdDirectory {
               } else if (value is Rational) {
                 data[tag] = IfdValueSRational.from(value);
               } else if (value is List<List<int>>) {
-                data[tag] = IfdValueSRational.list(List<Rational>.generate(
+                data[tag] = IfdValueSRational.list(
+                  List<Rational>.generate(
                     value.length,
-                    (index) => Rational(value[index][0], value[index][1])));
+                    (index) => Rational(value[index][0], value[index][1]),
+                  ),
+                );
               }
               break;
             case IfdValueType.single:
@@ -363,10 +370,7 @@ class IfdDirectory {
     }
   }
 
-  void setGpsLocation({
-    required double latitude,
-    required double longitude,
-  }) {
+  void setGpsLocation({required double latitude, required double longitude}) {
     gpsLatitude = latitude.abs();
     gpsLongitude = longitude.abs();
     gpsLatitudeRef = latitude < 0.0 ? 'S' : 'N';

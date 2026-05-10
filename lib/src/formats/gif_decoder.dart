@@ -116,11 +116,13 @@ class GifDecoder extends Decoder {
   var _duration = 0;
 
   void _readGraphicsControlExt(InputBuffer input) {
-    /*int blockSize =*/ input.readByte();
+    /*int blockSize =*/
+    input.readByte();
     final b = input.readByte();
     _duration = input.readUint16();
     _transparent = input.readByte();
-    /*int endBlock =*/ input.readByte();
+    /*int endBlock =*/
+    input.readByte();
     _disposalMethod = (b >> 2) & 0x7;
     //int userInput = (b >> 1) & 0x1;
     _transparentFlag = b & 0x1;
@@ -206,14 +208,16 @@ class GifDecoder extends Decoder {
         continue;
       }
 
-      final colorMap =
-          (frame.colorMap != null) ? frame.colorMap! : info!.globalColorMap!;
+      final colorMap = (frame.colorMap != null)
+          ? frame.colorMap!
+          : info!.globalColorMap!;
 
       final nextImage = Image(
-          width: lastImage.width,
-          height: lastImage.height,
-          numChannels: 1,
-          palette: colorMap.getPalette());
+        width: lastImage.width,
+        height: lastImage.height,
+        numChannels: 1,
+        palette: colorMap.getPalette(),
+      );
 
       if (frame.disposal == 2) {
         final imageBytes = nextImage.toUint8List();
@@ -221,7 +225,10 @@ class GifDecoder extends Decoder {
           imageBytes.fillRange(0, imageBytes.length - 1, frame.transparent);
         } else {
           imageBytes.fillRange(
-              0, imageBytes.length - 1, info!.backgroundColor!.r as int);
+            0,
+            imageBytes.length - 1,
+            info!.backgroundColor!.r as int,
+          );
         }
       } else if (frame.disposal != 3) {
         if (frame.colorMap != null) {
@@ -229,8 +236,12 @@ class GifDecoder extends Decoder {
           final remapColors = <int, int>{};
           // Map colors from lastImage palette to current frame's colorMap
           for (var ci = 0; ci < lp.numColors; ++ci) {
-            final nc = colorMap.findColor(lp.getRed(ci), lp.getGreen(ci),
-                lp.getBlue(ci), lp.getAlpha(ci));
+            final nc = colorMap.findColor(
+              lp.getRed(ci),
+              lp.getGreen(ci),
+              lp.getBlue(ci),
+              lp.getAlpha(ci),
+            );
             remapColors[ci] = nc;
           }
 
@@ -314,19 +325,22 @@ class GifDecoder extends Decoder {
     _pixelCount = width * height;
 
     final image = Image(
-        width: width,
-        height: height,
-        numChannels: 1,
-        palette: colorMap.getPalette());
+      width: width,
+      height: height,
+      numChannels: 1,
+      palette: colorMap.getPalette(),
+    );
 
     final line = Uint8List(width);
 
     if (gifImage.interlaced) {
       final row = gifImage.y;
       for (var i = 0, j = 0; i < 4; ++i) {
-        for (var y = row + interlacedOffset[i];
-            y < row + height;
-            y += interlacedJump[i], ++j) {
+        for (
+          var y = row + interlacedOffset[i];
+          y < row + height;
+          y += interlacedJump[i], ++j
+        ) {
           if (!_getLine(line)) {
             return image;
           }
@@ -487,8 +501,11 @@ class GifDecoder extends Decoder {
             // exactly the prefix of last code!
             if (_currentCode == _runningCode - 2) {
               currentPrefix = _lastCode;
-              _suffix[_runningCode - 2] = _stack[_stackPtr++] =
-                  _getPrefixChar(_prefix, _lastCode, _clearCode);
+              _suffix[_runningCode - 2] = _stack[_stackPtr++] = _getPrefixChar(
+                _prefix,
+                _lastCode,
+                _clearCode,
+              );
             } else {
               return false;
             }
@@ -531,11 +548,17 @@ class GifDecoder extends Decoder {
             // In that case CrntCode = XXXCode, CrntCode or the
             // prefix code is last code and the suffix char is
             // exactly the prefix of last code!
-            _suffix[_runningCode - 2] =
-                _getPrefixChar(_prefix, _lastCode, _clearCode);
+            _suffix[_runningCode - 2] = _getPrefixChar(
+              _prefix,
+              _lastCode,
+              _clearCode,
+            );
           } else {
-            _suffix[_runningCode - 2] =
-                _getPrefixChar(_prefix, _currentCode!, _clearCode);
+            _suffix[_runningCode - 2] = _getPrefixChar(
+              _prefix,
+              _currentCode!,
+              _clearCode,
+            );
           }
         }
 
@@ -617,7 +640,10 @@ class GifDecoder extends Decoder {
       }
 
       _buffer!.setRange(
-          1, 1 + _buffer![0], _input!.readBytes(_buffer![0]).toUint8List());
+        1,
+        1 + _buffer![0],
+        _input!.readBytes(_buffer![0]).toUint8List(),
+      );
 
       nextByte = _buffer![1];
       _buffer![1] = 2; // We use now the second place as last char read!
@@ -687,7 +713,7 @@ class GifDecoder extends Decoder {
     0x01ff,
     0x03ff,
     0x07ff,
-    0x0fff
+    0x0fff,
   ];
 
   static const List<int> interlacedOffset = [0, 4, 2, 1];

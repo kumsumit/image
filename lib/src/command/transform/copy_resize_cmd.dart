@@ -10,24 +10,27 @@ class CopyResizeCmd extends Command {
   Color? backgroundColor;
   Interpolation interpolation;
 
-  CopyResizeCmd(Command? input,
-      {this.width,
-      this.height,
-      this.maintainAspect,
-      this.backgroundColor,
-      this.interpolation = Interpolation.nearest})
-      : super(input);
+  CopyResizeCmd(
+    Command? input, {
+    this.width,
+    this.height,
+    this.maintainAspect,
+    this.backgroundColor,
+    this.interpolation = Interpolation.nearest,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {
     final img = await input?.getImage();
     outputImage = img != null
-        ? copyResize(img,
+        ? copyResize(
+            img,
             width: width,
             height: height,
             maintainAspect: maintainAspect,
             backgroundColor: backgroundColor,
-            interpolation: interpolation)
+            interpolation: interpolation,
+          )
         : null;
   }
 }

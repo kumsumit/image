@@ -7,19 +7,24 @@ class DitherImageCmd extends Command {
   final g.DitherKernel kernel;
   final bool serpentine;
 
-  DitherImageCmd(Command? input,
-      {this.quantizer,
-      this.kernel = g.DitherKernel.floydSteinberg,
-      this.serpentine = false})
-      : super(input);
+  DitherImageCmd(
+    Command? input, {
+    this.quantizer,
+    this.kernel = g.DitherKernel.floydSteinberg,
+    this.serpentine = false,
+  }) : super(input);
 
   @override
   Future<void> executeCommand() async {
     await input?.execute();
     final img = input?.outputImage;
     outputImage = img != null
-        ? g.ditherImage(img,
-            quantizer: quantizer, kernel: kernel, serpentine: serpentine)
+        ? g.ditherImage(
+            img,
+            quantizer: quantizer,
+            kernel: kernel,
+            serpentine: serpentine,
+          )
         : null;
   }
 }

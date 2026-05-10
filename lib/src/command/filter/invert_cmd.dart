@@ -7,7 +7,7 @@ class InvertCmd extends Command {
   Channel maskChannel;
 
   InvertCmd(Command? input, {this.mask, this.maskChannel = Channel.luminance})
-      : super(input);
+    : super(input);
 
   @override
   Future<void> executeCommand() async {

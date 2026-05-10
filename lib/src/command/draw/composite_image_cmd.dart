@@ -19,21 +19,23 @@ class CompositeImageCmd extends Command {
   Command? mask;
   Channel maskChannel;
 
-  CompositeImageCmd(Command? dst, this.src,
-      {this.dstX,
-      this.dstY,
-      this.dstW,
-      this.dstH,
-      this.srcX,
-      this.srcY,
-      this.srcW,
-      this.srcH,
-      this.blend = BlendMode.alpha,
-      this.linearBlend = false,
-      this.center = false,
-      this.mask,
-      this.maskChannel = Channel.luminance})
-      : super(dst);
+  CompositeImageCmd(
+    Command? dst,
+    this.src, {
+    this.dstX,
+    this.dstY,
+    this.dstW,
+    this.dstH,
+    this.srcX,
+    this.srcY,
+    this.srcW,
+    this.srcH,
+    this.blend = BlendMode.alpha,
+    this.linearBlend = false,
+    this.center = false,
+    this.mask,
+    this.maskChannel = Channel.luminance,
+  }) : super(dst);
 
   @override
   Future<void> executeCommand() async {
@@ -41,7 +43,9 @@ class CompositeImageCmd extends Command {
     final srcImg = await src?.getImage();
     final maskImg = await mask?.getImage();
     outputImage = dst != null && srcImg != null
-        ? compositeImage(dst, srcImg,
+        ? compositeImage(
+            dst,
+            srcImg,
             dstX: dstX,
             dstY: dstY,
             dstW: dstW,
@@ -54,7 +58,8 @@ class CompositeImageCmd extends Command {
             linearBlend: linearBlend,
             center: center,
             mask: maskImg,
-            maskChannel: maskChannel)
+            maskChannel: maskChannel,
+          )
         : null;
   }
 }

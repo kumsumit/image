@@ -34,7 +34,8 @@ void main(List<String> args) {
         // length includes the two length bytes, content starts at i+4
         final sigStart = i + 4;
         if (sigStart + 6 <= bytes.length) {
-          final sig = ((bytes[sigStart] & 0xff) << 24) |
+          final sig =
+              ((bytes[sigStart] & 0xff) << 24) |
               ((bytes[sigStart + 1] & 0xff) << 16) |
               ((bytes[sigStart + 2] & 0xff) << 8) |
               (bytes[sigStart + 3] & 0xff);
@@ -55,7 +56,8 @@ void main(List<String> args) {
   }
 
   print(
-      'Found APP1 at offset: 0x${app1Pos.toRadixString(16)} (decimal $app1Pos)');
+    'Found APP1 at offset: 0x${app1Pos.toRadixString(16)} (decimal $app1Pos)',
+  );
   print('APP1 length (including length field): $app1Length');
 
   final contentStart = app1Pos + 4;
@@ -71,7 +73,8 @@ void main(List<String> args) {
   final signature = block.readUint32();
   final zero = block.readUint16();
   print(
-      'Signature: 0x${signature.toRadixString(16)}; zero: 0x${zero.toRadixString(16)}');
+    'Signature: 0x${signature.toRadixString(16)}; zero: 0x${zero.toRadixString(16)}',
+  );
 
   // Now parse TIFF header
   final blockOffset = block.offset; // should be 6 relative to app1 start
@@ -92,7 +95,8 @@ void main(List<String> args) {
   block.offset = blockOffset + ifd0Offset;
   final numEntries = block.readUint16();
   print(
-      'IFD0 entries: $numEntries; IFD0 offset (absolute in APP1 payload): ${block.offset - 2}');
+    'IFD0 entries: $numEntries; IFD0 offset (absolute in APP1 payload): ${block.offset - 2}',
+  );
 
   int? exifSubIfdOffset;
   for (var i = 0; i < numEntries; ++i) {
@@ -114,7 +118,8 @@ void main(List<String> args) {
   if (nextIfdOffset != 0 && exifSubIfdOffset != null) {
     if (nextIfdOffset < exifSubIfdOffset) {
       print(
-          'Warning: IFD1 pointer points before ExifIFD (likely cause of exiftool warning)');
+        'Warning: IFD1 pointer points before ExifIFD (likely cause of exiftool warning)',
+      );
     } else if (nextIfdOffset == exifSubIfdOffset) {
       print('IFD1 pointer equals ExifIFD offset (suspicious)');
     } else {

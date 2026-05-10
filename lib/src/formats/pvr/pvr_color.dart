@@ -13,10 +13,7 @@ class PvrColorRgb extends PvrColorRgbCore<PvrColorRgb> {
 
   PvrColorRgb([this.r = 0, this.g = 0, this.b = 0]);
 
-  PvrColorRgb.from(PvrColorRgb other)
-      : r = other.r,
-        g = other.g,
-        b = other.b;
+  PvrColorRgb.from(PvrColorRgb other) : r = other.r, g = other.g, b = other.b;
 
   @override
   PvrColorRgb copy() => PvrColorRgb.from(this);
@@ -67,10 +64,10 @@ class PvrColorRgba extends PvrColorRgbCore<PvrColorRgba> {
   PvrColorRgba([this.r = 0, this.g = 0, this.b = 0, this.a = 0]);
 
   PvrColorRgba.from(PvrColorRgba other)
-      : r = other.r,
-        g = other.g,
-        b = other.b,
-        a = other.a;
+    : r = other.r,
+      g = other.g,
+      b = other.b,
+      a = other.a;
 
   @override
   PvrColorRgba copy() => PvrColorRgba.from(this);

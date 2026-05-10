@@ -19,15 +19,15 @@ class GifEncoder extends Encoder {
   DitherKernel dither;
   bool ditherSerpentine;
 
-  GifEncoder(
-      {this.delay = 80,
-      this.repeat = 0,
-      this.numColors = 256,
-      this.quantizerType = QuantizerType.neural,
-      this.samplingFactor = 10,
-      this.dither = DitherKernel.floydSteinberg,
-      this.ditherSerpentine = false})
-      : _encodedFrames = 0;
+  GifEncoder({
+    this.delay = 80,
+    this.repeat = 0,
+    this.numColors = 256,
+    this.quantizerType = QuantizerType.neural,
+    this.samplingFactor = 10,
+    this.dither = DitherKernel.floydSteinberg,
+    this.ditherSerpentine = false,
+  }) : _encodedFrames = 0;
 
   /// This adds the frame passed to [image].
   /// After the last frame has been added, [finish] is required to be called.
@@ -38,18 +38,23 @@ class GifEncoder extends Encoder {
 
       if (!image.hasPalette) {
         if (quantizerType == QuantizerType.neural) {
-          _lastColorMap = NeuralQuantizer(image,
-              numberOfColors: numColors, samplingFactor: samplingFactor);
+          _lastColorMap = NeuralQuantizer(
+            image,
+            numberOfColors: numColors,
+            samplingFactor: samplingFactor,
+          );
         } else if (quantizerType == QuantizerType.octree) {
           _lastColorMap = OctreeQuantizer(image, numberOfColors: numColors);
         } else {
           _lastColorMap = BinaryQuantizer();
         }
 
-        _lastImage = ditherImage(image,
-            quantizer: _lastColorMap!,
-            kernel: dither,
-            serpentine: ditherSerpentine);
+        _lastImage = ditherImage(
+          image,
+          quantizer: _lastColorMap!,
+          kernel: dither,
+          serpentine: ditherSerpentine,
+        );
       } else {
         _lastImage = image;
       }
@@ -72,18 +77,23 @@ class GifEncoder extends Encoder {
 
     if (!image.hasPalette) {
       if (quantizerType == QuantizerType.neural) {
-        _lastColorMap = NeuralQuantizer(image,
-            numberOfColors: numColors, samplingFactor: samplingFactor);
+        _lastColorMap = NeuralQuantizer(
+          image,
+          numberOfColors: numColors,
+          samplingFactor: samplingFactor,
+        );
       } else if (quantizerType == QuantizerType.octree) {
         _lastColorMap = OctreeQuantizer(image, numberOfColors: numColors);
       } else {
         _lastColorMap = BinaryQuantizer();
       }
 
-      _lastImage = ditherImage(image,
-          quantizer: _lastColorMap!,
-          kernel: dither,
-          serpentine: ditherSerpentine);
+      _lastImage = ditherImage(
+        image,
+        quantizer: _lastColorMap!,
+        kernel: dither,
+        serpentine: ditherSerpentine,
+      );
     } else {
       _lastImage = image;
     }
@@ -152,7 +162,6 @@ class GifEncoder extends Encoder {
     final numColors = palette.numColors;
 
     final out = output!
-
       // Image desc
       ..writeByte(_imageDescRecordType)
       ..writeUint16(0) // image position x,y = 0,0
@@ -398,7 +407,8 @@ class GifEncoder extends Encoder {
     }
 
     const dispose = 2; // dispose: 0 = no action, 2 = clear
-    final fields = 0 | // 1:3 reserved
+    final fields =
+        0 | // 1:3 reserved
         (dispose << 2) | // 4:6 disposal
         0 | // 7   user input - 0 = none
         hasTransparency; // 8   transparency flag
@@ -471,6 +481,6 @@ class GifEncoder extends Encoder {
     0x1FFF,
     0x3FFF,
     0x7FFF,
-    0xFFFF
+    0xFFFF,
   ];
 }
