@@ -7,12 +7,14 @@ import '../util/image_exception.dart';
 import 'bake_orientation.dart';
 import 'copy_resize.dart';
 
-Image resize(Image src,
-    {int? width,
-    int? height,
-    bool? maintainAspect,
-    Color? backgroundColor,
-    Interpolation interpolation = Interpolation.nearest}) {
+Image resize(
+  Image src, {
+  int? width,
+  int? height,
+  bool? maintainAspect,
+  Color? backgroundColor,
+  Interpolation interpolation = Interpolation.nearest,
+}) {
   if (width == null && height == null) {
     throw ImageException('Invalid size');
   }
@@ -75,12 +77,31 @@ Image resize(Image src,
   }
 
   if ((width * height) > (src.width * src.height)) {
-    return copyResize(src,
-        width: width,
-        height: height,
-        maintainAspect: maintainAspect,
-        backgroundColor: backgroundColor,
-        interpolation: interpolation);
+    return copyResize(
+      src,
+      width: width,
+      height: height,
+      maintainAspect: maintainAspect,
+      backgroundColor: backgroundColor,
+      interpolation: interpolation,
+    );
+  }
+
+  if (interpolation == Interpolation.lanczos) {
+    final resized = copyResize(
+      src,
+      width: width,
+      height: height,
+      maintainAspect: maintainAspect,
+      backgroundColor: backgroundColor,
+      interpolation: interpolation,
+    );
+
+    for (var i = 0; i < src.numFrames; ++i) {
+      src.frames[i].data = resized.frames[i].data;
+    }
+
+    return src;
   }
 
   final scaleX = Int32List(w);
@@ -174,8 +195,11 @@ Image resize(Image src,
         final sy2 = y * dy;
         for (var x = 0; x < w; ++x) {
           final sx2 = x * dx;
-          final p = frame.getPixelInterpolate(x1 + sx2, y1 + sy2,
-              interpolation: interpolation);
+          final p = frame.getPixelInterpolate(
+            x1 + sx2,
+            y1 + sy2,
+            interpolation: interpolation,
+          );
           dst.data!.width = width;
           dst.data!.height = height;
           dst.setPixel(x, y, p);

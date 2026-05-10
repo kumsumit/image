@@ -4,23 +4,31 @@ import '../color/color.dart';
 import '../image/image.dart';
 import '../image/interpolation.dart';
 import '../util/image_exception.dart';
+import '_lanczos_resample.dart';
 import 'bake_orientation.dart';
 
 double _linear(
-        double icc, double inc, double icn, double inn, double kx, double ky) =>
-    icc + kx * (inc - icc + ky * (icc + inn - icn - inc)) + ky * (icn - icc);
+  double icc,
+  double inc,
+  double icn,
+  double inn,
+  double kx,
+  double ky,
+) => icc + kx * (inc - icc + ky * (icc + inn - icn - inc)) + ky * (icn - icc);
 
 /// Returns a resized copy of the [src] Image.
 /// If [height] isn't specified, then it will be determined by the aspect
 /// ratio of [src] and [width].
 /// If [width] isn't specified, then it will be determined by the aspect ratio
 /// of [src] and [height].
-Image copyResize(Image src,
-    {int? width,
-    int? height,
-    bool? maintainAspect,
-    Color? backgroundColor,
-    Interpolation interpolation = Interpolation.nearest}) {
+Image copyResize(
+  Image src, {
+  int? width,
+  int? height,
+  bool? maintainAspect,
+  Color? backgroundColor,
+  Interpolation interpolation = Interpolation.nearest,
+}) {
   if (width == null && height == null) {
     throw ImageException('Invalid size');
   }
@@ -96,8 +104,12 @@ Image copyResize(Image src,
   final noOffset = x1 == 0 && y1 == 0;
   for (var i = 0; i < numFrames; ++i) {
     final frame = src.frames[i];
-    final dst = Image.fromResized(frame,
-        width: width, height: height, noAnimation: true);
+    final dst = Image.fromResized(
+      frame,
+      width: width,
+      height: height,
+      noAnimation: true,
+    );
     firstFrame?.addFrame(dst);
     firstFrame ??= dst;
 
@@ -108,7 +120,9 @@ Image copyResize(Image src,
       dst.clear(backgroundColor);
     }
 
-    if (interpolation == Interpolation.average) {
+    if (interpolation == Interpolation.lanczos) {
+      lanczosResize(frame, dst, dstX: x1, dstY: y1, width: w, height: h);
+    } else if (interpolation == Interpolation.average) {
       final srcPixel = frame.getPixelSafe(0, 0);
       for (var y = 0; y < h; ++y) {
         final ay1 = (y * dy).toInt();
@@ -159,7 +173,13 @@ Image copyResize(Image src,
           for (var x = 0; x < w; ++x) {
             frame.getPixel(scaleX[x], sy, srcPixel);
             dst.setPixelRgba(
-                x, y, srcPixel.r, srcPixel.g, srcPixel.b, srcPixel.a);
+              x,
+              y,
+              srcPixel.r,
+              srcPixel.g,
+              srcPixel.b,
+              srcPixel.a,
+            );
           }
         }
       } else {
@@ -170,7 +190,13 @@ Image copyResize(Image src,
           for (var x = 0; x < w; ++x) {
             frame.getPixel(scaleX[x], sy, srcPixel);
             dst.setPixelRgba(
-                x1 + x, dstY, srcPixel.r, srcPixel.g, srcPixel.b, srcPixel.a);
+              x1 + x,
+              dstY,
+              srcPixel.r,
+              srcPixel.g,
+              srcPixel.b,
+              srcPixel.a,
+            );
           }
         }
       }
@@ -201,16 +227,41 @@ Image copyResize(Image src,
             ..getPixel(nx, ny, inn);
 
           dst.setPixelRgba(
-              x1 + x,
-              dstY,
-              _linear(icc.r.toDouble(), inc.r.toDouble(), icn.r.toDouble(),
-                  inn.r.toDouble(), kx, ky),
-              _linear(icc.g.toDouble(), inc.g.toDouble(), icn.g.toDouble(),
-                  inn.g.toDouble(), kx, ky),
-              _linear(icc.b.toDouble(), inc.b.toDouble(), icn.b.toDouble(),
-                  inn.b.toDouble(), kx, ky),
-              _linear(icc.a.toDouble(), inc.a.toDouble(), icn.a.toDouble(),
-                  inn.a.toDouble(), kx, ky));
+            x1 + x,
+            dstY,
+            _linear(
+              icc.r.toDouble(),
+              inc.r.toDouble(),
+              icn.r.toDouble(),
+              inn.r.toDouble(),
+              kx,
+              ky,
+            ),
+            _linear(
+              icc.g.toDouble(),
+              inc.g.toDouble(),
+              icn.g.toDouble(),
+              inn.g.toDouble(),
+              kx,
+              ky,
+            ),
+            _linear(
+              icc.b.toDouble(),
+              inc.b.toDouble(),
+              icn.b.toDouble(),
+              inn.b.toDouble(),
+              kx,
+              ky,
+            ),
+            _linear(
+              icc.a.toDouble(),
+              inc.a.toDouble(),
+              icn.a.toDouble(),
+              inn.a.toDouble(),
+              kx,
+              ky,
+            ),
+          );
         }
       }
     } else {
@@ -220,10 +271,10 @@ Image copyResize(Image src,
         for (var x = 0; x < w; ++x) {
           final sx2 = x * dx;
           dst.setPixel(
-              x1 + x,
-              dstY,
-              frame.getPixelInterpolate(sx2, sy2,
-                  interpolation: interpolation));
+            x1 + x,
+            dstY,
+            frame.getPixelInterpolate(sx2, sy2, interpolation: interpolation),
+          );
         }
       }
     }

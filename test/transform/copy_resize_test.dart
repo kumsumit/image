@@ -62,6 +62,40 @@ void main() {
         ..writeAsBytesSync(encodePng(i0));
     });
 
+    test('copyResize lanczos', () {
+      final img = decodePng(
+        File('test/_data/png/buck_24.png').readAsBytesSync(),
+      )!;
+      final i0 = copyResize(
+        img,
+        width: 64,
+        interpolation: Interpolation.lanczos,
+      );
+      expect(i0.width, equals(64));
+      expect(i0.height, equals(40));
+      expect(hashImage(i0), equals(844812259));
+      File('$testOutputPath/transform/copyResize_lanczos.png')
+        ..createSync(recursive: true)
+        ..writeAsBytesSync(encodePng(i0));
+    });
+
+    test('copyResize lanczos larger', () {
+      final img = decodePng(
+        File('test/_data/png/buck_24.png').readAsBytesSync(),
+      )!;
+      final i0 = copyResize(
+        img,
+        width: 300,
+        interpolation: Interpolation.lanczos,
+      );
+      expect(i0.width, equals(300));
+      expect(i0.height, equals(186));
+      expect(hashImage(i0), equals(817446904));
+      File('$testOutputPath/transform/copyResize_lanczos_larger.png')
+        ..createSync(recursive: true)
+        ..writeAsBytesSync(encodePng(i0));
+    });
+
     test('copyResize maintainAspect', () {
       final img = decodePng(
         File('test/_data/png/buck_24.png').readAsBytesSync(),
@@ -327,8 +361,8 @@ void main() {
       );
 
       File(
-        '$testOutputPath/transform/copyResize_color_linear_smaller_aspect_1.png',
-      )
+          '$testOutputPath/transform/copyResize_color_linear_smaller_aspect_1.png',
+        )
         ..createSync(recursive: true)
         ..writeAsBytesSync(encodePng(i0));
     });
@@ -424,8 +458,8 @@ void main() {
       );
 
       File(
-        '$testOutputPath/transform/copyResize_color_cubic_smaller_aspect_1.png',
-      )
+          '$testOutputPath/transform/copyResize_color_cubic_smaller_aspect_1.png',
+        )
         ..createSync(recursive: true)
         ..writeAsBytesSync(encodePng(i0));
     });

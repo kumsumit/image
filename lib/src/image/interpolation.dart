@@ -10,5 +10,8 @@ enum Interpolation {
   cubic,
 
   /// Average the colors of the neighboring pixels.
-  average
+  average,
+
+  /// Lanczos-3 resampling for resizing. Slower, sharper high quality.
+  lanczos,
 }

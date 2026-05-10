@@ -54,6 +54,19 @@ void main() {
         ..writeAsBytesSync(encodePng(i0));
     });
 
+    test('resize lanczos', () {
+      final img = decodePng(
+        File('test/_data/png/buck_24.png').readAsBytesSync(),
+      )!;
+      final i0 = resize(img, width: 64, interpolation: Interpolation.lanczos);
+      expect(i0.width, equals(64));
+      expect(i0.height, equals(40));
+      expect(hashImage(i0), equals(844812259));
+      File('$testOutputPath/transform/resize_lanczos.png')
+        ..createSync(recursive: true)
+        ..writeAsBytesSync(encodePng(i0));
+    });
+
     test('resize maintainAspect', () {
       final img = decodePng(
         File('test/_data/png/buck_24.png').readAsBytesSync(),

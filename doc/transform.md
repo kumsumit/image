@@ -95,6 +95,7 @@ Returns a resized copy of the src image.
   * If maintainAspect is not set or is false, src will be stretched.
   * If maintainAspect is true, src will fill the new resolution without changing the aspect ratio, using backgroundColor
 as the padding color.
+* The interpolation can be nearest, linear, cubic, average, or lanczos. Lanczos uses a Lanczos-3 resampling filter for sharper high-quality resizing.
 
 ![copyResize](images/transform/copyResize.png)
 
