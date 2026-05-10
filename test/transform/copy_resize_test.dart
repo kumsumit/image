@@ -96,6 +96,26 @@ void main() {
         ..writeAsBytesSync(encodePng(i0));
     });
 
+    test('copyResize lanczos premultiplies alpha', () {
+      final img = Image(width: 9, height: 1, numChannels: 4);
+      for (var x = 0; x < img.width; ++x) {
+        img.setPixelRgba(x, 0, 255, 0, 0, 0);
+      }
+      img.setPixelRgba(4, 0, 0, 0, 255, 255);
+
+      final i0 = copyResize(
+        img,
+        width: 1,
+        height: 1,
+        interpolation: Interpolation.lanczos,
+      );
+      final p = i0.getPixel(0, 0);
+      expect(p.r, lessThan(10));
+      expect(p.g, lessThan(10));
+      expect(p.b, greaterThan(200));
+      expect(p.a, greaterThan(0));
+    });
+
     test('copyResize maintainAspect', () {
       final img = decodePng(
         File('test/_data/png/buck_24.png').readAsBytesSync(),

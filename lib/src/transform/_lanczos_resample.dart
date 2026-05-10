@@ -57,20 +57,22 @@ void lanczosResize(
           continue;
         }
         src.getPixelClamped(sx, y, srcPixel);
-        r += srcPixel.r * weight;
-        g += srcPixel.g * weight;
-        b += srcPixel.b * weight;
-        a += srcPixel.a * weight;
+        final alpha = srcPixel.a.toDouble();
+        r += srcPixel.r * alpha * weight;
+        g += srcPixel.g * alpha * weight;
+        b += srcPixel.b * alpha * weight;
+        a += alpha * weight;
         totalWeight += weight;
       }
 
       final ti = (y * width + x) * 4;
       if (totalWeight == 0) {
         src.getPixelClamped(center.round(), y, srcPixel);
-        tmp[ti] = srcPixel.r.toDouble();
-        tmp[ti + 1] = srcPixel.g.toDouble();
-        tmp[ti + 2] = srcPixel.b.toDouble();
-        tmp[ti + 3] = srcPixel.a.toDouble();
+        final alpha = srcPixel.a.toDouble();
+        tmp[ti] = srcPixel.r * alpha;
+        tmp[ti + 1] = srcPixel.g * alpha;
+        tmp[ti + 2] = srcPixel.b * alpha;
+        tmp[ti + 3] = alpha;
       } else {
         final inv = 1.0 / totalWeight;
         tmp[ti] = r * inv;
@@ -111,17 +113,28 @@ void lanczosResize(
       if (totalWeight == 0) {
         final sy = center.round().clamp(0, src.height - 1);
         final ti = (sy * width + x) * 4;
+        final alpha = tmp[ti + 3];
+        final invAlpha = alpha == 0 ? 0 : 1.0 / alpha;
         dst.setPixelRgba(
           dstX + x,
           dy,
-          tmp[ti],
-          tmp[ti + 1],
-          tmp[ti + 2],
-          tmp[ti + 3],
+          tmp[ti] * invAlpha,
+          tmp[ti + 1] * invAlpha,
+          tmp[ti + 2] * invAlpha,
+          alpha,
         );
       } else {
         final inv = 1.0 / totalWeight;
-        dst.setPixelRgba(dstX + x, dy, r * inv, g * inv, b * inv, a * inv);
+        final alpha = a * inv;
+        final invAlpha = alpha == 0 ? 0 : 1.0 / alpha;
+        dst.setPixelRgba(
+          dstX + x,
+          dy,
+          r * inv * invAlpha,
+          g * inv * invAlpha,
+          b * inv * invAlpha,
+          alpha,
+        );
       }
     }
   }
