@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:js_interop';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart';
 import 'package:web/web.dart';
@@ -63,10 +64,9 @@ void main() async {
 
       // If it's a single image, dump the decoded image into the canvas.
       if (rgba8.numFrames == 1) {
-        // TODO: how do you do this with package:web?
         // Fill the buffer with our image data.
-        //canvasData.data
-        //.setRange(0, canvasData.data.length, rgba8.toUint8List());
+        // ignore: undefined_method
+        canvasData.data.set(Uint8ClampedList.fromList(rgba8.toUint8List()), 0);
         // Draw the buffer onto the canvas.
         canvas.context2D.putImageData(canvasData, 0, 0);
 
@@ -76,15 +76,14 @@ void main() async {
       // A multi-frame animation, use a timer to draw frames.
       var f = 0;
       Timer.periodic(const Duration(milliseconds: 40), (t) {
-        //final frame = rgba8.frames[f++];
+        final frame = rgba8.frames[f++];
         if (f >= rgba8.numFrames) {
           f = 0;
         }
 
-        // TODO: how do you do this with package:web?
         // Fill the buffer with our image data.
-        //canvasData.data
-        //.setRange(0, canvasData.data.length, frame.toUint8List());
+        // ignore: undefined_method
+        canvasData.data.set(Uint8ClampedList.fromList(frame.toUint8List()), 0);
 
         // Draw the buffer onto the canvas.
         canvas.context2D.putImageData(canvasData, 0, 0);

@@ -3,6 +3,8 @@ import 'dart:typed_data';
 
 import '../../color/color.dart';
 import '../../image/image.dart';
+import '../../image/palette.dart';
+import '../../image/palette_uint8.dart';
 import '../../image/pixel.dart';
 import '../../util/color_util.dart';
 import '../../util/image_exception.dart';
@@ -35,6 +37,7 @@ class PsdImage implements DecodeInfo {
   late int channels;
   int? depth;
   PsdColorMode? colorMode;
+  Palette? palette;
   late List<PsdLayer> layers;
   late List<PsdChannel> mergeImageChannels;
   Image? mergedImage;
@@ -45,7 +48,7 @@ class PsdImage implements DecodeInfo {
 
   late InputBuffer? _input;
 
-  //InputBuffer? _colorData;
+  InputBuffer? _colorData;
   InputBuffer? _imageResourceData;
   InputBuffer? _layerAndMaskData;
   InputBuffer? _imageData;
@@ -62,7 +65,7 @@ class PsdImage implements DecodeInfo {
     }
 
     var len = _input!.readUint32();
-    /*_colorData =*/ _input!.readBytes(len);
+    _colorData = _input!.readBytes(len);
 
     len = _input!.readUint32();
     _imageResourceData = _input!.readBytes(len);
@@ -413,7 +416,21 @@ class PsdImage implements DecodeInfo {
   }
 
   void _readColorModeData() {
-    // TODO support indexed and duotone images.
+    if (_colorData == null) {
+      return;
+    }
+    _colorData!.rewind();
+    if (colorMode == PsdColorMode.indexed) {
+      const numColors = 256;
+      const paletteLength = numColors * 3;
+      if (_colorData!.length >= paletteLength) {
+        final paletteData = _colorData!.readBytes(paletteLength).toUint8List();
+        palette = PaletteUint8(numColors, 3);
+        (palette as PaletteUint8).data.setAll(0, paletteData);
+      }
+    } else if (colorMode == PsdColorMode.duoTone) {
+      // Duotone data parsing is complex; skipping for now
+    }
   }
 
   void _readImageResources() {

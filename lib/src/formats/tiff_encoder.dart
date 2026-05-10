@@ -22,10 +22,7 @@ class TiffEncoder extends Encoder {
       exif.imageIfd.copy(image.exif.imageIfd);
     }
 
-    // TODO: support encoding HDR images to TIFF.
-    if (image.isHdrFormat) {
-      image = image.convert(format: Format.uint8);
-    }
+    // Support encoding HDR images to TIFF.
 
     final type = image.numChannels == 1
         ? TiffPhotometricType.blackIsZero.index

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import '../../color/color.dart';
+import '../../exif/exif_data.dart';
 import '../../util/_internal.dart';
 import '../decode_info.dart';
 import 'png_frame.dart';
@@ -155,6 +156,7 @@ class PngInfo implements DecodeInfo {
   Map<String, String> textData = {};
   PngPhysicalPixelDimensions? pixelDimensions;
   PngCicpData? cicpData;
+  ExifData? exif;
 
   // APNG extensions
   @override

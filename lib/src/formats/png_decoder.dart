@@ -8,6 +8,7 @@ import '../color/format.dart';
 import '../draw/blend_mode.dart';
 import '../draw/composite_image.dart';
 import '../draw/fill_rect.dart';
+import '../exif/exif_data.dart';
 import '../image/icc_profile.dart';
 import '../image/image.dart';
 import '../image/palette_uint8.dart';
@@ -159,13 +160,13 @@ class PngDecoder extends Decoder {
           // End of the image.
           _input.skip(4); // CRC
           break;
-        /*case 'eXif': // TODO: parse exif
+        case 'eXif':
           {
             final exifData = _input.readBytes(chunkSize);
-            final exif = ExifData.fromInputBuffer(exifData);
+            _info.exif = ExifData.fromInputBuffer(exifData);
             _input.skip(4); // CRC
             break;
-          }*/
+          }
         case 'gAMA':
           if (chunkSize != 4) {
             throw ImageException('Invalid gAMA chunk');
@@ -460,6 +461,10 @@ class PngDecoder extends Decoder {
         numChannels: numChannels,
         palette: palette,
         format: format);
+
+    if (_info.exif != null) {
+      image.exif = _info.exif!;
+    }
 
     final origW = _info.width;
     final origH = _info.height;

@@ -130,10 +130,6 @@ class ExrImage implements DecodeInfo {
       for (var lx = 0; lx < part.numXLevels!; ++lx, ++l) {
         for (var ty = 0, oi = 0; ty < part.numYTiles![ly]!; ++ty) {
           for (var tx = 0; tx < part.numXTiles![lx]!; ++tx, ++oi) {
-            // TODO support sub-levels (for rip/mip-mapping).
-            if (l != 0) {
-              break;
-            }
             final offset = offsets![l]![oi];
             imgData.offset = offset;
 

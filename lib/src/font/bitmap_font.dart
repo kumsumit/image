@@ -76,8 +76,9 @@ class BitmapFont {
     }
 
     /// Remove leading whitespace so xml detection is correct
-    final fontStr =
-        String.fromCharCodes(fontFile.content as List<int>).trimLeft();
+    final fontStr = String.fromCharCodes(
+      fontFile.content as List<int>,
+    ).trimLeft();
     XmlDocument xml;
 
     /// Added <?xml which may be present, appropriately
@@ -110,17 +111,17 @@ class BitmapFont {
     /// Rather than check for children, which will also count whitespace as
     /// XmlText, the first child should have the name <font>.
     final docElements = _childElements(xml).toList();
-    if (docElements.length != 1 || docElements[0].name.toString() != 'font') {
+    if (docElements.length != 1 || docElements[0].name.qualified != 'font') {
       throw ImageException('Invalid font XML');
     }
 
     final font = docElements[0];
 
     for (var c in _childElements(font)) {
-      final name = c.name.toString();
+      final name = c.name.qualified;
       if (name == 'info') {
         for (var a in c.attributes) {
-          switch (a.name.toString()) {
+          switch (a.name.qualified) {
             case 'face':
               face = a.value;
               break;
@@ -169,7 +170,7 @@ class BitmapFont {
         }
       } else if (name == 'common') {
         for (var a in c.attributes) {
-          switch (a.name.toString()) {
+          switch (a.name.qualified) {
             case 'lineHeight':
               lineHeight = int.parse(a.value);
               break;
@@ -202,12 +203,15 @@ class BitmapFont {
           if (arc != null) {
             final imageFile = _findFile(arc, filename);
             if (imageFile == null) {
-              throw ImageException('Font zip missing font page image '
-                  '$filename');
+              throw ImageException(
+                'Font zip missing font page image '
+                '$filename',
+              );
             }
 
-            final image =
-                PngDecoder().decode(castToUint8List(imageFile.content));
+            final image = PngDecoder().decode(
+              castToUint8List(imageFile.content),
+            );
 
             fontPages[id] = image;
           }
@@ -227,7 +231,7 @@ class BitmapFont {
     }
 
     for (var c in _childElements(font)) {
-      final name = c.name.toString();
+      final name = c.name.qualified;
       if (name == 'chars') {
         for (var char in _childElements(c)) {
           final id = int.parse(char.getAttribute('id')!);
@@ -248,7 +252,15 @@ class BitmapFont {
           final fontImage = fontPages[page];
 
           final ch = BitmapFontCharacter(
-              id, width, height, xoffset, yoffset, xadvance, page, chnl);
+            id,
+            width,
+            height,
+            xoffset,
+            yoffset,
+            xadvance,
+            page,
+            chnl,
+          );
 
           characters[id] = ch;
 
@@ -288,17 +300,17 @@ class BitmapFont {
       switch (tk[0]) {
         case 'info':
           final attrs = _parseParameters(tk);
-          final info = XmlElement(XmlName('info'), attrs, []);
+          final info = XmlElement(const XmlName.parts('info'), attrs, []);
           children.add(info);
           break;
         case 'common':
           final attrs = _parseParameters(tk);
-          final node = XmlElement(XmlName('common'), attrs, []);
+          final node = XmlElement(const XmlName.parts('common'), attrs, []);
           children.add(node);
           break;
         case 'page':
           final attrs = _parseParameters(tk);
-          final page = XmlElement(XmlName('page'), attrs, []);
+          final page = XmlElement(const XmlName.parts('page'), attrs, []);
           pageList.add(page);
           break;
         case 'chars':
@@ -306,7 +318,7 @@ class BitmapFont {
           break;
         case 'char':
           final attrs = _parseParameters(tk);
-          final node = XmlElement(XmlName('char'), attrs, []);
+          final node = XmlElement(const XmlName.parts('char'), attrs, []);
           charList.add(node);
           break;
         case 'kernings':
@@ -314,28 +326,36 @@ class BitmapFont {
           break;
         case 'kerning':
           final attrs = _parseParameters(tk);
-          final node = XmlElement(XmlName('kerning'), attrs, []);
+          final node = XmlElement(const XmlName.parts('kerning'), attrs, []);
           kerningList.add(node);
           break;
       }
     }
 
     if (charsAttrs != null || charList.isNotEmpty) {
-      final node = XmlElement(XmlName('chars'), charsAttrs!, charList);
+      final node = XmlElement(
+        const XmlName.parts('chars'),
+        charsAttrs!,
+        charList,
+      );
       children.add(node);
     }
 
     if (kerningsAttrs != null || kerningList.isNotEmpty) {
-      final node = XmlElement(XmlName('kernings'), kerningsAttrs!, kerningList);
+      final node = XmlElement(
+        const XmlName.parts('kernings'),
+        kerningsAttrs!,
+        kerningList,
+      );
       children.add(node);
     }
 
     if (pageList.isNotEmpty) {
-      final pages = XmlElement(XmlName('pages'), [], pageList);
+      final pages = XmlElement(const XmlName.parts('pages'), [], pageList);
       children.add(pages);
     }
 
-    final xml = XmlElement(XmlName('font'), [], children);
+    final xml = XmlElement(const XmlName.parts('font'), [], children);
     final doc = XmlDocument([xml]);
 
     return doc;
@@ -355,7 +375,7 @@ class BitmapFont {
       // Remove all " characters
       atk[1] = atk[1].replaceAll('"', '');
 
-      final a = XmlAttribute(XmlName(atk[0]), atk[1]);
+      final a = XmlAttribute(const XmlName.parts('info'), atk[1]);
       params.add(a);
     }
     return params;
@@ -383,9 +403,16 @@ class BitmapFontCharacter {
   final int channel;
   final Image image;
 
-  BitmapFontCharacter(this.id, this.width, this.height, this.xOffset,
-      this.yOffset, this.xAdvance, this.page, this.channel)
-      : image = Image(width: width, height: height, numChannels: 4);
+  BitmapFontCharacter(
+    this.id,
+    this.width,
+    this.height,
+    this.xOffset,
+    this.yOffset,
+    this.xAdvance,
+    this.page,
+    this.channel,
+  ) : image = Image(width: width, height: height, numChannels: 4);
 
   @override
   String toString() {
@@ -397,7 +424,7 @@ class BitmapFontCharacter {
       'yOffset': yOffset,
       'xAdvance': xAdvance,
       'page': page,
-      'channel': channel
+      'channel': channel,
     };
     return 'Character $x';
   }
