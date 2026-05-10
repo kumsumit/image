@@ -22,7 +22,7 @@ enum PsdColorMode {
   cmyk,
   multiChannel,
   duoTone,
-  lab
+  lab,
 }
 
 class PsdImage implements DecodeInfo {
@@ -160,7 +160,21 @@ class PsdImage implements DecodeInfo {
             final ab = p.b.toInt();
             final aa = p.a.toInt();
 
-            _blend(ar, ag, ab, aa, br, bg, bb, ba, blendMode, opacity, p);
+            _blend(
+              ar,
+              ag,
+              ab,
+              aa,
+              br,
+              bg,
+              bb,
+              ba,
+              blendMode,
+              opacity,
+              dx,
+              dy,
+              p,
+            );
           }
         }
       }
@@ -169,13 +183,27 @@ class PsdImage implements DecodeInfo {
     return mergedImage!;
   }
 
-  void _blend(int ar, int ag, int ab, int aa, int br, int bg, int bb, int ba,
-      int? blendMode, double opacity, Pixel p) {
+  void _blend(
+    int ar,
+    int ag,
+    int ab,
+    int aa,
+    int br,
+    int bg,
+    int bb,
+    int ba,
+    int? blendMode,
+    double opacity,
+    int x,
+    int y,
+    Pixel p,
+  ) {
     var r = br;
     var g = bg;
     var b = bb;
     var a = ba;
-    final da = (ba / 255.0) * opacity;
+    var effectiveOpacity = opacity;
+    final rgb = [0, 0, 0];
 
     switch (blendMode) {
       case PsdBlendMode.passThrough:
@@ -187,6 +215,10 @@ class PsdImage implements DecodeInfo {
       case PsdBlendMode.normal:
         break;
       case PsdBlendMode.dissolve:
+        if (!_blendDissolve(x, y, ba, opacity)) {
+          return;
+        }
+        effectiveOpacity = 1.0;
         break;
       case PsdBlendMode.darken:
         r = _blendDarken(ar, br);
@@ -209,6 +241,11 @@ class PsdImage implements DecodeInfo {
         b = _blendLinearBurn(ab, bb);
         break;
       case PsdBlendMode.darkenColor:
+        if (_blendLuminance(br, bg, bb) >= _blendLuminance(ar, ag, ab)) {
+          r = ar;
+          g = ag;
+          b = ab;
+        }
         break;
       case PsdBlendMode.lighten:
         r = _blendLighten(ar, br);
@@ -231,6 +268,11 @@ class PsdImage implements DecodeInfo {
         b = _blendLinearDodge(ab, bb);
         break;
       case PsdBlendMode.lighterColor:
+        if (_blendLuminance(br, bg, bb) <= _blendLuminance(ar, ag, ab)) {
+          r = ar;
+          g = ag;
+          b = ab;
+        }
         break;
       case PsdBlendMode.overlay:
         r = _blendOverlay(ar, br, aa, ba);
@@ -278,19 +320,42 @@ class PsdImage implements DecodeInfo {
         b = _blendExclusion(ab, bb);
         break;
       case PsdBlendMode.subtract:
+        r = _blendSubtract(ar, br);
+        g = _blendSubtract(ag, bg);
+        b = _blendSubtract(ab, bb);
         break;
       case PsdBlendMode.divide:
+        r = _blendDivide(ar, br);
+        g = _blendDivide(ag, bg);
+        b = _blendDivide(ab, bb);
         break;
       case PsdBlendMode.hue:
+        _blendHsl(ar, ag, ab, br, bg, bb, PsdBlendMode.hue, rgb);
+        r = rgb[0];
+        g = rgb[1];
+        b = rgb[2];
         break;
       case PsdBlendMode.saturation:
+        _blendHsl(ar, ag, ab, br, bg, bb, PsdBlendMode.saturation, rgb);
+        r = rgb[0];
+        g = rgb[1];
+        b = rgb[2];
         break;
       case PsdBlendMode.color:
+        _blendHsl(ar, ag, ab, br, bg, bb, PsdBlendMode.color, rgb);
+        r = rgb[0];
+        g = rgb[1];
+        b = rgb[2];
         break;
       case PsdBlendMode.luminosity:
+        _blendHsl(ar, ag, ab, br, bg, bb, PsdBlendMode.luminosity, rgb);
+        r = rgb[0];
+        g = rgb[1];
+        b = rgb[2];
         break;
     }
 
+    final da = (ba / 255.0) * effectiveOpacity;
     p
       ..r = ((ar * (1.0 - da)) + (r * da)).toInt()
       ..g = ((ag * (1.0 - da)) + (g * da)).toInt()
@@ -389,6 +454,62 @@ class PsdImage implements DecodeInfo {
   static int _blendExclusion(int bottom, int top) =>
       (top + bottom - 2 * top * bottom / 255.0).round();
 
+  static int _blendSubtract(int bottom, int top) =>
+      (bottom - top).clamp(0, 255).toInt();
+
+  static int _blendDivide(int bottom, int top) {
+    if (top == 0) {
+      return 255;
+    }
+    return ((bottom * 255) / top).clamp(0, 255).toInt();
+  }
+
+  static num _blendLuminance(int r, int g, int b) => getLuminanceRgb(r, g, b);
+
+  static bool _blendDissolve(int x, int y, int alpha, double opacity) {
+    final threshold = ((alpha / 255.0) * opacity * 255).round();
+    if (threshold <= 0) {
+      return false;
+    }
+    if (threshold >= 255) {
+      return true;
+    }
+
+    var hash = x * 374761393 + y * 668265263;
+    hash = (hash ^ (hash >> 13)) * 1274126177;
+    hash = hash ^ (hash >> 16);
+    return (hash & 0xff) < threshold;
+  }
+
+  static void _blendHsl(
+    int ar,
+    int ag,
+    int ab,
+    int br,
+    int bg,
+    int bb,
+    int blendMode,
+    List<int> rgb,
+  ) {
+    final bottom = rgbToHsl(ar, ag, ab);
+    final top = rgbToHsl(br, bg, bb);
+
+    switch (blendMode) {
+      case PsdBlendMode.hue:
+        hslToRgb(top[0], bottom[1], bottom[2], rgb);
+        break;
+      case PsdBlendMode.saturation:
+        hslToRgb(bottom[0], top[1], bottom[2], rgb);
+        break;
+      case PsdBlendMode.color:
+        hslToRgb(top[0], top[1], bottom[2], rgb);
+        break;
+      case PsdBlendMode.luminosity:
+        hslToRgb(bottom[0], bottom[1], top[2], rgb);
+        break;
+    }
+  }
+
   void _readHeader() {
     signature = _input!.readUint32();
     version = _input!.readUint16();
@@ -454,8 +575,11 @@ class PsdImage implements DecodeInfo {
       }
 
       if (blockSignature == resourceBlockSignature) {
-        imageResources[blockId] =
-            PsdImageResource(blockId, blockName, blockData);
+        imageResources[blockId] = PsdImageResource(
+          blockId,
+          blockName,
+          blockData,
+        );
       }
     }
   }
@@ -494,7 +618,8 @@ class PsdImage implements DecodeInfo {
     len = _layerAndMaskData!.readUint32();
     final maskData = _layerAndMaskData!.readBytes(len);
     if (len > 0) {
-      /*int colorSpace =*/ maskData
+      /*int colorSpace =*/
+      maskData
         ..readUint16()
         /*int rc =*/
         ..readUint16()
@@ -526,22 +651,42 @@ class PsdImage implements DecodeInfo {
 
     mergeImageChannels = [];
     for (var i = 0; i < channels; ++i) {
-      mergeImageChannels.add(PsdChannel.read(_imageData!, i == 3 ? -1 : i,
-          width, height, depth, compression, lineLengths, i));
+      mergeImageChannels.add(
+        PsdChannel.read(
+          _imageData!,
+          i == 3 ? -1 : i,
+          width,
+          height,
+          depth,
+          compression,
+          lineLengths,
+          i,
+        ),
+      );
     }
 
     mergedImage = createImageFromChannels(
-        colorMode, depth, width, height, mergeImageChannels);
+      colorMode,
+      depth,
+      width,
+      height,
+      mergeImageChannels,
+    );
   }
 
   static int _ch(List<int>? data, int si, int ns) => data == null
       ? 0
       : ns == 1
-          ? data[si]
-          : ((data[si] << 8) | data[si + 1]) >> 8;
+      ? data[si]
+      : ((data[si] << 8) | data[si + 1]) >> 8;
 
-  static Image createImageFromChannels(PsdColorMode? colorMode, int? bitDepth,
-      int width, int height, List<PsdChannel> channelList) {
+  static Image createImageFromChannels(
+    PsdColorMode? colorMode,
+    int? bitDepth,
+    int width,
+    int height,
+    List<PsdChannel> channelList,
+  ) {
     final channels = <int, PsdChannel>{};
     for (var ch in channelList) {
       channels[ch.id] = ch;
@@ -551,11 +696,14 @@ class PsdImage implements DecodeInfo {
     final ns = (bitDepth == 8)
         ? 1
         : (bitDepth == 16)
-            ? 2
-            : -1;
+        ? 2
+        : -1;
 
-    final output =
-        Image(width: width, height: height, numChannels: numChannels);
+    final output = Image(
+      width: width,
+      height: height,
+      numChannels: numChannels,
+    );
 
     if (ns == -1) {
       throw ImageException('PSD: unsupported bit depth: $bitDepth');

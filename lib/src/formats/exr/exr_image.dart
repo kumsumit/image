@@ -32,8 +32,10 @@ class ExrImage implements DecodeInfo {
 
     flags = input.readUint24();
     if (!_supportsFlags(flags)) {
-      throw ImageException('The file format version number\'s flag field '
-          'contains unrecognized flags.');
+      throw ImageException(
+        'The file format version number\'s flag field '
+        'contains unrecognized flags.',
+      );
     }
 
     if (!_isMultiPart) {
@@ -161,8 +163,15 @@ class ExrImage implements DecodeInfo {
               tileHeight = height - ty;
             }
 
-            final uncompressedData = InputBuffer(compressor.uncompress(
-                data, tx, ty, part.tileWidth, part.tileHeight));
+            final uncompressedData = InputBuffer(
+              compressor.uncompress(
+                data,
+                tx,
+                ty,
+                part.tileWidth,
+                part.tileHeight,
+              ),
+            );
             tileWidth = compressor.decodedWidth;
             tileHeight = compressor.decodedHeight;
 
@@ -183,10 +192,11 @@ class ExrImage implements DecodeInfo {
                   switch (ch.dataType) {
                     case ExrChannelType.half:
                       v = Float16.float16ToDouble(
-                          uncompressedData.readUint16());
+                        uncompressedData.readUint16(),
+                      );
                       break;
                     case ExrChannelType.float:
-                      v = uncompressedData.readUint16();
+                      v = uncompressedData.readFloat32();
                       break;
                     case ExrChannelType.uint:
                       v = uncompressedData.readUint32();
@@ -273,7 +283,7 @@ class ExrImage implements DecodeInfo {
                 v = Float16.float16ToDouble(uncompressedData.readUint16());
                 break;
               case ExrChannelType.float:
-                v = uncompressedData.readUint16();
+                v = uncompressedData.readFloat32();
                 break;
               case ExrChannelType.uint:
                 v = uncompressedData.readUint32();

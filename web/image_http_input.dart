@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:js_interop';
-import 'dart:typed_data';
 import 'package:image/image.dart';
 import 'package:web/web.dart';
 
@@ -13,8 +12,7 @@ void main() {
   // This example demonstrates using a file Input element.
   fileInput = document.querySelector('#file') as HTMLInputElement;
 
-  // ignore: argument_type_not_assignable
-  fileInput.addEventListener('change', onFileChanged);
+  fileInput.addEventListener('change', onFileChanged.toJS);
 }
 
 /// Called when the user has selected a file.
@@ -23,16 +21,15 @@ void onFileChanged(Event event) {
   final file = files.item(0)!;
 
   FileReader()
-  // ignore: argument_type_not_assignable
-  ..addEventListener('load', onFileLoaded)
-  ..readAsArrayBuffer(file);
+    ..addEventListener('load', onFileLoaded.toJS)
+    ..readAsArrayBuffer(file);
 }
 
 /// Called when the file has been read.
 void onFileLoaded(Event event) {
   final reader = event.currentTarget as FileReader;
 
-  final bytes = reader.result as Uint8List;
+  final bytes = (reader.result! as JSArrayBuffer).toDart.asUint8List();
 
   // Find a decoder that is able to decode the given file contents.
   final decoder = findDecoderForData(bytes);
@@ -64,8 +61,7 @@ void onFileLoaded(Event event) {
     final d = c.context2D.createImageData(c.width.toJS, c.height);
 
     // Fill the buffer with our image data.
-    // ignore: undefined_method
-    d.data.set(Uint8ClampedList.fromList(image.toUint8List()), 0);
+    d.data.toDart.setAll(0, image.toUint8List());
     // Draw the buffer onto the canvas.
     c.context2D.putImageData(d, 0, 0);
 

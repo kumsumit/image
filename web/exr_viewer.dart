@@ -1,4 +1,6 @@
-import 'dart:convert';
+import 'dart:js_interop';
+import 'dart:typed_data';
+
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 import 'package:web/web.dart';
@@ -33,9 +35,11 @@ void main() async {
           // Convert the adjusted EXR to a PNG
           final png = img.encodePng(ldr);
           // Replace the image element src with the converted image.
-          final png64 = base64Encode(png);
-          // ignore: unsafe_html
-          imgElem.src = 'data:image/png;base64,$png64';
+          final blob = Blob(
+            [Uint8List.fromList(png).toJS].toJS,
+            BlobPropertyBag(type: 'image/png'),
+          );
+          imgElem.src = URL.createObjectURL(blob);
         }
       }
     }
