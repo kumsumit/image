@@ -28,6 +28,7 @@ void main() {
         final bytes = File('test/_data/exr/ocean.exr').readAsBytesSync();
 
         final dec = ExrDecoder()..startDecode(bytes);
+        expect(dec.numFrames(), greaterThan(0));
         final img = dec.decodeFrame(0)!;
         expect(img.width, equals(300));
         expect(img.height, equals(209));
@@ -39,6 +40,27 @@ void main() {
         File('$testOutputPath/exr/ocean.png')
           ..createSync(recursive: true)
           ..writeAsBytesSync(png);
+      });
+
+      test('exr sub-levels', () {
+        final bytes = File('test/_data/exr/grid.exr').readAsBytesSync();
+
+        final dec = ExrDecoder()..startDecode(bytes);
+        // Check if multiple frames (levels) are available
+        expect(dec.numFrames(), greaterThanOrEqualTo(1));
+
+        // Decode first frame
+        final img = dec.decodeFrame(0)!;
+        expect(img, isNotNull);
+
+        // If more frames, test decoding another level
+        if (dec.numFrames() > 1) {
+          final level1 = dec.decodeFrame(1);
+          expect(level1, isNotNull);
+          // Typically sub-levels have smaller dimensions
+          expect(level1!.width, lessThanOrEqualTo(img.width));
+          expect(level1.height, lessThanOrEqualTo(img.height));
+        }
       });
     });
   });
