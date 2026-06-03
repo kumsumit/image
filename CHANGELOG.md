@@ -1,3 +1,42 @@
+## 4.9.2
+
+- Remove xml dependency, replacing it with a minimal built-in parser for the
+  bitmap font (.fnt) format.
+
+## 4.9.1
+
+- Remove meta dependency.
+
+## 4.9.0
+
+- Fix `minMax` returning incorrect values when the minimum or maximum was in
+  the first pixel of a multi-channel image.
+- Fix `copyResizeCropSquare` ignoring the crop offset when using non-nearest
+  interpolation, which off-centered the resized result.
+- Improve the precision of the RGB/XYZ/CIE-Lab color conversions, and round
+  rather than truncate the final RGB values, making the conversions lossless.
+- Fix `copyResizeCropSquare` throwing a range error when a non-zero radius was
+  used with a non-square image.
+- Fix non-antialiased `drawLine` drawing diagonal lines offset by ~1 pixel.
+- Preserve EXIF metadata when expanding an image with `copyExpandCanvas`.
+- `Image.convert` now applies an explicitly provided `alpha` value even when
+  the format and channel count are unchanged.
+- Fix a range error in `Image.fromBytes` when the source row stride is smaller
+  than the image's row stride.
+- Fix a `RangeError` when decoding images with corrupt EXIF data.
+- Reject non-BMP files that merely start with the `BM` signature instead of
+  crashing the decoder.
+- Fix `noise` with `NoiseType.saltAndPepper` producing colored pixels instead
+  of black/white ones.
+- `colorOffset` now scales its offsets to the bit depth of the image, so the
+  effect is consistent regardless of the image's format.
+- Add `fuzzy` and `padding` options to `trim` and `findTrim`.
+- Add `findEncoderForData`, which returns an `Encoder` for a buffer of image
+  data, complementing `findDecoderForData`.
+- Add a `dispose` option to `GifEncoder` to control the frame disposal method.
+- `PsdImage.layers` no longer throws a `LateInitializationError` when accessed
+  before `decode` has been called.
+
 ## 4.8.0 - February 17, 2026
 
 - Fix JPEG decoding issue with Adobe RGB color transformations.

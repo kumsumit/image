@@ -38,7 +38,9 @@ class PsdImage implements DecodeInfo {
   int? depth;
   PsdColorMode? colorMode;
   Palette? palette;
-  late List<PsdLayer> layers;
+
+  /// The image's layers. Empty until [decode] has been called.
+  final List<PsdLayer> layers = [];
   late List<PsdChannel> mergeImageChannels;
   Image? mergedImage;
   final imageResources = <int, PsdImageResource>{};
@@ -593,7 +595,7 @@ class PsdImage implements DecodeInfo {
 
     final layerData = _layerAndMaskData!.readBytes(len);
 
-    layers = [];
+    layers.clear();
     if (len > 0) {
       var count = layerData.readInt16();
       // If it is a negative number, its absolute value is the number of
@@ -677,8 +679,8 @@ class PsdImage implements DecodeInfo {
   static int _ch(List<int>? data, int si, int ns) => data == null
       ? 0
       : ns == 1
-      ? data[si]
-      : ((data[si] << 8) | data[si + 1]) >> 8;
+          ? data[si]
+          : ((data[si] << 8) | data[si + 1]) >> 8;
 
   static Image createImageFromChannels(
     PsdColorMode? colorMode,
@@ -696,8 +698,8 @@ class PsdImage implements DecodeInfo {
     final ns = (bitDepth == 8)
         ? 1
         : (bitDepth == 16)
-        ? 2
-        : -1;
+            ? 2
+            : -1;
 
     final output = Image(
       width: width,

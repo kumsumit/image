@@ -213,13 +213,13 @@ class ExifData extends IfdContainer {
       // be translated to the StripOffsets long type.
       final tagType =
           tag == stripOffsetTag && value.type == IfdValueType.undefined
-          ? IfdValueType.long
-          : value.type;
+              ? IfdValueType.long
+              : value.type;
 
       final tagLength =
           tag == stripOffsetTag && value.type == IfdValueType.undefined
-          ? 1
-          : value.length;
+              ? 1
+              : value.length;
 
       out
         ..writeUint16(tag)
@@ -281,35 +281,47 @@ class ExifData extends IfdContainer {
     // IFD blocks
     var index = 0;
     while (ifdOffset > 0) {
-      block.offset = blockOffset + ifdOffset;
-      if (block.length < 2) {
-        break;
-      }
-
-      final directory = IfdDirectory();
-      final numEntries = block.readUint16();
-      final dir = List<_ExifEntry>.generate(
-        numEntries,
-        (i) => _readEntry(block, blockOffset),
-      );
-
-      for (final entry in dir) {
-        if (entry.value != null) {
-          directory[entry.tag] = entry.value!;
+      try {
+        block.offset = blockOffset + ifdOffset;
+        if (block.length < 2) {
+          break;
         }
-      }
-      directories['ifd$index'] = directory;
-      index++;
 
-      final nextIfdOffset = block.readUint32();
-      if (nextIfdOffset == ifdOffset) {
+        final directory = IfdDirectory();
+        final numEntries = block.readUint16();
+        // Each IFD entry is 12 bytes; if the buffer can't hold them all the
+        // data is corrupt, so stop rather than reading past the buffer end.
+        if (numEntries * 12 > block.length) {
+          break;
+        }
+        final dir = List<_ExifEntry>.generate(
+            numEntries, (i) => _readEntry(block, blockOffset));
+
+        for (final entry in dir) {
+          if (entry.value != null) {
+            directory[entry.tag] = entry.value!;
+          }
+        }
+        directories['ifd$index'] = directory;
+        index++;
+
+        final nextIfdOffset = block.readUint32();
+        if (nextIfdOffset == ifdOffset) {
+          break;
+        } else {
+          ifdOffset = nextIfdOffset;
+        }
+      } catch (e) {
+        // Malformed IFD; stop reading further directories.
         break;
-      } else {
-        ifdOffset = nextIfdOffset;
       }
     }
 
-    const subTags = {0x8769: 'exif', 0xA005: 'interop', 0x8825: 'gps'};
+    const subTags = {
+      0x8769: 'exif',
+      0xA005: 'interop',
+      0x8825: 'gps',
+    };
 
     for (final d in directories.values) {
       for (final dt in subTags.keys) {
@@ -321,9 +333,7 @@ class ExifData extends IfdContainer {
             final directory = IfdDirectory();
             final numEntries = block.readUint16();
             final dir = List<_ExifEntry>.generate(
-              numEntries,
-              (i) => _readEntry(block, blockOffset),
-            );
+                numEntries, (i) => _readEntry(block, blockOffset));
 
             for (final entry in dir) {
               if (entry.value != null) {
@@ -351,7 +361,7 @@ class ExifData extends IfdContainer {
 
     final entry = _ExifEntry(tag, null);
 
-    if (format > IfdValueType.values.length) {
+    if (format >= IfdValueType.values.length) {
       return entry;
     }
 

@@ -12,14 +12,11 @@ enum NoiseType { gaussian, uniform, saltAndPepper, poisson, rice }
 /// should be. [type] should be one of the following: [NoiseType.gaussian],
 /// [NoiseType.uniform], [NoiseType.saltAndPepper], [NoiseType.poisson],
 /// or [NoiseType.rice].
-Image noise(
-  Image image,
-  num sigma, {
-  NoiseType type = NoiseType.gaussian,
-  Random? random,
-  Image? mask,
-  Channel maskChannel = Channel.luminance,
-}) {
+Image noise(Image image, num sigma,
+    {NoiseType type = NoiseType.gaussian,
+    Random? random,
+    Image? mask,
+    Channel maskChannel = Channel.luminance}) {
   random ??= Random();
 
   var nSigma = sigma;
@@ -50,9 +47,8 @@ Image noise(
           final g = (p.g + nSigma * grand(random)).clamp(0, p.maxChannelValue);
           final b = (p.b + nSigma * grand(random)).clamp(0, p.maxChannelValue);
           final a = p.a;
-          final msk = mask
-              ?.getPixel(p.x, p.y)
-              .getChannelNormalized(maskChannel);
+          final msk =
+              mask?.getPixel(p.x, p.y).getChannelNormalized(maskChannel);
           if (msk == null) {
             p.setRgba(r, g, b, a);
           } else {
@@ -70,9 +66,8 @@ Image noise(
           final g = (p.g + nSigma * crand(random)).clamp(0, p.maxChannelValue);
           final b = (p.b + nSigma * crand(random)).clamp(0, p.maxChannelValue);
           final a = p.a;
-          final msk = mask
-              ?.getPixel(p.x, p.y)
-              .getChannelNormalized(maskChannel);
+          final msk =
+              mask?.getPixel(p.x, p.y).getChannelNormalized(maskChannel);
           if (msk == null) {
             p.setRgba(r, g, b, a);
           } else {
@@ -94,22 +89,17 @@ Image noise(
         }
         for (final p in frame) {
           if (random.nextDouble() * 100.0 < nSigma) {
-            final r = (random.nextDouble() < 0.5 ? M : m).clamp(
-              0,
-              p.maxChannelValue,
-            );
-            final g = (random.nextDouble() < 0.5 ? M : m).clamp(
-              0,
-              p.maxChannelValue,
-            );
-            final b = (random.nextDouble() < 0.5 ? M : m).clamp(
-              0,
-              p.maxChannelValue,
-            );
+            // Salt-and-pepper noise sets the whole pixel to the min or max
+            // value; the choice is made once per pixel so the result is not
+            // colored.
+            final v =
+                (random.nextDouble() < 0.5 ? M : m).clamp(0, p.maxChannelValue);
+            final r = v;
+            final g = v;
+            final b = v;
             final a = p.a;
-            final msk = mask
-                ?.getPixel(p.x, p.y)
-                .getChannelNormalized(maskChannel);
+            final msk =
+                mask?.getPixel(p.x, p.y).getChannelNormalized(maskChannel);
             if (msk == null) {
               p.setRgba(r, g, b, a);
             } else {
@@ -128,9 +118,8 @@ Image noise(
           final g = prand(random, p.g.toDouble()).clamp(0, p.maxChannelValue);
           final b = prand(random, p.b.toDouble()).clamp(0, p.maxChannelValue);
           final a = p.a;
-          final msk = mask
-              ?.getPixel(p.x, p.y)
-              .getChannelNormalized(maskChannel);
+          final msk =
+              mask?.getPixel(p.x, p.y).getChannelNormalized(maskChannel);
           if (msk == null) {
             p.setRgba(r, g, b, a);
           } else {
@@ -165,9 +154,8 @@ Image noise(
 
           final a = p.a;
 
-          final msk = mask
-              ?.getPixel(p.x, p.y)
-              .getChannelNormalized(maskChannel);
+          final msk =
+              mask?.getPixel(p.x, p.y).getChannelNormalized(maskChannel);
           if (msk == null) {
             p.setRgba(r, g, b, a);
           } else {

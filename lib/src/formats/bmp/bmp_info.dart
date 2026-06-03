@@ -19,7 +19,7 @@ enum BmpCompression {
   reserved10,
   cmyk,
   cmykRle8,
-  cmykRle4,
+  cmykRle4
 }
 
 class BmpFileHeader {
@@ -82,19 +82,19 @@ class BmpInfo implements DecodeInfo {
   final int _startPos;
 
   BmpInfo(InputBuffer p, {BmpFileHeader? fileHeader})
-    : header = fileHeader ?? BmpFileHeader(p),
-      _startPos = p.offset,
-      headerSize = p.readUint32(),
-      width = p.readInt32(),
-      _height = p.readInt32(),
-      planes = p.readUint16(),
-      bitsPerPixel = p.readUint16(),
-      compression = BmpCompression.values[p.readUint32()],
-      imageSize = p.readUint32(),
-      xppm = p.readInt32(),
-      yppm = p.readInt32(),
-      totalColors = p.readUint32(),
-      importantColors = p.readUint32() {
+      : header = fileHeader ?? BmpFileHeader(p),
+        _startPos = p.offset,
+        headerSize = p.readUint32(),
+        width = p.readInt32(),
+        _height = p.readInt32(),
+        planes = p.readUint16(),
+        bitsPerPixel = p.readUint16(),
+        compression = _compressionFromValue(p.readUint32()),
+        imageSize = p.readUint32(),
+        xppm = p.readInt32(),
+        yppm = p.readInt32(),
+        totalColors = p.readUint32(),
+        importantColors = p.readUint32() {
     // BMP allows > 4 bit per channel for 16bpp, so we have to scale it
     // up to 8-bit
     const maxChannelValue = 255.0;
@@ -182,6 +182,13 @@ class BmpInfo implements DecodeInfo {
     }
   }
 
+  static BmpCompression _compressionFromValue(int value) {
+    if (value < 0 || value >= BmpCompression.values.length) {
+      throw ImageException('Unsupported BMP compression type: $value');
+    }
+    return BmpCompression.values[value];
+  }
+
   bool get ignoreAlphaChannel =>
       // Gimp and Photoshop ignore the alpha channel for BITMAPINFOHEADER.
       headerSize == 40 ||
@@ -213,9 +220,7 @@ class BmpInfo implements DecodeInfo {
   }
 
   void decodePixel(
-    InputBuffer input,
-    void Function(num r, num g, num b, num a) pixel,
-  ) {
+      InputBuffer input, void Function(num r, num g, num b, num a) pixel) {
     if (palette != null) {
       if (bitsPerPixel == 1) {
         final bi = input.readByte();
@@ -274,10 +279,8 @@ class BmpInfo implements DecodeInfo {
           : (((p & alphaMask) >> _alphaShift) * _alphaScale).toInt();
       return pixel(r, g, b, a);
     } else {
-      throw ImageException(
-        'Unsupported bitsPerPixel ($bitsPerPixel) or'
-        ' compression ($compression).',
-      );
+      throw ImageException('Unsupported bitsPerPixel ($bitsPerPixel) or'
+          ' compression ($compression).');
     }
   }
 }
